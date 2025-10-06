@@ -1,5 +1,4 @@
-package model;
-
+package model.Peao;
 public class Peao {
     private String cor;
     private int posicao;

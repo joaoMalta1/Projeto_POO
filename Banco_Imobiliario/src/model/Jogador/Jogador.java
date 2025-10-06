@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import model.Peao.Peao;
 
 public class Jogador {
     private Peao peao;

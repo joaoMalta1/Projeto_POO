@@ -1,4 +1,4 @@
-package model;
+package model.Peao;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
