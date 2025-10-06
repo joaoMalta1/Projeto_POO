@@ -8,10 +8,10 @@ public class Tabuleiro {
     private int tamanho;
     private int posicaoPrisao;
 
-    public Tabuleiro(int tamanho, int posicaoPrisao)
+    public Tabuleiro(int posicaoPrisao)
 	{
-        this.tamanho = tamanho;
-        this.posicaoPrisao = posicaoPrisao;
+        this.tamanho = 40; // Tamanho padrão do tabuleiro
+        this.posicaoPrisao = 10; // Posição padrão da prisão
         this.casas = new ArrayList<>();
         inicializarCasas();
     }

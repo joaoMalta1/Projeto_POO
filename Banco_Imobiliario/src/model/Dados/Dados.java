@@ -7,7 +7,7 @@ import java.util.Random;
  * Não deve ser instanciada
  * Apenas uma função de jogar dados
  * */
-class Dados {
+public class Dados {
 	/*
 	 * Retorna um vetor de tamanho 2 com valores de 1 (inclusive) até 6 (inclusive)
 	 * */
