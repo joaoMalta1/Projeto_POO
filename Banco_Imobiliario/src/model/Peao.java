@@ -18,14 +18,22 @@ public class Peao {
     }
 
     public void setPosicao(int novaPosicao) {
-        this.posicao = novaPosicao;
+        this.posicao = novaPosicao; // classe util para quando for pra cadeia independente da posicao
     }
 
-    public void mover(int casas) {
-        this.posicao += casas;
+    public int mover(int casas) {
+    	if (casas < 0) 
+    	{
+    		return 0;
+    	}
+    	else 
+    	{
+    		this.posicao += casas;
+    		return 1;
+    	}
     }
 
-    @Override
+    @Override //metodo pra printar o objeto
     public String toString() {
         return "Peão " + cor + " na posição " + posicao;
     }
