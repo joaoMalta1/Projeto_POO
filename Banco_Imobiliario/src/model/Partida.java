@@ -1,10 +1,8 @@
-package model.Partida;
+package model;
 import java.util.List;
-import model.Dados.Dados;
-import model.Jogador.Jogador;
-import model.Peao.Peao;
 
-public class Partida {
+
+class Partida {
 	private Jogador[] jogadores;
 	private int qtd_jogadores;
 	private int jogadorAtual;

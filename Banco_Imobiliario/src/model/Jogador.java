@@ -1,9 +1,8 @@
-package model.Jogador;
+package model;
 import java.util.ArrayList;
 import java.util.List;
-import model.Peao.Peao;
 
-public class Jogador {
+class Jogador {
     private Peao peao;
     private double saldo; 
     // private List<TituloDePropriedade> titulos;

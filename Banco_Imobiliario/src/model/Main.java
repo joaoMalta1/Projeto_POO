@@ -1,6 +1,5 @@
 package model;
 
-import model.Peao.Peao;
 
 public class Main 
 {

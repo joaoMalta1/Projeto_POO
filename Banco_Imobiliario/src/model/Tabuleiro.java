@@ -1,9 +1,9 @@
-package model.Tabuleiro;
+package model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tabuleiro {
+class Tabuleiro {
     private List<String> casas;
     private int tamanho;
     private int posicaoPrisao;

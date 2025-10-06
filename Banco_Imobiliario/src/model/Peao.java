@@ -1,6 +1,6 @@
-package model.Peao;
+package model;
 
-public class Peao {
+class Peao {
     private String cor;
     private int posicao;
 
