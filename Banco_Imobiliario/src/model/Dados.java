@@ -15,9 +15,9 @@ class Dados {
 		Random random = new Random();
 		
 		int[] resultado = new int[2];
-		
-		resultado[0] = random.nextInt(1, 7);
-		resultado[1] = random.nextInt(1, 7);
+		int max = 7, min = 1;
+		resultado[0] = random.nextInt(max - min) + min;
+		resultado[1] = random.nextInt(max - min) + min;
 		
 		return resultado;
 	}
