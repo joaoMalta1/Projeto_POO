@@ -1,5 +1,7 @@
 package model;
 
+/* TODO: testes JUnit */
+
 class Campo {
 	String nome;
 	
