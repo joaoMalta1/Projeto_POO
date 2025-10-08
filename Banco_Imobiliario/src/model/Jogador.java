@@ -8,29 +8,29 @@ class Jogador {
     // private List<TituloDePropriedade> titulos;
     // private List<Carta> cartas;
 
-    public Jogador(Peao peao) {
+    Jogador(Peao peao) {
         this.peao = peao;
         this.saldo = 4000; //valor inicial do jogador
         // this.titulos = new ArrayList<>();
         // this.cartas = new ArrayList<>();
     }
 
-    public Peao getPeao() {
+    Peao getPeao() {
         return peao;
     }
 
-    public double getSaldo() {
+    double getSaldo() {
         return saldo;
     }
 
     // metodos de negocio (dinheiro)
-    public void adicionarValor(double valor) {
+    void adicionarValor(double valor) {
         if (valor > 0) {
             saldo += valor;
         }
     }
 
-    public int removerValor(double valor) {
+    int removerValor(double valor) {
         if (valor > 0 && saldo >= valor) {
             saldo -= valor;
             return 1; // sucesso
