@@ -4,13 +4,17 @@ import java.util.List;
 
 class Jogador {
     private Peao peao;
-    private double saldo; 
+    private double saldo;
+    boolean faliu;
+    boolean naPrisao;
     // private List<TituloDePropriedade> titulos;
     // private List<Carta> cartas;
 
     Jogador(Peao peao) {
         this.peao = peao;
-        this.saldo = 4000; //valor inicial do jogador
+        saldo = 4000; //valor inicial do jogador
+        faliu = false;
+        naPrisao = false;
         // this.titulos = new ArrayList<>();
         // this.cartas = new ArrayList<>();
     }
@@ -22,7 +26,15 @@ class Jogador {
     double getSaldo() {
         return saldo;
     }
-
+    
+    void setNaPrisao(boolean valor) {
+    	naPrisao = valor;
+    }
+    
+    boolean getNaPrisao() {
+    	return naPrisao;
+    }
+    
     // metodos de negocio (dinheiro)
     void adicionarValor(double valor) {
         if (valor > 0) {
@@ -35,8 +47,11 @@ class Jogador {
             saldo -= valor;
             return 1; // sucesso
         } 
-        else 
-            return 0; // falha e jogador perdeu
+        else {
+        	faliu = true;
+//        	TODO: adicionar vendas de propriedades
+            return 0; // falha e jogador perdeu	
+        }
     }
 
     // metodos de titulos e cartas
