@@ -9,6 +9,9 @@ class Jogador {
     // ---- Prisão ----
     private boolean naPrisao;
     private int rodadasPreso;
+//    TODO: adicionar fila dos últimos dados lançados
+    // private List<TituloDePropriedade> titulos;
+    // private List<Carta> cartas;
 
     Jogador(Peao peao) {
         this.peao = peao;
@@ -17,6 +20,8 @@ class Jogador {
         this.naPrisao = false;
         this.rodadasPreso = 0;
     }
+    
+//    TODO: função de jogar dados e mover peão (integrar com função moverJogador da classe Tabuleiro
 
     // ---- Getters ----
     Peao getPeao() {

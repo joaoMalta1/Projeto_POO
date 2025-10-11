@@ -7,15 +7,15 @@ class Campo {
 	protected double precoPassagem;
 	
 	Campo(String nome, double precoPassagem) {
+		if(nome == null) {
+			throw new IllegalArgumentException("Nome invalido!");
+		}
 		this.nome = nome;
+		this.precoPassagem = precoPassagem;
 	}
 	
-	void caiuNoCampo(Jogador pagador, Banco banco) {
-//		caso o campo seja um no qual o jogador recebe dinheiro ao cair nele 
-//		"removeremos" um valor negativo, e ele receberá um valor positivo
-		pagador.removerValor(precoPassagem);
-		banco.recebeDinheiro(precoPassagem);
-	}
+//	função genérica a todas as subclasses a ser implementada por cada uma com suas especificidades
+	void caiuNoCampo(Jogador pagador, Banco banco) {}
 }
 
 class Prisao extends Campo {
@@ -23,9 +23,10 @@ class Prisao extends Campo {
 	Prisao(String nome, double precoPassagem) {
 		super(nome, precoPassagem);
 	}
+	
+//	TODO: função caiuNoCampo() e regras de negócio
+	
 }
-
-
 
 class VaParaPrisao extends Campo {
 	
