@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Scanner;
+
 class Propriedade extends Campo {
 	protected Jogador dono;
 	protected double precoCompra;
@@ -26,7 +28,34 @@ class Propriedade extends Campo {
 		}
 
 //		não tem saldo para comprar
+		System.err.println("Saldo insuficiente!");
 		return 2;
+	}
+	
+//	S = true ; N = false;
+	protected boolean scannerSN(String mensagem) {
+		Scanner scanner = new Scanner(System.in);
+		String resposta;
+        
+        do {
+            System.out.print(mensagem + " (S/N): ");
+            resposta = scanner.nextLine().trim().toUpperCase();
+            
+            switch (resposta) {
+                case "S" -> {
+                    System.out.println("Você escolheu SIM");
+                    scanner.close();
+                    return true;
+                }
+                case "N" -> {
+                    System.out.println("Você escolheu NÃO");
+                    scanner.close();
+                    return false;
+                }
+                default -> System.out.println("Resposta inválida! Digite apenas S ou N.");
+            }
+//            faz scan até receber S ou N
+        } while (true);
 	}
 	
 }
@@ -40,7 +69,6 @@ class Terreno extends Propriedade {
 	
 	Terreno(String nome, double precoPassagem, double precoCompra) {
 		super(nome, precoPassagem, precoCompra);
-		this.precoCompra = precoCompra;
 		qtdCasas   = 0;
 	}
 
@@ -58,9 +86,6 @@ class Terreno extends Propriedade {
 		
 //		caso comprador seja o dono e tenha a quantia suficiente
 		if(comprador.getSaldo() >= precoCasa) {
-//			não implementaremos o banqueiro, portanto, apenas subtrairemos ou adicionaremos 
-//			dinheiro do jogador sem destiná-lo a lugar algum 
-//			(assumindo que o banco tem dinheiro infinito)
 			comprador.removerValor(precoCasa);
 			banco.recebeDinheiro(precoCasa);
 			qtdCasas++;
@@ -68,20 +93,39 @@ class Terreno extends Propriedade {
 			return 0;
 		}
 		
-//		caso não tenha a quantia suficiente
+//		caso não tenha saldo suficiente
+		System.err.println("Saldo insuficiente!");
 		return 2;
 	}
 	
-	
-	
-	void caiuNoCampo(Jogador pagador, Banco banco) {
+	void caiuNoCampo(Jogador jogador, Banco banco) {
 		double precoAPagar = precoPassagem * qtdCasas;
-		pagador.removerValor(precoAPagar);
+//		CASO: ninguém possui (pode ser comprado OU apenas pagará taxa de passagem ao banco)
 		if(this.dono == null) {
-			banco.recebeDinheiro(precoAPagar);
+//			Jogador decide pelo console se deseja comprar terreno
+	        boolean vaiComprar = scannerSN("Deseja comprar o Terreno?");
+			if(vaiComprar) {
+				this.comprar(jogador, banco);
+			}
+			else {
+				jogador.removerValor(precoPassagem);
+				banco.recebeDinheiro(precoPassagem);				
+			}
 			return;
 		}
-		this.dono.adicionarValor(precoAPagar);
+//		CASO: já possui dono e o jogador que está no campo não é o dono
+		else if(jogador != dono) {
+			jogador.removerValor(precoAPagar);
+			this.dono.adicionarValor(precoAPagar);
+			return;
+		}
+//		CASO: é o dono (pode comprar casa)
+		else {
+			boolean vaiComprarCasa = scannerSN("Deseja comprar uma Casa?");
+			if(vaiComprarCasa) {
+				this.construirCasa(jogador, banco);
+			}
+		}
 		return;
 	}
 }
@@ -92,13 +136,23 @@ class Empresa extends Propriedade {
 		super(nome, precoPassagem, precoCompra);
 	}
 	
-	void caiuNoCampo(Jogador pagador, Banco banco) {
-		pagador.removerValor(precoPassagem);
+	void caiuNoCampo(Jogador jogador, Banco banco) {
+//		CASO: empresa não tem dono (pode ser comprada ou apenas será pago o preço de passagem)
 		if(this.dono == null) {
-			banco.recebeDinheiro(precoPassagem);
-			return;
+//			Lê do teclado se o jogador quer comprar a empresa
+			boolean querComprar = this.scannerSN("Quer comprar a empresa?");
+			if(querComprar) {
+				this.comprar(jogador, banco);
+			}
+			else {
+				jogador.removerValor(precoPassagem);
+				banco.recebeDinheiro(precoPassagem);				
+			}
 		}
-		this.dono.adicionarValor(precoPassagem);
+		else if(jogador != dono) {
+			jogador.removerValor(precoPassagem);
+			this.dono.adicionarValor(precoPassagem);
+		}
 		return;
 	}
 	

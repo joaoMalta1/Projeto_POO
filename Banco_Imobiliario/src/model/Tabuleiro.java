@@ -16,9 +16,9 @@ class Tabuleiro {
     }
 
     private void inicializarCasas() {
-    	String[] nomesDosCampos;
-    	double[] precosPassagem;
-    	
+    	ArrayList<String> nomesDosCampos = new ArrayList<>();
+        ArrayList<Double> precosPassagem = new ArrayList<>();
+        
     	final String nomes = """
     			PARTIDA
     			Leblon
@@ -91,24 +91,28 @@ class Tabuleiro {
 		    	280
 		    	260""";
 
-//    	converte string de nomes (da tabela) em array de nomes (String)
-    	nomesDosCampos  = nomes.split("\\r?\\n");
-    	for(int i = 0; i < nomesDosCampos.length; i++) {
-    		nomesDosCampos[i] = nomesDosCampos[i].trim();    	
-    	}
+//    	converte string de nomes (da tabela) em arraylist de nomes (String)
+    	String[] linhasNomes = nomes.split("\\r?\\n");
+        for (String linha : linhasNomes) {
+            nomesDosCampos.add(linha.trim());
+        }
     	
 //    	converte string de precos (da tabela) em array de precos (double)
-    	String[] linhas = precos.split("\\r?\\n");
-    	precosPassagem  = new double[linhas.length];
-    	for(int i = 0; i < linhas.length; i++) {
-    		precosPassagem[i] = Double.parseDouble(linhas[i].trim());
-    	}
+        String[] linhasPrecos = precos.split("\\r?\\n");
+        for (String linha : linhasPrecos) {
+            precosPassagem.add(Double.parseDouble(linha.trim()));
+        }
+        
+// 		verifica se os tamanhos dos arraylist sao iguais
+        if (nomesDosCampos.size() != precosPassagem.size()) {
+        	throw new IllegalArgumentException("Erro na inicialização do Tabuleiro!"); // aborta programa
+        }
 
     	
 //    	cria campos seguindo a tabela
-        for(int i = 0; i < nomesDosCampos.length; i++){
-        	String nome  = nomesDosCampos[i];
-        	double precoPassagem = precosPassagem[i];
+        for(int i = 0; i < nomesDosCampos.size(); i++){
+        	String nome  = nomesDosCampos.get(i);
+        	double precoPassagem = precosPassagem.get(i);
         	
             if(nome == "PRISÃO") {
             	System.out.println(nome);
@@ -137,7 +141,12 @@ class Tabuleiro {
     // Retorna o objeto do campo passado como parâmetro
     Campo getCampo(int posicao) {
         if (posicao < 0 || posicao >= tamanho) {
-            throw new IllegalArgumentException("Posição inválida no tabuleiro!");
+        	try {
+                throw new IllegalArgumentException("Posição fora do intervalo!");
+            } catch (IllegalArgumentException e) {
+                System.out.println("Erro capturado: " + e.getMessage());
+                return null;
+            }
         }
         return campos.get(posicao);
     }
@@ -148,7 +157,12 @@ class Tabuleiro {
     			return campo;
     		}
     	}
-    	return null;
+    	try {
+            throw new IllegalArgumentException("Nome inexistente!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro capturado: " + e.getMessage());
+         	return null;
+        }
     }
 
     // Calcula a nova posição após o movimento e lida com pagamentos
