@@ -1,15 +1,15 @@
 package model;
 
 class Peao {
-    private String cor;
+    private CorPeao cor;
     private int posicao;
 
-    public Peao(String cor) {
+    public Peao(CorPeao cor) {
         this.cor = cor;
         this.posicao = 0;
     }
 
-    public String getCor() {
+    public CorPeao getCor() {
         return cor;
     }
 
@@ -34,4 +34,14 @@ class Peao {
     public String toString() {
         return "Peão " + cor + " na posição " + posicao;
     }
+    
+    enum CorPeao {
+        VERMELHA,
+        AZUL,
+        LARANJA,
+        AMARELA,
+        ROXA,
+        CINZA
+    }
+    
 }

@@ -124,7 +124,7 @@ class Tabuleiro {
             	campos.add(new Campo(nome, precoPassagem));}
             else if(nome == "VÁ PARA A PRISÃO") {
             	System.out.println(nome);
-            	campos.add(new vaParaPrisao(nome, precoPassagem));}
+            	campos.add(new VaParaPrisao(nome, precoPassagem));}
 //          ASSUMIMOS, como não consta em uma tabela o preço de compra de um terreno, que ele é
 //            igual a 5 vezes o preço que se paga por casa ao passar pelo terreno
             else if(nome.startsWith("Companhia")) {
@@ -170,8 +170,8 @@ class Tabuleiro {
         int novaPosicao = (posicaoAtual + passos) % tamanho;
         
         if(novaPosicao == this.getPosicaoVaParaPrisao() 
-        		&& campos.get(novaPosicao) instanceof vaParaPrisao) {
-        	vaParaPrisao campoVPP = (vaParaPrisao)campos.get(novaPosicao);
+        		&& campos.get(novaPosicao) instanceof VaParaPrisao) {
+        	VaParaPrisao campoVPP = (VaParaPrisao)campos.get(novaPosicao);
         	campoVPP.caiuNoCampo(jogador, this);
         }
         else {
@@ -196,7 +196,7 @@ class Tabuleiro {
     
     int getPosicaoVaParaPrisao() {
     	for(int i = 0; i < campos.size(); i++) {
-        	if(campos.get(i) instanceof vaParaPrisao) {
+        	if(campos.get(i) instanceof VaParaPrisao) {
         		return i;
         	}
         }

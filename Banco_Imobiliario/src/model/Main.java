@@ -5,7 +5,7 @@ public class Main
 {
     public static void main(String[] args) {
         
-        Peao peaoAzul = new Peao("azul");
+        Peao peaoAzul = new Peao(Peao.CorPeao.AZUL);
 
         // Exibir o estado inicial
         System.out.println(peaoAzul);

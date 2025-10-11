@@ -23,19 +23,18 @@ class Prisao extends Campo {
 	Prisao(String nome, double precoPassagem) {
 		super(nome, precoPassagem);
 	}
-	
 }
 
 
 
-class vaParaPrisao extends Campo {
+class VaParaPrisao extends Campo {
 	
-	vaParaPrisao(String nome, double precoPassagem) {
+	VaParaPrisao(String nome, double precoPassagem) {
 		super(nome, precoPassagem);
 	}
 	
 	void caiuNoCampo(Jogador jogador, Tabuleiro tabuleiro) {
 		jogador.getPeao().setPosicao(tabuleiro.getPosicaoPrisao());
-		jogador.setNaPrisao(true);
+		jogador.irParaPrisao();
 	}
 }

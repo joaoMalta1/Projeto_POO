@@ -1,24 +1,24 @@
 package model;
-import java.util.ArrayList;
-import java.util.List;
 
 class Jogador {
+
     private Peao peao;
     private double saldo;
-    boolean faliu;
-    boolean naPrisao;
-    // private List<TituloDePropriedade> titulos;
-    // private List<Carta> cartas;
+    private boolean faliu;
+
+    // ---- Prisão ----
+    private boolean naPrisao;
+    private int rodadasPreso;
 
     Jogador(Peao peao) {
         this.peao = peao;
-        saldo = 4000; //valor inicial do jogador
-        faliu = false;
-        naPrisao = false;
-        // this.titulos = new ArrayList<>();
-        // this.cartas = new ArrayList<>();
+        this.saldo = 4000; // saldo inicial
+        this.faliu = false;
+        this.naPrisao = false;
+        this.rodadasPreso = 0;
     }
 
+    // ---- Getters ----
     Peao getPeao() {
         return peao;
     }
@@ -26,64 +26,63 @@ class Jogador {
     double getSaldo() {
         return saldo;
     }
-    
-    void setNaPrisao(boolean valor) {
-    	naPrisao = valor;
+
+    boolean isFaliu() {
+        return faliu;
     }
-    
-    boolean getNaPrisao() {
-    	return naPrisao;
+
+    boolean isNaPrisao() {
+        return naPrisao;
     }
-    
-    // metodos de negocio (dinheiro)
+
+    int getRodadasPreso() {
+        return rodadasPreso;
+    }
+
+    // ---- Métodos de dinheiro ----
     void adicionarValor(double valor) {
         if (valor > 0) {
             saldo += valor;
         }
     }
 
-    int removerValor(double valor) {
+    boolean removerValor(double valor) {
         if (valor > 0 && saldo >= valor) {
             saldo -= valor;
-            return 1; // sucesso
-        } 
-        else {
-        	faliu = true;
-//        	TODO: adicionar vendas de propriedades
-            return 0; // falha e jogador perdeu	
+            return true; // sucesso
+        } else {
+            faliu = true;
+            return false; // jogador perdeu
         }
     }
 
-    // metodos de titulos e cartas
-    // public List<TituloDePropriedade> getTitulos() {
-    //     return titulos;
-    // }
+    // ---- Métodos da prisão ----
+    void irParaPrisao() {
+        naPrisao = true;
+        rodadasPreso = 0;
+    }
 
-    // public List<Carta> getCartas() {
-    //     return cartas;
-    // }
+    void sairDaPrisao() {
+        naPrisao = false;
+        rodadasPreso = 0;
+    }
 
-    // public void adicionarTitulo(TituloDePropriedade titulo) {
-    //     titulos.add(titulo);
-    // }
+    void incrementaRodadasPreso() {
+        if (naPrisao) {
+            rodadasPreso++;
+        }
+    }
 
-    // public void removerTitulo(TituloDePropriedade titulo) {
-    //     titulos.remove(titulo);
-    // }
-
-    // public void adicionarCarta(Carta carta) {
-    //     cartas.add(carta);
-    // }
-
-    // public void removerCarta(Carta carta) {
-    //     cartas.remove(carta);
-    //}
+    boolean podeSairDaPrisao(int dado1, int dado2) {
+        return (dado1 == dado2) || (rodadasPreso >= 3);
+    }
 
     @Override
     public String toString() {
         return "Peão: " + peao +
-                "\nSaldo: R$" + String.format("%.2f", saldo); //+
-                // "\nPropriedades: " + titulos.size() +
-                // "\nCartas: " + cartas.size();
+               "\nSaldo: R$" + String.format("%.2f", saldo) +
+               "\nNa prisão: " + naPrisao +
+               "\nRodadas preso: " + rodadasPreso +
+               "\nFalido: " + faliu;
     }
 }
