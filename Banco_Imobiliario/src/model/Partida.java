@@ -13,6 +13,7 @@ class Partida {
 	private int qtd_jogadores;
 	private int jogadorAtual;
 	private Peao.CorPeao[] cores = {Peao.CorPeao.AZUL,Peao.CorPeao.VERMELHA,Peao.CorPeao.AMARELA,CorPeao.CINZA, Peao.CorPeao.LARANJA, Peao.CorPeao.ROXA};
+    private VaParaPrisao vaParaPrisao;
 
 	Partida(int qtd_jogadores) {
 		this.qtd_jogadores = qtd_jogadores;
@@ -80,5 +81,24 @@ class Partida {
             }
         }
         return ativos;
+    }
+
+    int[] jogarDados() {
+        int counter = 0;
+        int[] resultado = new int[2];
+        
+        while (counter < 3) {
+            resultado = Dados.jogar();
+
+            if(resultado[0] != resultado[1]) {
+                return resultado;
+            }
+
+            counter++;
+        }
+        
+        this.vaParaPrisao.irParaPrisao(this.getJogadorAtual());
+
+        return resultado;
     }
 }
