@@ -1,16 +1,18 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class Jogador {
 
     private Peao peao;
     private double saldo;
     private boolean faliu;
+    private List<Propriedade> propriedades;
 
     // ---- Prisão ----
     private boolean naPrisao;
-    private int rodadasPreso;
-    // manter uma array lista de proiedades para comprar, vender  e associar as funcoes da classe de propriedade e fazer a de quando falir 
-    // TODO: adicionar fila dos últimos dados lançados para verificar trinca de dados iguais; 
+    private int rodadasPreso;    
     // private List<TituloDePropriedade> titulos;
     // private List<Carta> cartas;
 
@@ -20,6 +22,7 @@ class Jogador {
         this.faliu = false;
         this.naPrisao = false;
         this.rodadasPreso = 0;
+        this.propriedades = new ArrayList<>();
     }
 
 //    TODO: função de jogar dados e mover peão (integrar com função moverJogador da classe Tabuleiro
@@ -45,6 +48,10 @@ class Jogador {
         return rodadasPreso;
     }
 
+    List<Propriedade> getPropriedades() {
+        return propriedades;
+    }
+
     // ---- Setters ----
     void setNaPrisao(boolean estaNaPrisao) {
     	this.naPrisao = estaNaPrisao;
@@ -68,6 +75,35 @@ class Jogador {
         } else {
             faliu = true;
             return false; // jogador perdeu
+        }
+    }
+
+     // ---- Métodos de Propriedade ----
+    
+    void adicionarPropriedade(Propriedade propriedade) {
+        if (propriedade != null && !this.propriedades.contains(propriedade)) {
+            this.propriedades.add(propriedade);
+        }
+    }
+
+    // Remove a propriedade da lista do jogador (após venda ou falência)
+    void removerPropriedade(Propriedade propriedade) {
+        this.propriedades.remove(propriedade);
+    }
+
+    // ---- Falência ----
+    void falencia(Banco banco) {
+        if (this.faliu) {
+            banco.recebeDinheiro(this.saldo);
+            for (Propriedade p : new ArrayList<>(this.propriedades)) {
+                p.dono = null; 
+                if (p instanceof Terreno) {
+                    ((Terreno) p).qtdCasas = 0; // é isso ?
+                }
+            }
+            this.propriedades.clear();
+            this.saldo = 0.0; 
+            System.out.println("jogador faliu");
         }
     }
 

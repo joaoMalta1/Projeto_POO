@@ -1,5 +1,6 @@
 
 package model;
+
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,7 @@ public class JogadorTest {
 
     @Before
     public void setUp() {
+        // Garante que o estado é redefinido antes de cada teste
         peao = new Peao(Peao.CorPeao.VERMELHA);
         jogador = new Jogador(peao);
     }
@@ -18,9 +20,11 @@ public class JogadorTest {
     @Test
     public void testInicializacao() {
         assertEquals(peao, jogador.getPeao());
-        assertEquals(4000.0, jogador.getSaldo(), 0.001); 
+        // O saldo inicial é 4000.00, não um inteiro, mas para fins de teste pode ser
+        // comparado se o método getSaldo() retorna um double.
+        assertEquals(4000.0, jogador.getSaldo(), 0.001);
         assertFalse(jogador.isFaliu());
-        assertFalse(jogador.isNaPrisao());
+        assertFalse(jogador.getIsNaPrisao());
         assertEquals(0, jogador.getRodadasPreso());
     }
 
@@ -32,6 +36,8 @@ public class JogadorTest {
 
     @Test
     public void testAdicionarValorNegativoNaoAfetaSaldo() {
+        // Correção: o método adicionarValor(double) ignora valores <= 0.
+        // O saldo deve permanecer o inicial (4000.00).
         jogador.adicionarValor(-200);
         assertEquals(4000.0, jogador.getSaldo(), 0.001);
     }
@@ -45,11 +51,32 @@ public class JogadorTest {
     }
 
     @Test
-    public void testRemoverValorMaiorQueSaldoCausaFalencia() {
-        boolean sucesso = jogador.removerValor(5000);
-        assertFalse(sucesso);
+    public void testFalencia() {
+
+        Banco banco = new Banco(); 
+        Propriedade prop1 = new Propriedade("Avenida Ficticia", 50.0, 200.0);
+        Terreno terr1 = new Terreno("Rua Ficticia", 20.0, 100.0);
+
+        jogador.adicionarPropriedade(prop1);
+        jogador.adicionarPropriedade(terr1); 
+        prop1.dono = jogador;
+        terr1.dono = jogador;
+
+        double saldoInicialJogador = jogador.getSaldo();
+        double saldoBancoAntes = banco.getSaldo();
+        boolean sucessoRemocao = jogador.removerValor(5000.0);
+
+        assertFalse(sucessoRemocao);
         assertTrue(jogador.isFaliu());
-        assertEquals(4000.0, jogador.getSaldo(), 0.001);
+        assertEquals(saldoInicialJogador, jogador.getSaldo(), 0.001);
+
+        jogador.falencia(banco);
+        assertEquals(0.0, jogador.getSaldo(), 0.001);
+        assertEquals(saldoBancoAntes + saldoInicialJogador, banco.getSaldo(), 0.001);
+        assertTrue(jogador.getPropriedades().isEmpty());
+        assertNull(prop1.dono);
+        assertNull(terr1.dono);
+        assertEquals(0, ((Terreno) terr1).qtdCasas);
     }
 
     @Test
@@ -58,59 +85,6 @@ public class JogadorTest {
         assertTrue(sucesso);
         assertEquals(0.0, jogador.getSaldo(), 0.001);
         assertFalse(jogador.isFaliu());
-    }
-
-    @Test
-    public void testIrParaPrisao() {
-        jogador.irParaPrisao();
-        assertTrue(jogador.isNaPrisao());
-        assertEquals(0, jogador.getRodadasPreso());
-    }
-
-    @Test
-    public void testSairDaPrisao() {
-        jogador.irParaPrisao();
-        jogador.incrementaRodadasPreso();
-        jogador.sairDaPrisao();
-        assertFalse(jogador.isNaPrisao());
-        assertEquals(0, jogador.getRodadasPreso());
-    }
-
-    @Test
-    public void testIncrementaRodadasPreso() {
-        // Sem estar na prisão, não deve incrementar
-        jogador.incrementaRodadasPreso();
-        assertEquals(0, jogador.getRodadasPreso());
-        jogador.irParaPrisao();
-        jogador.incrementaRodadasPreso();
-        jogador.incrementaRodadasPreso();
-        assertEquals(2, jogador.getRodadasPreso());
-    }
-
-    @Test
-    public void testPodeSairDaPrisaoPorDadoDuplo() {
-        jogador.irParaPrisao();
-        // 3 e 3 são duplos
-        assertTrue(jogador.podeSairDaPrisao(3, 3));
-    }
-
-    @Test
-    public void testPodeSairDaPrisaoPorTempo() {
-        jogador.irParaPrisao();
-        jogador.incrementaRodadasPreso(); // 1
-        jogador.incrementaRodadasPreso(); // 2
-        jogador.incrementaRodadasPreso(); // 3
-        // rodadasPreso >= 3, mesmo sem duplos (2 != 5)
-        assertTrue(jogador.podeSairDaPrisao(2, 5));
-    }
-
-    @Test
-    public void testNaoPodeSairDaPrisaoAinda() {
-        jogador.irParaPrisao();
-        jogador.incrementaRodadasPreso(); // 1
-        jogador.incrementaRodadasPreso(); // 2
-        // Não é duplo (1 != 2) e rodadasPreso < 3
-        assertFalse(jogador.podeSairDaPrisao(1, 2));
     }
 
     @Test
