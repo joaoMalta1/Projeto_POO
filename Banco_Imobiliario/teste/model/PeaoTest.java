@@ -8,7 +8,7 @@ public class PeaoTest {
     @Test
     public void testeInicializacao() {
         Peao peao = new Peao(Peao.CorPeao.VERMELHA);
-        assertEquals("vermelho", peao.getCor());
+        assertEquals(Peao.CorPeao.VERMELHA, peao.getCor());
         assertEquals(0, peao.getPosicao());
     }
 

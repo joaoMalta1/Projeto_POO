@@ -4,24 +4,24 @@ class Peao {
     private CorPeao cor;
     private int posicao;
 
-    public Peao(CorPeao cor) {
+    Peao(CorPeao cor) {
         this.cor = cor;
         this.posicao = 0;
     }
 
-    public CorPeao getCor() {
+    CorPeao getCor() {
         return cor;
     }
 
-    public int getPosicao() {
+    int getPosicao() {
         return posicao;
     }
 
-    public void setPosicao(int novaPosicao) {
+    void setPosicao(int novaPosicao) {
         this.posicao = novaPosicao; // classe util para quando for pra cadeia independente da posicao
     }
 
-    public int mover(int casas) {
+    int mover(int casas) {
         if (casas < 0) {
             return 0;
         } else {
@@ -43,5 +43,4 @@ class Peao {
         ROXA,
         CINZA
     }
-    
 }

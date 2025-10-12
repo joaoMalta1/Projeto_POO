@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 class Propriedade extends Campo {
 	protected Jogador dono;
-	protected double precoCompra;
+	protected final double precoCompra;
 	
 	Propriedade(String nome, double precoPassagem, double precoCompra) {
 		super(nome, precoPassagem);
@@ -12,10 +12,10 @@ class Propriedade extends Campo {
 		this.precoCompra = precoCompra;
 	}
 	
-	int comprar(Jogador comprador, Banco banco){
+	ResultadoTransacao comprar(Jogador comprador, Banco banco){
 //		já tem dono, logo não pode comprar
 		if(this.dono != null) {
-			return 1;
+			return ResultadoTransacao.JA_TEM_DONO;
 		}
 		
 //		pode comprar
@@ -24,38 +24,37 @@ class Propriedade extends Campo {
 			banco.recebeDinheiro(precoCompra);
 			this.dono = comprador;
 			
-			return 0;
+			return ResultadoTransacao.SUCESSO;
 		}
 
 //		não tem saldo para comprar
 		System.err.println("Saldo insuficiente!");
-		return 2;
+		return ResultadoTransacao.SALDO_INSUFICIENTE;
 	}
 	
 //	S = true ; N = false;
-	protected boolean scannerSN(String mensagem) {
-		Scanner scanner = new Scanner(System.in);
-		String resposta;
-        
-        do {
+    protected boolean scannerSN(String mensagem, Scanner scanner) {
+        while (true) {
             System.out.print(mensagem + " (S/N): ");
-            resposta = scanner.nextLine().trim().toUpperCase();
+            String resposta = scanner.nextLine().trim().toUpperCase();
             
-            switch (resposta) {
-                case "S" -> {
-                    System.out.println("Você escolheu SIM");
-                    scanner.close();
-                    return true;
-                }
-                case "N" -> {
-                    System.out.println("Você escolheu NÃO");
-                    scanner.close();
-                    return false;
-                }
-                default -> System.out.println("Resposta inválida! Digite apenas S ou N.");
+            if (resposta.equals("S")) {
+                return true;
+            } else if (resposta.equals("N")) {
+                return false;
             }
-//            faz scan até receber S ou N
-        } while (true);
+            System.out.println("Resposta inválida! Digite apenas S ou N.");
+        }
+    }
+    
+    void caiuNoCampo(Jogador jogador, Banco banco, Scanner scanner) {}
+	
+	//Enum para resultados consistentes
+	enum ResultadoTransacao {
+	 SUCESSO,
+	 JA_TEM_DONO,
+	 SALDO_INSUFICIENTE,
+	 NAO_EH_DONO
 	}
 	
 }
@@ -73,15 +72,10 @@ class Terreno extends Propriedade {
 	}
 
 	
-	
-/* Função para a construção de uma casa
- * retorna 0 caso a compra seja efetuadada
- * retorna 1 caso o comprador não seja o dono
- * retorna 2 caso o comprador não tenha dinheiro suficiente
- * */
-	int construirCasa(Jogador comprador, Banco banco){
+	ResultadoTransacao construirCasa(Jogador comprador, Banco banco){
 		if(comprador != this.dono) {
-			return 1;
+			System.err.println("Não é dono!");
+			return ResultadoTransacao.NAO_EH_DONO;
 		}
 		
 //		caso comprador seja o dono e tenha a quantia suficiente
@@ -90,20 +84,26 @@ class Terreno extends Propriedade {
 			banco.recebeDinheiro(precoCasa);
 			qtdCasas++;
 			
-			return 0;
+			return ResultadoTransacao.SUCESSO;
 		}
 		
 //		caso não tenha saldo suficiente
 		System.err.println("Saldo insuficiente!");
-		return 2;
+		return ResultadoTransacao.SALDO_INSUFICIENTE;
 	}
 	
-	void caiuNoCampo(Jogador jogador, Banco banco) {
+//	IMPORTANTE:
+//	Por enquanto estamos utilizando o Scanner dentro desta função para fazer a leitura.
+//	Como isso é uma interação com o usuário deverá ser implementado pelo módulo View.
+//	Posteriormente, quando criarmos este módulo, esta integração será mudada.
+//	Esta é uma solução PROVISÓRIA
+	@Override
+	void caiuNoCampo(Jogador jogador, Banco banco, Scanner scanner) {
 		double precoAPagar = precoPassagem * qtdCasas;
 //		CASO: ninguém possui (pode ser comprado OU apenas pagará taxa de passagem ao banco)
 		if(this.dono == null) {
 //			Jogador decide pelo console se deseja comprar terreno
-	        boolean vaiComprar = scannerSN("Deseja comprar o Terreno?");
+	        boolean vaiComprar = scannerSN("Deseja comprar o Terreno?", scanner);
 			if(vaiComprar) {
 				this.comprar(jogador, banco);
 			}
@@ -121,7 +121,7 @@ class Terreno extends Propriedade {
 		}
 //		CASO: é o dono (pode comprar casa)
 		else {
-			boolean vaiComprarCasa = scannerSN("Deseja comprar uma Casa?");
+			boolean vaiComprarCasa = scannerSN("Deseja comprar uma Casa?", scanner);
 			if(vaiComprarCasa) {
 				this.construirCasa(jogador, banco);
 			}
@@ -135,12 +135,18 @@ class Empresa extends Propriedade {
 	Empresa(String nome, double precoPassagem, double precoCompra) {
 		super(nome, precoPassagem, precoCompra);
 	}
-	
-	void caiuNoCampo(Jogador jogador, Banco banco) {
+
+//	IMPORTANTE:
+//	Por enquanto estamos utilizando o Scanner dentro desta função para fazer a leitura.
+//	Como isso é uma interação com o usuário deverá ser implementado pelo módulo View.
+//	Posteriormente, quando criarmos este módulo, esta integração será mudada.
+//	Esta é uma solução PROVISÓRIA
+	@Override
+	void caiuNoCampo(Jogador jogador, Banco banco, Scanner scanner) {
 //		CASO: empresa não tem dono (pode ser comprada ou apenas será pago o preço de passagem)
 		if(this.dono == null) {
 //			Lê do teclado se o jogador quer comprar a empresa
-			boolean querComprar = this.scannerSN("Quer comprar a empresa?");
+			boolean querComprar = this.scannerSN("Quer comprar a empresa?", scanner);
 			if(querComprar) {
 				this.comprar(jogador, banco);
 			}

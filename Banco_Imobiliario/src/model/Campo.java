@@ -1,7 +1,5 @@
 package model;
 
-/* TODO: testes JUnit */
-
 class Campo {
 	String nome;
 	protected double precoPassagem;
@@ -14,8 +12,10 @@ class Campo {
 		this.precoPassagem = precoPassagem;
 	}
 	
-//	função genérica a todas as subclasses a ser implementada por cada uma com suas especificidades
-	void caiuNoCampo(Jogador pagador, Banco banco) {}
+	void caiuNoCampo(Jogador pagador, Banco banco) {
+		pagador.removerValor(precoPassagem);
+		banco.recebeDinheiro(precoPassagem);
+	}
 }
 
 class Prisao extends Campo {

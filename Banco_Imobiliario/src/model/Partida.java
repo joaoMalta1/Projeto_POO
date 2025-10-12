@@ -37,7 +37,7 @@ class Partida {
 		this.jogadorAtual = 0;
 	}
     
-    public int proximoJogador() {
+    int proximoJogador() {
         if (isFimDeJogo()) {
             return jogadorAtual; 
         }
@@ -57,22 +57,22 @@ class Partida {
         return jogadorAtual;
     }
     
-    public boolean isFimDeJogo() {
+    boolean isFimDeJogo() {
         return getQtdJogadoresAtivos() <= 1;
     }
     
-    public Jogador getVencedor() {
+    Jogador getVencedor() {
         if (isFimDeJogo()) {
             return jogadores[jogadorAtual];
         }
         return null;
     }
 
-    public Jogador getJogadorAtual() {
+    Jogador getJogadorAtual() {
         return jogadores[jogadorAtual];
     }
     
-    public int getQtdJogadoresAtivos() {
+    int getQtdJogadoresAtivos() {
         int ativos = 0;
         for (Jogador jogador : jogadores) {
             if (!jogador.isFaliu()) {

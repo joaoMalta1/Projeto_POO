@@ -27,7 +27,7 @@ public class DadosTest {
 	 * Este teste se baseia na conclusão estatística que a chance de não cair 6 ou 1 no dado 
 	 * em 500 iterações é tão baixa que pode ser considerada 0
 	 * */
-	@Test
+	@Test(timeout = 2000)
 	public void testeExtremos() {
 		boolean temExtremos = false;
 		

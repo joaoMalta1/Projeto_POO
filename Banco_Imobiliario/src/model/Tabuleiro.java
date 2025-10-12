@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 class Tabuleiro {
     private List<Campo> campos;
@@ -114,59 +115,43 @@ class Tabuleiro {
         	String nome  = nomesDosCampos.get(i);
         	double precoPassagem = precosPassagem.get(i);
         	
-            if(nome == "PRISÃO") {
-            	System.out.println(nome);
+            if(nome.equals("PRISÃO")) {
             	campos.add(new Prisao(nome, precoPassagem));}
-            else if(nome == "PARTIDA" || nome == "PARADA LIVRE" || 
-            		nome == "Lucros ou Dividendos ($$)" || 
-            		nome == "Imposto de Renda ($$)"){
-            	System.out.println(nome);
+            else if(nome.equals("PARTIDA" ) || nome.equals("PARADA LIVRE" ) || 
+            		nome.equals("Lucros ou Dividendos ($$)") || 
+            		nome.equals("Imposto de Renda ($$)")){
             	campos.add(new Campo(nome, precoPassagem));}
-            else if(nome == "VÁ PARA A PRISÃO") {
-            	System.out.println(nome);
+            else if(nome.equals("VÁ PARA A PRISÃO")) {
             	campos.add(new VaParaPrisao(nome, precoPassagem));}
 //          ASSUMIMOS, como não consta em uma tabela o preço de compra de um terreno, que ele é
 //            igual a 5 vezes o preço que se paga por casa ao passar pelo terreno
             else if(nome.startsWith("Companhia")) {
-            	System.out.println(nome);
             	campos.add(new Empresa(nome, precoPassagem, 5*precoPassagem));}
             else {
-            	System.out.println(nome);
             	campos.add(new Terreno(nome, precoPassagem, 5*precoPassagem));}
         }
         tamanho = campos.size();
-        System.out.println(tamanho);
     }
 
     // Retorna o objeto do campo passado como parâmetro
     Campo getCampo(int posicao) {
         if (posicao < 0 || posicao >= tamanho) {
-        	try {
-                throw new IllegalArgumentException("Posição fora do intervalo!");
-            } catch (IllegalArgumentException e) {
-                System.out.println("Erro capturado: " + e.getMessage());
-                return null;
-            }
+        	throw new IllegalArgumentException("Posição fora do intervalo!");
         }
         return campos.get(posicao);
     }
     
     Campo getCampo(String nome) {
     	for(Campo campo : campos) {
-    		if(campo.nome == nome) {
+    		if(campo.nome.equals(nome)) {
     			return campo;
     		}
     	}
-    	try {
-            throw new IllegalArgumentException("Nome inexistente!");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erro capturado: " + e.getMessage());
-         	return null;
-        }
+    	throw new IllegalArgumentException("Nome inexistente!");
     }
 
     // Calcula a nova posição após o movimento e lida com pagamentos
-    int moverJogador(Jogador jogador, int posicaoAtual, int passos) {
+    int moverJogador(Jogador jogador, int posicaoAtual, int passos, Scanner scanner) {
         int novaPosicao = (posicaoAtual + passos) % tamanho;
         
         if(novaPosicao == this.getPosicaoVaParaPrisao() 
@@ -175,9 +160,17 @@ class Tabuleiro {
         	campoVPP.caiuNoCampo(jogador, this);
         }
         else {
-        	campos.get(novaPosicao).caiuNoCampo(jogador, banco);        	
+        	if(campos.get(novaPosicao) instanceof Propriedade) {
+        		Propriedade prop = (Propriedade)campos.get(novaPosicao); 
+        		prop.caiuNoCampo(jogador, banco, scanner);
+        	}
+//        	caso não seja nem propriedade nem vaParaPrisao
+        	else {
+        		campos.get(novaPosicao).caiuNoCampo(jogador, banco);        	        		
+        	}
         }
         
+//        caso jogador passe, mas não pare no campo inicial (recebe dinheiro)
         if(posicaoAtual + passos > tamanho) {
         	campos.get(0).caiuNoCampo(jogador, banco);
         }
