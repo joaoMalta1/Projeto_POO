@@ -37,7 +37,7 @@ class Jogador {
         return faliu;
     }
 
-    boolean isNaPrisao() {
+    boolean getIsNaPrisao() {
         return naPrisao;
     }
 
@@ -45,6 +45,15 @@ class Jogador {
         return rodadasPreso;
     }
 
+    // ---- Setters ----
+    void setNaPrisao(boolean estaNaPrisao) {
+    	this.naPrisao = estaNaPrisao;
+    }
+    
+    void setRodadasPreso(int rodadasPreso) {
+    	this.rodadasPreso = rodadasPreso;
+    }
+    
     // ---- Métodos de dinheiro ----
     void adicionarValor(double valor) {
         if (valor > 0) {
@@ -60,27 +69,6 @@ class Jogador {
             faliu = true;
             return false; // jogador perdeu
         }
-    }
-
-    // ---- Métodos da prisão ----
-    void irParaPrisao() {
-        naPrisao = true;
-        rodadasPreso = 0;
-    }
-
-    void sairDaPrisao() {
-        naPrisao = false;
-        rodadasPreso = 0;
-    }
-
-    void incrementaRodadasPreso() {
-        if (naPrisao) {
-            rodadasPreso++;
-        }
-    }
-
-    boolean podeSairDaPrisao(int dado1, int dado2) {
-        return (dado1 == dado2) || (rodadasPreso >= 3);
     }
 
     @Override

@@ -10,6 +10,8 @@ public class VaParaPrisaoTest {
     private Tabuleiro tabuleiro;
     private Banco banco;
     private Jogador jogador;
+    private Prisao prisao;
+    private VaParaPrisao vaParaPrisao;
 
     @Before
     public void setUp() {
@@ -39,7 +41,7 @@ public class VaParaPrisaoTest {
 
         vaParaPrisao.caiuNoCampo(jogador, tabuleiro);
 
-        assertTrue(jogador.isNaPrisao());
+        assertTrue(jogador.getIsNaPrisao());
     }
 
     // Teste 3: Verifica se o contador de rodadas preso é resetado
@@ -49,9 +51,11 @@ public class VaParaPrisaoTest {
         if(campo instanceof VaParaPrisao) {
         	VaParaPrisao vaParaPrisao = (VaParaPrisao) campo;        	
         	// Simula que o jogador estava preso anteriormente por 2 rodadas
-        	jogador.irParaPrisao();
-        	jogador.incrementaRodadasPreso();
-        	jogador.incrementaRodadasPreso();
+        	vaParaPrisao.irParaPrisao(jogador);
+        	prisao.passouUmaRodadaPreso(jogador);
+        	prisao.passouUmaRodadaPreso(jogador);
+        	prisao.passouUmaRodadaPreso(jogador);
+      
         	vaParaPrisao.caiuNoCampo(jogador, tabuleiro);
         	assertEquals(0, jogador.getRodadasPreso());
         }
@@ -72,7 +76,7 @@ public class VaParaPrisaoTest {
         ((VaParaPrisao) campo).caiuNoCampo(jogador, tabuleiro);
 
         assertEquals(tabuleiro.getPosicaoPrisao(), jogador.getPeao().getPosicao());
-        assertTrue(jogador.isNaPrisao());
+        assertTrue(jogador.getIsNaPrisao());
     }
 
     // Teste 5: Verifica múltiplos jogadores
@@ -86,11 +90,11 @@ public class VaParaPrisaoTest {
 
         // Verifica jogador 1
         assertEquals(tabuleiro.getPosicaoPrisao(), jogador.getPeao().getPosicao());
-        assertTrue(jogador.isNaPrisao());
+        assertTrue(jogador.getIsNaPrisao());
 
         // Verifica jogador 2
         assertEquals(tabuleiro.getPosicaoPrisao(), jogador2.getPeao().getPosicao());
-        assertTrue(jogador2.isNaPrisao());
+        assertTrue(jogador2.getIsNaPrisao());
     }
 
     // Teste 6: Verifica se não afeta saldo do jogador
