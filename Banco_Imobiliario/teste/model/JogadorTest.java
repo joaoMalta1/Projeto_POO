@@ -17,6 +17,7 @@ public class JogadorTest {
         jogador = new Jogador(peao);
     }
 
+    // Teste de inicialização do jogador
     @Test
     public void testInicializacao() {
         assertEquals(peao, jogador.getPeao());
@@ -28,12 +29,14 @@ public class JogadorTest {
         assertEquals(0, jogador.getRodadasPreso());
     }
 
+    // Teste do método adicionarValor(double)
     @Test
     public void testAdicionarValorPositivo() {
         jogador.adicionarValor(500);
         assertEquals(4500.0, jogador.getSaldo(), 0.001);
     }
 
+    // Teste do método adicionarValor(double) com valor negativo
     @Test
     public void testAdicionarValorNegativoNaoAfetaSaldo() {
         // Correção: o método adicionarValor(double) ignora valores <= 0.
@@ -42,6 +45,7 @@ public class JogadorTest {
         assertEquals(4000.0, jogador.getSaldo(), 0.001);
     }
 
+    // Teste do método removerValor(double) com valor válido
     @Test
     public void testRemoverValorValido() {
         boolean sucesso = jogador.removerValor(1000);
@@ -50,6 +54,7 @@ public class JogadorTest {
         assertFalse(jogador.isFaliu());
     }
 
+    // Teste de falencia do jogador quando o saldo não é suficiente
     @Test
     public void testFalencia() {
 
@@ -79,6 +84,7 @@ public class JogadorTest {
         assertEquals(0, ((Terreno) terr1).qtdCasas);
     }
 
+    // Teste do método removerValor(double) com valor igual ao saldo
     @Test
     public void testRemoverValorIgualAoSaldo() {
         boolean sucesso = jogador.removerValor(4000);
@@ -86,6 +92,7 @@ public class JogadorTest {
         assertEquals(0.0, jogador.getSaldo(), 0.001);
         assertFalse(jogador.isFaliu());
     }
+
 
     @Test
     public void testToStringContemInformacoesBasicas() {
