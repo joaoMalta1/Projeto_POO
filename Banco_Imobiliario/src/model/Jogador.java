@@ -9,7 +9,8 @@ class Jogador {
     // ---- Prisão ----
     private boolean naPrisao;
     private int rodadasPreso;
-//    TODO: adicionar fila dos últimos dados lançados
+    // manter uma array lista de proiedades para comprar, vender  e associar as funcoes da classe de propriedade e fazer a de quando falir 
+    // TODO: adicionar fila dos últimos dados lançados para verificar trinca de dados iguais; 
     // private List<TituloDePropriedade> titulos;
     // private List<Carta> cartas;
 
@@ -20,7 +21,7 @@ class Jogador {
         this.naPrisao = false;
         this.rodadasPreso = 0;
     }
-    
+
 //    TODO: função de jogar dados e mover peão (integrar com função moverJogador da classe Tabuleiro
 
     // ---- Getters ----
