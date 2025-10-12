@@ -17,6 +17,7 @@ public class VaParaPrisaoTest {
         banco = new Banco();
         tabuleiro = new Tabuleiro(banco);
         jogador = new Jogador(new Peao(Peao.CorPeao.AZUL));
+        prisao = new Prisao("PRISÃO", 0);
     }
 
 // 		Teste 1: Verifica se o jogador é movido para a posição da prisão 
