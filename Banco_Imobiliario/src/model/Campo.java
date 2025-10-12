@@ -23,9 +23,27 @@ class Prisao extends Campo {
 	Prisao(String nome, double precoPassagem) {
 		super(nome, precoPassagem);
 	}
-	
-//	TODO: função caiuNoCampo() e regras de negócio
-	
+    
+    boolean podeSairDaPrisao(Jogador jogador, int dado1, int dado2) {
+        return (dado1 == dado2) || (jogador.getRodadasPreso() > 3);
+    }
+    
+    void sairDaPrisao(Jogador jogador) {
+        jogador.setNaPrisao(false);
+        jogador.setRodadasPreso(0);
+    }
+    
+    void passouUmaRodadaPreso(Jogador jogador) {
+        if (!jogador.getIsNaPrisao()) {
+            System.out.println("Jogador não está preso. Nenhuma rodada descontada.");
+        }
+        if (jogador.getIsNaPrisao()) {
+        	int rodadasFaltantes = jogador.getRodadasPreso() + 1;
+        	jogador.setRodadasPreso(rodadasFaltantes);
+        }
+    }
+    
+	void caiuNoCampo(Jogador jogador, Banco banco) {}
 }
 
 class VaParaPrisao extends Campo {
@@ -36,6 +54,11 @@ class VaParaPrisao extends Campo {
 	
 	void caiuNoCampo(Jogador jogador, Tabuleiro tabuleiro) {
 		jogador.getPeao().setPosicao(tabuleiro.getPosicaoPrisao());
-		jogador.irParaPrisao();
+		this.irParaPrisao(jogador);
 	}
+	
+    void irParaPrisao(Jogador jogador) {
+        jogador.setNaPrisao(true);
+        jogador.setRodadasPreso(0);
+    }
 }
