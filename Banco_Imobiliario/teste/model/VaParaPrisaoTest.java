@@ -11,7 +11,6 @@ public class VaParaPrisaoTest {
     private Banco banco;
     private Jogador jogador;
     private Prisao prisao;
-    private VaParaPrisao vaParaPrisao;
 
     @Before
     public void setUp() {

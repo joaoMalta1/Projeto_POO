@@ -13,8 +13,13 @@ class Campo {
 	}
 	
 	void caiuNoCampo(Jogador pagador, Banco banco) {
-		pagador.removerValor(precoPassagem);
-		banco.recebeDinheiro(precoPassagem);
+		if (precoPassagem < 0) {
+            pagador.adicionarValor(-precoPassagem);
+            banco.daDinheiro(-precoPassagem); // banco perde esse valor
+        } else if (precoPassagem > 0){
+            pagador.removerValor(precoPassagem);
+            banco.recebeDinheiro(precoPassagem);
+        }
 	}
 }
 
