@@ -3,6 +3,8 @@ package controller;
 import controller.CorPeao;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
 
 // Singleton
 public class ControleInformacoesJogo {
@@ -115,4 +117,32 @@ public class ControleInformacoesJogo {
 				return nome_jogadores.get(i);
 		throw new IllegalArgumentException("Cor inexistente");			
 	} 
+	
+	public void setOrdemJogadores() {
+		// Verifica se todos os jogadores foram adicionados
+        if (nome_jogadores.size() != qtd_jogadores || cor_jogadores.size() != qtd_jogadores) {
+            throw new IllegalStateException("Nem todos os jogadores foram adicionados.");
+        }
+
+        // Cria lista de índices e embaralha
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < qtd_jogadores; i++) {
+            indices.add(i);
+        }
+        Collections.shuffle(indices);
+
+        // Cria listas temporárias para os novos ordenamentos
+        ArrayList<String> novosNomes = new ArrayList<>();
+        ArrayList<CorPeao> novasCores = new ArrayList<>();
+
+        // Reorganiza nomes e cores com base nos índices sorteados
+        for (int i : indices) {
+            novosNomes.add(nome_jogadores.get(i));
+            novasCores.add(cor_jogadores.get(i));
+        }
+
+        // Substitui as listas originais pelas novas listas ordenadas
+        nome_jogadores = novosNomes;
+        cor_jogadores = novasCores;
+	}
 }

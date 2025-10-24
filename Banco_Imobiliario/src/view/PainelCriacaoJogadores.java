@@ -127,7 +127,7 @@ class PainelCriacaoJogadores extends JPanel {
     	if(nome.length() >= 1 && nome.length() <= 8)
     		return true;
     	JOptionPane.showMessageDialog(this, 
-                "Nome tem tamanho no intervalo [0,8]", 
+                "Nome deve ter tamanho no intervalo [0,8]", 
                 "Entrada Incorreta", 
                 JOptionPane.INFORMATION_MESSAGE);
     	return false;
@@ -158,8 +158,13 @@ class PainelCriacaoJogadores extends JPanel {
     	
 //        caso já tenha adicionado todos os jogadores e pode ir para o jogo
         if(ctrl.ehUltimoJogador()) {
+        	ctrl.setOrdemJogadores();
+        	String msg = "";
+        	for(int i = 0; i < ctrl.getQtdJogadores(); i++) {
+        		msg += ctrl.getNomeJogador(i) + " ";
+        	}
         	JOptionPane.showMessageDialog(this, 
-                    "Funcionalidade em desenvolvimento", 
+                    "Funcionalidade em desenvolvimento\nNomes:\n" + msg, 
                     "Carregar Jogo", 
                     JOptionPane.INFORMATION_MESSAGE);
         }
