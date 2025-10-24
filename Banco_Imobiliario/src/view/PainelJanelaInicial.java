@@ -7,9 +7,8 @@ import javax.swing.*;
 class PainelJanelaInicial extends JPanel{
     private static final long serialVersionUID = 1L;
     
-	private JButton bNovoJogo; 
-	private JButton bCarregar; 
-	private JLabel titulo;
+	private BotaoEstilizado bNovoJogo, bCarregar; 
+	private TituloEstilizado titulo;
 	private Janela janela;
 	
 	PainelJanelaInicial(Janela janela){
@@ -17,79 +16,43 @@ class PainelJanelaInicial extends JPanel{
 		inicializarComponentes();
         configurarLayout();
         configurarEventos();
-        
-		add(bNovoJogo);
-		add(bCarregar);
-		setBackground(Color.CYAN);
 	}
 	
 	private void inicializarComponentes() {
-		titulo = new JLabel("Banco Imobiliário");
-        titulo.setFont(new Font("Arial", Font.BOLD, 28));
-        titulo.setForeground(new Color(44, 62, 80));
+		titulo = new TituloEstilizado("Banco Imobiliário");
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
-		bNovoJogo = new JButton("Novo Jogo");
-        bCarregar = new JButton("Carregar Jogo");
-        
-        Font fonteBotoes = new Font("Arial", Font.BOLD, 20);
-        bNovoJogo.setFont(fonteBotoes);
-        bCarregar.setFont(fonteBotoes);
-        
-        Color corBotoes = new Color(70, 130, 180);
-        bNovoJogo.setBackground(corBotoes);
-        bCarregar.setBackground(corBotoes);
-        bNovoJogo.setForeground(Color.WHITE);
-        bCarregar.setForeground(Color.WHITE);
-        
-        bNovoJogo.setFocusPainted(false);
-        bCarregar.setFocusPainted(false);
-        bNovoJogo.setBorder(BorderFactory.createEmptyBorder(12, 40, 12, 40));
-        bCarregar.setBorder(BorderFactory.createEmptyBorder(12, 40, 12, 40));
+		bNovoJogo = new BotaoEstilizado("Novo Jogo", 300, 100);
+		bCarregar = new BotaoEstilizado("Carregar Jogo", 300, 100);
+                
+        bNovoJogo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bCarregar.setAlignmentX(Component.CENTER_ALIGNMENT);
 	}
+	
+	
     private void configurarLayout() {
+		setBackground(Color.WHITE);	
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(new Color(240, 248, 255));
+        setBorder(BorderFactory.createEmptyBorder(40, 20, 40, 20));
         
-        // Cria espaço flexível no topo para centralizar verticalmente
-        add(Box.createVerticalGlue());
+        add(Box.createRigidArea(new Dimension(0, 70)));
         
-        // Adiciona título
         add(titulo);
         
-        // Separação
-        add(Box.createRigidArea(new Dimension(0, 80)));
+        add(Box.createRigidArea(new Dimension(0, 50)));
         
-        bNovoJogo.setAlignmentX(Component.CENTER_ALIGNMENT);
-        bNovoJogo.setMinimumSize(new Dimension(180, 45));
-        bNovoJogo.setPreferredSize(new Dimension(300, 70));
-        bNovoJogo.setMaximumSize(new Dimension(400, 80));
+        
         add(bNovoJogo);
         
-        // Separação
-        add(Box.createRigidArea(new Dimension(0, 100)));
+        add(Box.createRigidArea(new Dimension(0, 20)));
         
-        bCarregar.setAlignmentX(Component.CENTER_ALIGNMENT);
-        bCarregar.setMinimumSize(new Dimension(180, 45));
-        bCarregar.setPreferredSize(new Dimension(300, 70));
-        bCarregar.setMaximumSize(new Dimension(400, 80));
         add(bCarregar);
-        
-        // Cria espaço flexível na base para centralizar verticalmente
-        add(Box.createVerticalGlue());
-        
-        // Adiciona borda interna
-        setBorder(BorderFactory.createEmptyBorder(40, 20, 40, 20));
     }
+    
+    
     private void configurarEventos() {
-        bNovoJogo.addActionListener(e -> {
-//            System.out.println("Iniciando novo jogo...");
-//            janela.mostrarTela(Telas.TABULEIRO);
-        	JOptionPane.showMessageDialog(this, 
-                    "Funcionalidade em desenvolvimento", 
-                    "Novo Jogo", 
-                    JOptionPane.INFORMATION_MESSAGE);
-            });
+        bNovoJogo.addActionListener(e -> { 
+        	janela.mostrarTela(Telas.QUANTIDADE_JOGADORES);  });
         
         bCarregar.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, 

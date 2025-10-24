@@ -35,6 +35,7 @@ class Peao {
         return "Peão " + cor + " na posição " + posicao;
     }
     
+//    TODO: trocar essa referência e todas outras pela pública do controller
     enum CorPeao {
         VERMELHA,
         AZUL,
