@@ -8,6 +8,7 @@ final class Telas {
     static final String TABULEIRO = "TABULEIRO";
     static final String CRIACAO_JOGADORES = "CRIACAO_JOGADORES";
     static final String QUANTIDADE_JOGADORES = "QUANTIDADE_JOGADORES";
+    static final String CARTAS_PROPRIEDADES = "CARTAS_PROPRIEDADES";
     
     private Telas() {}
 }
