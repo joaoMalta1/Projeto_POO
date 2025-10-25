@@ -15,7 +15,7 @@ class Janela extends JFrame {
     private JPanel cardPanel;
     private String telaAtual;
 	
-	public Janela(String nome) {	
+	Janela(String nome) {	
 		super(nome);
 		
 		inicializarComponentes();
@@ -71,22 +71,23 @@ class Janela extends JFrame {
 //		cardLayout.show(cardPanel, nomeTela);
 //	}
 	
-
+	private void removeTelaAtual() {
+		Component[] components = cardPanel.getComponents();
+        for (Component comp : components) {
+            if (telaAtual.equals(((JPanel)comp).getName())) {
+                cardPanel.remove(comp);
+                break;
+            }
+        }
+	}
 //    Método para trocar de tela criando uma nova instância
-    public void mostrarTela(String nomeTela) {
+    void mostrarTela(String nomeTela) {
     	JPanel novaTela = criarTela(nomeTela);
     	if(novaTela == null)
     		return;
 
-//        remove tela atual
     	if (telaAtual != null && !telaAtual.equals(nomeTela)) {
-            Component[] components = cardPanel.getComponents();
-            for (Component comp : components) {
-                if (telaAtual.equals(((JPanel)comp).getName())) {
-                    cardPanel.remove(comp);
-                    break;
-                }
-            }
+    		removeTelaAtual();
         }
         
 //        Adiciona e mostra a nova tela
