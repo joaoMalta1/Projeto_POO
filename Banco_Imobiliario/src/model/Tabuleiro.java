@@ -16,93 +16,87 @@ class Tabuleiro {
         this.banco = banco;
     }
 
-    private void inicializarCasas() {
-    	ArrayList<String> nomesDosCampos = new ArrayList<>();
-        ArrayList<Double> precosPassagem = new ArrayList<>();
-        
-    	final String nomes = """
-    			PARTIDA
-    			Leblon
-    			Av. Presidente Vargas
-    			Av. Nossa Sra. De Copacabana
-    			Companhia Ferroviária
-    			Av. Brigadeiro Faria Lima
-    			Companhia de Viação
-    			Av. Rebouças
-    			Av. 9 de Julho
-    			PRISÃO
-    			Av. Europa
-    			Rua Augusta
-    			Av. Pacaembú
-    			Companhia de Táxi
-    			Interlagos
-    			Lucros ou Dividendos ($$)
-    			Morumbi
-    			PARADA LIVRE
-    			Flamengo
-    			Botafogo
-    			Imposto de Renda ($$)
-    			Companhia de Navegação
-    			Av. Brasil
-    			Av. Paulista
-    			Jardim Europa
-    			VÁ PARA A PRISÃO
-    			Copacabana
-    			Companhia de Aviação
-    			Av. Vieira Souto
-    			Av. Atlântica
-    			Companhia de Táxi Aéreo
-    			Ipanema
-    			Jardim Paulista
-    			Brooklin""";
-    	
-    	final String precos = """
-		    	-200
-		    	100
-		    	60
-		    	60
-		    	200
-		    	240
-		    	200
-		    	220
-		    	220
-		    	0
-		    	200
-		    	180
-		    	180
-		    	150
-		    	350
-		    	-200
-		    	400
-		    	0
-		    	120
-		    	100
-		    	200
-		    	150
-		    	160
-		    	140
-		    	140
-		    	0
-		    	260
-		    	200
-		    	320
-		    	300
-		    	200
-		    	300
-		    	280
-		    	260""";
+	private void inicializarCasas() {
+		ArrayList<String> nomesDosCampos = new ArrayList<>();
+		ArrayList<Double> precosPassagem = new ArrayList<>();
 
-//    	converte string de nomes (da tabela) em arraylist de nomes (String)
-    	String[] linhasNomes = nomes.split("\\r?\\n");
-        for (String linha : linhasNomes) {
-            nomesDosCampos.add(linha.trim());
-        }
-    	
-//    	converte string de precos (da tabela) em array de precos (double)
-        String[] linhasPrecos = precos.split("\\r?\\n");
-        for (String linha : linhasPrecos) {
-            precosPassagem.add(Double.parseDouble(linha.trim()));
-        }
+		// Lista de nomes e preços codificados como arrays para compatibilidade com JDK antigos
+		String[] nomesArray = new String[] {
+				"PARTIDA",
+				"Leblon",
+				"Av. Presidente Vargas",
+				"Av. Nossa Sra. De Copacabana",
+				"Companhia Ferroviária",
+				"Av. Brigadeiro Faria Lima",
+				"Companhia de Viação",
+				"Av. Rebouças",
+				"Av. 9 de Julho",
+				"PRISÃO",
+				"Av. Europa",
+				"Rua Augusta",
+				"Av. Pacaembú",
+				"Companhia de Táxi",
+				"Interlagos",
+				"Lucros ou Dividendos ($$)",
+				"Morumbi",
+				"PARADA LIVRE",
+				"Flamengo",
+				"Botafogo",
+				"Imposto de Renda ($$)",
+				"Companhia de Navegação",
+				"Av. Brasil",
+				"Av. Paulista",
+				"Jardim Europa",
+				"VÁ PARA A PRISÃO",
+				"Copacabana",
+				"Companhia de Aviação",
+				"Av. Vieira Souto",
+				"Av. Atlântica",
+				"Companhia de Táxi Aéreo",
+				"Ipanema",
+				"Jardim Paulista",
+				"Brooklin"
+		};
+
+		double[] precosArray = new double[] {
+				-200,
+				100,
+				60,
+				60,
+				200,
+				240,
+				200,
+				220,
+				220,
+				0,
+				200,
+				180,
+				180,
+				150,
+				350,
+				-200,
+				400,
+				0,
+				120,
+				100,
+				200,
+				150,
+				160,
+				140,
+				140,
+				0,
+				260,
+				200,
+				320,
+				300,
+				200,
+				300,
+				280,
+				260
+		};
+
+		for (String s : nomesArray) nomesDosCampos.add(s);
+		for (double d : precosArray) precosPassagem.add(d);
         
 // 		verifica se os tamanhos dos arraylist sao iguais
         if (nomesDosCampos.size() != precosPassagem.size()) {
