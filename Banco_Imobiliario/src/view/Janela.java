@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.*;
 
@@ -35,8 +37,27 @@ class Janela extends JFrame {
 	
 	void configurarJanela() {
 		setSize(LARG_DEFAULT, ALT_DEFAULT);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Centralizado
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null); // Centralizado
+
+//		impedir que a janela seja extendida para um tamanho maior que 1280x800
+		Dimension maxSize = new Dimension(LARG_DEFAULT, ALT_DEFAULT); 
+		setMaximumSize(maxSize);
+		// Add listener to enforce maximum size
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                Window window = (Window) e.getComponent();
+                Dimension size = window.getSize();
+                Dimension enforcedSize = new Dimension(
+                    Math.min(size.width, maxSize.width),
+                    Math.min(size.height, maxSize.height)
+                );
+                if (!size.equals(enforcedSize)) {
+                    window.setSize(enforcedSize);
+                }
+            }
+        });
 	}
 	
 	void mostrarTelaInicial() {

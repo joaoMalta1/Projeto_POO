@@ -127,7 +127,7 @@ class PainelCriacaoJogadores extends JPanel {
     	if(nome.length() >= 1 && nome.length() <= 8)
     		return true;
     	JOptionPane.showMessageDialog(this, 
-                "Nome deve ter tamanho no intervalo [0,8]", 
+                "Nome deve ter tamanho no intervalo [1,8]", 
                 "Entrada Incorreta", 
                 JOptionPane.INFORMATION_MESSAGE);
     	return false;
