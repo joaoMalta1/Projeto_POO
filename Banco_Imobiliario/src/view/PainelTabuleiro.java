@@ -19,7 +19,7 @@ public class PainelTabuleiro extends JPanel {
     private Image imagemMapa; // A imagem do seu mapa
     
     // Dimensões que você espera que o mapa tenha (opcional, se quiser forçar o tamanho)
-    private final int LARGURA_MAPA = 1200; 
+    private final int LARGURA_MAPA = 700; 
     private final int ALTURA_MAPA = 700;
 
     public PainelTabuleiro(Janela janela) {
