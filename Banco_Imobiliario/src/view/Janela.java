@@ -110,7 +110,7 @@ class Janela extends JFrame {
             case Telas.TABULEIRO:
                 return null;
             case Telas.CARTAS_PROPRIEDADES:
-                return new PainelCartasPropriedades(this);
+                return new PainelCartasPropriedades(this, 9);
             default:
                 return null;
         }
