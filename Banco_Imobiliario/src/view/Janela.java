@@ -107,7 +107,7 @@ class Janela extends JFrame {
             case Telas.CRIACAO_JOGADORES:
             	return new PainelCriacaoJogadores(this);
             case Telas.TABULEIRO:
-                return null;
+            	return new PainelTabuleiro(this);
             default:
                 return null;
         }

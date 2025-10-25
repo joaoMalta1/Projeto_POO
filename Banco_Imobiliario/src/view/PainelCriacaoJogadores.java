@@ -163,16 +163,12 @@ class PainelCriacaoJogadores extends JPanel {
         	for(int i = 0; i < ctrl.getQtdJogadores(); i++) {
         		msg += ctrl.getNomeJogador(i) + " ";
         	}
-        	JOptionPane.showMessageDialog(this, 
-                    "Funcionalidade em desenvolvimento\nNomes:\n" + msg, 
-                    "Carregar Jogo", 
-                    JOptionPane.INFORMATION_MESSAGE);
+        	janela.mostrarTela(Telas.TABULEIRO);
         }
         
         ctrl.proxJogador();
         
         recarregarPainel();
-        
         return;
     }
 }
