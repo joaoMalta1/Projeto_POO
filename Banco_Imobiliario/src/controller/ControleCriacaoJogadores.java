@@ -1,29 +1,27 @@
 package controller;
 
-import controller.CorPeao;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
 // Singleton
-public class ControleInformacoesJogo {
+public class ControleCriacaoJogadores {
 	private int qtd_jogadores;
-	private static ControleInformacoesJogo ctrl = null;
+	private static ControleCriacaoJogadores ctrl = null;
 	private ArrayList<String> nome_jogadores;
 	private ArrayList<CorPeao> cor_jogadores;
 	private int jogadorAtual;
 	
-	private ControleInformacoesJogo(){
+	private ControleCriacaoJogadores (){
 		qtd_jogadores = 3;
 		jogadorAtual = 0;
 		nome_jogadores = new ArrayList<>();
 		cor_jogadores = new ArrayList<>();
 	}
 	
-	public static ControleInformacoesJogo getInstance() {
+	public static ControleCriacaoJogadores getInstance() {
 		if(ctrl == null) {
-			ctrl = new ControleInformacoesJogo();}
+			ctrl = new ControleCriacaoJogadores();}
 		return ctrl;
 	}
 	
@@ -118,7 +116,12 @@ public class ControleInformacoesJogo {
 		throw new IllegalArgumentException("Cor inexistente");			
 	} 
 	
-	public void setOrdemJogadores() {
+	public void finalizaCriacao() {
+		setOrdemJogadores();
+//		TODO: CRIAR JOGADORES DE FATO FALANDO COM FacadeModel
+	}
+	
+	void setOrdemJogadores() {
 		// Verifica se todos os jogadores foram adicionados
         if (nome_jogadores.size() != qtd_jogadores || cor_jogadores.size() != qtd_jogadores) {
             throw new IllegalStateException("Nem todos os jogadores foram adicionados.");
@@ -131,17 +134,15 @@ public class ControleInformacoesJogo {
         }
         Collections.shuffle(indices);
 
-        // Cria listas temporárias para os novos ordenamentos
         ArrayList<String> novosNomes = new ArrayList<>();
         ArrayList<CorPeao> novasCores = new ArrayList<>();
 
-        // Reorganiza nomes e cores com base nos índices sorteados
+        // Aplica embaralhamento
         for (int i : indices) {
             novosNomes.add(nome_jogadores.get(i));
             novasCores.add(cor_jogadores.get(i));
         }
 
-        // Substitui as listas originais pelas novas listas ordenadas
         nome_jogadores = novosNomes;
         cor_jogadores = novasCores;
 	}

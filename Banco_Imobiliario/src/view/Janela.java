@@ -99,7 +99,8 @@ class Janela extends JFrame {
     }
     
     private JPanel criarTela(String nomeTela) {
-    	nomeTela = Telas.CARTAS_PROPRIEDADES; 
+//    	DEBUG
+//    	nomeTela = Telas.CARTAS_PROPRIEDADES; 
         switch (nomeTela) {
             case Telas.INICIO:
                 return new PainelJanelaInicial(this);
@@ -108,7 +109,7 @@ class Janela extends JFrame {
             case Telas.CRIACAO_JOGADORES:
             	return new PainelCriacaoJogadores(this);
             case Telas.TABULEIRO:
-                return null;
+                return new PainelTabuleiro(this);
             case Telas.CARTAS_PROPRIEDADES:
                 return new PainelCartasPropriedades(this, 9);
             default:

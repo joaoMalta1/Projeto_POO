@@ -5,7 +5,6 @@ import java.awt.*;
 import javax.swing.*;
 
 import controller.CorPeao;
-import controller.ControleInformacoesJogo;
 
 class PainelCriacaoJogadores extends JPanel {
     private static final long serialVersionUID = 1L;
@@ -25,7 +24,7 @@ class PainelCriacaoJogadores extends JPanel {
     
     private void inicializarComponentes() {
     	perguntaNome = new TituloEstilizado("Qual o nome do Jogador nr" + 
-    ((Integer)(ControleInformacoesJogo.getInstance().getJogadorAtual()+1)).toString() 
+    ((Integer)(FacadeView.getInstance().getJogadorAtual()+1)).toString() 
     +  "?");
     	perguntaNome.setAlignmentX(Component.CENTER_ALIGNMENT);
     	
@@ -82,23 +81,16 @@ class PainelCriacaoJogadores extends JPanel {
     }
     
     private void recarregarPainel() {
-        // Atualizar título
     perguntaNome.setText("Qual o nome do Jogador nr" + 
-            (ControleInformacoesJogo.getInstance().getJogadorAtual() + 1) + "?");
+            (FacadeView.getInstance().getJogadorAtual() + 1) + "?");
         
-        // Limpar campo
         campoNome.setText("Nome único de tamanho [1,8]");
-        
-        // TODO: Atualizar cores disponíveis (remover cor usada se necessário)
-        // String corUsada = ... // Obter a cor que foi usada
-        // Remover a cor usada do dropdown se necessário
-        
-        // Forçar repaint para atualizar a interface
+                
         repaint();
     }
     
     boolean controleJaExiste(String nome, CorPeao cor) {
-    	ControleInformacoesJogo ctrl = ControleInformacoesJogo.getInstance();
+    	FacadeView ctrl = FacadeView.getInstance();
     	if(ctrl.nomeJaExiste(nome) && ctrl.corJaExiste(cor)) {
     		JOptionPane.showMessageDialog(this, 
                     "Nome e Cor já existem", 
@@ -134,7 +126,7 @@ class PainelCriacaoJogadores extends JPanel {
     }
     
     void eventoConfirmar() {
-    	ControleInformacoesJogo ctrl = ControleInformacoesJogo.getInstance();
+    	FacadeView ctrl = FacadeView.getInstance();
     	String nome = campoNome.getText();
     	CorPeao cor = (CorPeao)dropdown.getSelectedItem();
     	
@@ -158,12 +150,13 @@ class PainelCriacaoJogadores extends JPanel {
     	
 //        caso já tenha adicionado todos os jogadores e pode ir para o jogo
         if(ctrl.ehUltimoJogador()) {
-        	ctrl.setOrdemJogadores();
-        	String msg = "";
-        	for(int i = 0; i < ctrl.getQtdJogadores(); i++) {
-        		msg += ctrl.getNomeJogador(i) + " ";
-        	}
+        	ctrl.finalizaCriacao();
+//        	String msg = "";
+//        	for(int i = 0; i < ctrl.getQtdJogadores(); i++) {
+//        		msg += ctrl.getNomeJogador(i) + " ";
+//        	}
         	janela.mostrarTela(Telas.TABULEIRO);
+        	return;
         }
         
         ctrl.proxJogador();

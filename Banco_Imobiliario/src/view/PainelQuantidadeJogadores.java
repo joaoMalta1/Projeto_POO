@@ -4,8 +4,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import controller.ControleInformacoesJogo;
-
 class PainelQuantidadeJogadores extends JPanel {
     private static final long serialVersionUID = 1L;
     
@@ -64,7 +62,7 @@ class PainelQuantidadeJogadores extends JPanel {
 
         confirmar.addActionListener(e -> {
             int qtd_jogadores = (int) dropdown.getSelectedItem();
-            ControleInformacoesJogo.getInstance().setQtdJogadores(qtd_jogadores);
+            FacadeView.getInstance().setQtdJogadores(qtd_jogadores);
             janela.mostrarTela(Telas.CRIACAO_JOGADORES);
         });
     }
