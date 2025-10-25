@@ -13,6 +13,25 @@ class Janela extends JFrame {
     private JPanel cardPanel;
     private String telaAtual;
 	
+    private JPanel criarTela(String nomeTela) {
+        switch (nomeTela) {
+            case Telas.INICIO:
+                return new PainelJanelaInicial(this);
+            case Telas.QUANTIDADE_JOGADORES:
+                return new PainelQuantidadeJogadores(this);
+            case Telas.CRIACAO_JOGADORES:
+                return new PainelCriacaoJogadores(this);
+            case Telas.TABULEIRO:
+                // cria model e controller e injeta no painel do tabuleiro
+                // usa null para Banco; adapte se houver um Banco disponível no projeto
+                Tabuleiro tabModel = new Tabuleiro(null);
+                TabuleiroController tabController = new TabuleiroController(tabModel);
+                return new PainelTabuleiro(tabModel, tabController);
+            default:
+                return null;
+        }
+    }
+    
 	public Janela(String nome) {	
 		super(nome);
 		
