@@ -4,44 +4,45 @@ import java.util.ArrayList;
 
 import model.FacadeModel;
 
+
 // sipa não é singleton...
 // Singleton
 public class Turno {
 	private static Turno ctrl = null;
-	private static ArrayList<String> nomeJogadores = null;
-	private static ArrayList<CorPeao> corJogadores = null;
-	private int jogadorAtual = 0;
-	private static Partida partida = null;
 	
 	private Turno() {}
 	
 	public static Turno getInstance() {
 		if(ctrl == null) {
 			ctrl = new Turno();
-			partida = Partida.getInstance();
-			setJogadores(partida.getNomesJogadores(), partida.getCorJogadores());
 		}
 		return ctrl;
 	}
 	
-	static void setJogadores(ArrayList<String> nomes, ArrayList<CorPeao> cores) {
-		nomeJogadores = new ArrayList<String>(nomes);
-		corJogadores = new ArrayList<CorPeao>(cores);
-	}
-	
+// TODO: PASSAR ESSA LÓGICA PARA CONTROLEPARTIDA 	
 	public int getJogadorAtual() {
-		return jogadorAtual;
+		return FacadeModel.getInstance().getJogadorAtual();
 	}
 		
 	public void proxJogador() {
-		jogadorAtual = (++jogadorAtual)%nomeJogadores.size();
+		FacadeModel.getInstance().proxJogador();
 	}
 	
 	public CorPeao getCorJogadorAtual() {
-		return corJogadores.get(jogadorAtual);
+		return FacadeModel.getInstance().getCorJogadorAtual();
 	}
 	
 	public int[] jogarDados() {
-		return FacadeModel.getInstance().jogarDados();
+		int[] dados = FacadeModel.getInstance().jogarDados();
+		FacadeModel.getInstance().andarJogadorAtual(dados);
+		return dados;
+	}
+	
+	public int getPosJogadorAtual() {
+		return FacadeModel.getInstance().getPosJogadorAtual();
+	}
+	
+	public boolean posicaoAtualEhPropriedade() {
+		return FacadeModel.getInstance().ehPropriedade(getPosJogadorAtual());
 	}
 }

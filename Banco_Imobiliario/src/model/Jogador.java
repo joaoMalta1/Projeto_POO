@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Jogador {
-
+	private String nome;
     private Peao peao;
     private double saldo;
     private boolean faliu;
@@ -16,7 +16,8 @@ class Jogador {
     // private List<TituloDePropriedade> titulos;
     // private List<Carta> cartas;
 
-    Jogador(Peao peao) {
+    Jogador(String nome, Peao peao) {
+    	this.nome = nome;
         this.peao = peao;
         this.saldo = 4000; // saldo inicial
         this.faliu = false;

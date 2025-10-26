@@ -2,6 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 
+import model.FacadeModel;
+
 // Singleton
 class Partida {
 	private static Partida ctrl = null;
@@ -19,6 +21,7 @@ class Partida {
 	void setJogadores(ArrayList<String> nomes, ArrayList<CorPeao> cores) {
 		nomeJogadores = new ArrayList<String>(nomes);
 		corJogadores = new ArrayList<CorPeao>(cores);
+		FacadeModel.getInstance().criaJogadores(nomes, cores);
 	}
 	
 	ArrayList<String> getNomesJogadores(){
