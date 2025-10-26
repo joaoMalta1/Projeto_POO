@@ -1,5 +1,7 @@
 package model;
 
+import controller.CorPeao;
+
 class Peao {
     private CorPeao cor;
     private int posicao;
@@ -36,12 +38,12 @@ class Peao {
     }
     
 //    TODO: trocar essa referência e todas outras pela pública do controller
-    enum CorPeao {
-        VERMELHA,
-        AZUL,
-        LARANJA,
-        AMARELA,
-        ROXA,
-        CINZA
-    }
+//    enum CorPeao {
+//        VERMELHA,
+//        AZUL,
+//        LARANJA,
+//        AMARELA,
+//        ROXA,
+//        CINZA
+//    }
 }
