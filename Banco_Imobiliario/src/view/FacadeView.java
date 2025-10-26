@@ -1,19 +1,20 @@
 package view;
 
 import controller.CorPeao;
-import controller.ControleCriacaoJogadores;
+import controller.CriacaoJogadores;
+import controller.Turno;
 
 // Facade + Singleton
 public class FacadeView {
 	private static FacadeView fv = null;
-	private static ControleCriacaoJogadores ctrl;
+	private static CriacaoJogadores ctrl;
 	
 	private FacadeView() {}
 	
 	public static FacadeView getInstance() {
 		if(fv == null) {
 			fv = new FacadeView();
-			ctrl = ControleCriacaoJogadores.getInstance();
+			ctrl = CriacaoJogadores.getInstance();
 		}
 		return fv;
 	}
@@ -56,5 +57,9 @@ public class FacadeView {
 	
 	void proxJogador() {
 		ctrl.proxJogador();
+	}
+	
+	int[] jogarDados() {
+		return Turno.getInstance().jogarDados();
 	}
 }

@@ -4,14 +4,24 @@ import java.util.Random;
 
 /*
  * Classe que implementa o jogar de dois dados de seis lados
- * Não deve ser instanciada
- * Apenas uma função de jogar dados
+ * Singleton
  * */
 class Dados {
+	private static Dados ctrl = null;
+	
+	private Dados() {}
+	
+	static Dados getInstance() {
+		if(ctrl == null) {
+			ctrl = new Dados();
+		}
+		return ctrl;
+	}
+	
 	/*
 	 * Retorna um vetor de tamanho 2 com valores de 1 (inclusive) até 6 (inclusive)
 	 * */
-	static int[] jogar() {
+	int[] jogar() {
 		Random random = new Random();
 		
 		int[] resultado = new int[2];

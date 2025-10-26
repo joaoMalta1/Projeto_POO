@@ -11,4 +11,8 @@ public class FacadeModel {
 		}
 		return fm;
 	}
+	
+	public int[] jogarDados() {
+		return Dados.getInstance().jogar();
+	}
 }

@@ -77,7 +77,7 @@ class Partida {
         int[] resultado = new int[2];
 
         while (counter < 3) {
-            resultado = Dados.jogar();
+            resultado = Dados.getInstance().jogar();
 
             if (resultado[0] != resultado[1]) {
                 return resultado;

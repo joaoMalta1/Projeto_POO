@@ -5,23 +5,23 @@ import java.util.List;
 import java.util.Collections;
 
 // Singleton
-public class ControleCriacaoJogadores {
+public class CriacaoJogadores {
 	private int qtd_jogadores;
-	private static ControleCriacaoJogadores ctrl = null;
+	private static CriacaoJogadores ctrl = null;
 	private ArrayList<String> nome_jogadores;
 	private ArrayList<CorPeao> cor_jogadores;
 	private int jogadorAtual;
 	
-	private ControleCriacaoJogadores (){
+	private CriacaoJogadores (){
 		qtd_jogadores = 3;
 		jogadorAtual = 0;
 		nome_jogadores = new ArrayList<>();
 		cor_jogadores = new ArrayList<>();
 	}
 	
-	public static ControleCriacaoJogadores getInstance() {
+	public static CriacaoJogadores getInstance() {
 		if(ctrl == null) {
-			ctrl = new ControleCriacaoJogadores();}
+			ctrl = new CriacaoJogadores();}
 		return ctrl;
 	}
 	
@@ -119,6 +119,7 @@ public class ControleCriacaoJogadores {
 	public void finalizaCriacao() {
 		setOrdemJogadores();
 //		TODO: CRIAR JOGADORES DE FATO FALANDO COM FacadeModel
+		Partida.getInstance().setJogadores(nome_jogadores, cor_jogadores);
 	}
 	
 	void setOrdemJogadores() {

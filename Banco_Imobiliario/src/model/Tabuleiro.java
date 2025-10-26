@@ -166,7 +166,7 @@ class Tabuleiro {
         				return novaPosicao;
         			}
         			prisao.sairDaPrisao(jogador);
-            		return this.moverJogador(jogador, posicaoAtual, Dados.jogar(), scanner);
+            		return this.moverJogador(jogador, posicaoAtual, Dados.getInstance().jogar(), scanner);
         		}
 
 //        		CONTINUA PRESO

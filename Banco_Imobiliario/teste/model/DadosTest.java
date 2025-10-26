@@ -8,7 +8,7 @@ public class DadosTest {
 
 	@Test
 	public void testeIntervalo() {
-		int[] dados = Dados.jogar();
+		int[] dados = Dados.getInstance().jogar();
 		
 		assertTrue(dados[0] > 0);
 		assertTrue(dados[0] < 7);
@@ -18,7 +18,7 @@ public class DadosTest {
 	
 	@Test
 	public void testeTamanho() {
-		int[] dados = Dados.jogar();
+		int[] dados = Dados.getInstance().jogar();
 		
 		assertTrue(dados.length == 2);
 	}
@@ -32,7 +32,7 @@ public class DadosTest {
 		boolean temExtremos = false;
 		
 		for(int i = 0; i < 500; i++) {
-			int[] dados = Dados.jogar();
+			int[] dados = Dados.getInstance().jogar();
 			if(dados[0] == 6 || dados[1] == 6) {
 				temExtremos = true;
 				break;
@@ -40,7 +40,7 @@ public class DadosTest {
 		}
 		
 		for(int i = 0; i < 500; i++){
-			int[] dados = Dados.jogar();
+			int[] dados = Dados.getInstance().jogar();
 			if(dados[0] == 1 || dados[1] == 1) {
 				temExtremos = true;
 				break;
