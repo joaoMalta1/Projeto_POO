@@ -28,7 +28,7 @@ public class PainelTabuleiro extends JPanel {
     public PainelTabuleiro(Janela janela) {
         this.janelaPrincipal = janela;
         // Cor de fundo do JPanel (visível se a imagem for menor ou transparente)
-        setBackground(Color.DARK_GRAY); 
+        setBackground(Cores.getInstance().corCorrespondente(FacadeView.getInstance().getCorJogadorAtual())); 
         
         carregarImagemDoMapa();
         carregarImagensDados();

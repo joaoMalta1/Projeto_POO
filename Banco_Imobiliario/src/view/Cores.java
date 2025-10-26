@@ -15,7 +15,7 @@ class Cores {
 	
 	private Cores() {}
 	
-	Cores getInstance() {
+	static Cores getInstance() {
 		if(ctrl == null) {
 			ctrl = new Cores();
 		}

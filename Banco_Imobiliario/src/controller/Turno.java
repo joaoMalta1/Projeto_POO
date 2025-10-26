@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import model.FacadeModel;
 
+// sipa não é singleton...
 // Singleton
 public class Turno {
 	private static Turno ctrl = null;
@@ -36,7 +37,7 @@ public class Turno {
 		jogadorAtual = (++jogadorAtual)%nomeJogadores.size();
 	}
 	
-	public CorPeao getCorAtual() {
+	public CorPeao getCorJogadorAtual() {
 		return corJogadores.get(jogadorAtual);
 	}
 	
