@@ -39,6 +39,7 @@ class Janela extends JFrame {
 		setSize(LARG_DEFAULT, ALT_DEFAULT);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null); // Centralizado
+		setResizable(false);
 
 //		impedir que a janela seja extendida para um tamanho maior que 1280x800
 		Dimension maxSize = new Dimension(LARG_DEFAULT, ALT_DEFAULT); 
