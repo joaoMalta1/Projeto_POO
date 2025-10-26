@@ -15,8 +15,11 @@ public class PainelTabuleiro extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private final Janela janelaPrincipal;
-    
+    private BotaoEstilizado botaoDados;
+    private int[] dados = {1,1};
     private Image imagemMapa; // A imagem do seu mapa
+    private Image[] imagensDados;
+    private boolean dadosVisiveis = false;
     
     // Dimensões que você espera que o mapa tenha (opcional, se quiser forçar o tamanho)
     private final int LARGURA_MAPA = 700; 
@@ -28,6 +31,88 @@ public class PainelTabuleiro extends JPanel {
         setBackground(Color.DARK_GRAY); 
         
         carregarImagemDoMapa();
+        carregarImagensDados();
+        criarBotaoDados();
+    }
+    
+    private void criarBotaoDados() {
+        botaoDados = new BotaoEstilizado("Jogar Dados", 300, 200);
+        botaoDados.setAlignmentX(CENTER_ALIGNMENT);
+        botaoDados.setAlignmentY(CENTER_ALIGNMENT);
+        
+        botaoDados.addActionListener(e -> {
+            dados = FacadeView.getInstance().jogarDados();
+            if (dados != null && dados.length >= 2) {
+                dadosVisiveis = true;
+            }
+            remove(botaoDados);
+            repaint();
+        });
+        
+        add(botaoDados);
+    }
+    
+    private void carregarImagensDados() {
+        imagensDados = new Image[7]; // índice 0 não usado, 1-6 para os valores
+        
+        for (int i = 1; i <= 6; i++) {
+            try {
+                // Caminho relativo: volta uma pasta (../) pois estamos em /view
+                // e as imagens estão em /resources/Dados
+                File file = new File("src/resources/Dados/" + i + ".png");
+                
+                if (file.exists()) {
+                    Image imagemOriginal = ImageIO.read(file);
+                    // Redimensiona para um tamanho adequado (ajuste conforme necessário)
+                    imagensDados[i] = imagemOriginal.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+                } else {
+                    System.err.println("ERRO: Imagem do dado " + i + " não encontrada: " + file.getAbsolutePath());
+                    imagensDados[i] = null;
+                }
+            } catch (IOException e) {
+                System.err.println("Erro ao carregar imagem do dado " + i + ": " + e.getMessage());
+                imagensDados[i] = null;
+            }
+        }
+    }
+    
+    /**
+     * Desenha os dois dados no centro do painel com distância de 100 pixels entre os centros
+     */
+    private void desenharDados(Graphics2D g2d) {
+        if (!dadosVisiveis || dados[0] == 0 || dados[1]== 0) {
+            return;
+        }
+        
+        // Verifica se as imagens dos dados estão carregadas
+        if (imagensDados[dados[0]] == null || imagensDados[dados[1]] == null) {
+            System.err.println("Erro: Imagens dos dados não carregadas para os valores " + dados[0] + " e " + dados[1]);
+            return;
+        }
+        
+        // Calcula posições para centralizar os dados
+        int larguraDado = imagensDados[dados[0]].getWidth(this);
+        int alturaDado = imagensDados[dados[0]].getHeight(this);
+        
+        // Distância entre centros = 100 pixels
+        int distanciaCentros = 100;
+        
+        // Posição X do centro do conjunto de dados
+        int centroX = getWidth() / 2;
+        
+        // Posição Y do centro (verticalmente)
+        int centroY = getHeight() / 2;
+        
+        // Calcula posições X para cada dado
+        int x1 = centroX - distanciaCentros / 2 - larguraDado / 2;
+        int x2 = centroX + distanciaCentros / 2 - larguraDado / 2;
+        
+        // Posição Y (mesma para ambos)
+        int y = centroY - alturaDado / 2;
+        
+        // Desenha os dados
+        g2d.drawImage(imagensDados[dados[0]], x1, y, this);
+        g2d.drawImage(imagensDados[dados[1]], x2, y, this);
     }
     
     /**
@@ -92,7 +177,8 @@ public class PainelTabuleiro extends JPanel {
             g2d.drawString("Erro: Imagem do Mapa não Carregada!", 50, 50);
         }
         
-        // Se necessário, adicione outros elementos do jogo (peças, texto, etc.) aqui.
+        // Desenha os dados se estiverem visíveis
+        desenharDados(g2d);
     }
     
     // Garante que o painel ocupe todo o espaço da Janela, se o CardLayout permitir.
