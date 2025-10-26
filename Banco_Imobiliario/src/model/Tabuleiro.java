@@ -234,4 +234,8 @@ class Tabuleiro {
             System.out.println(i + ": " + campos.get(i).nome);
         }
     }
+    
+    boolean ehPropriedade(int posicao) {
+    	return campos.get(posicao) instanceof Propriedade;
+    }
 }

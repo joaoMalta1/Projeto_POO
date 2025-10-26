@@ -3,6 +3,7 @@ package view;
 import controller.CorPeao;
 import controller.CriacaoJogadores;
 import controller.Turno;
+import model.FacadeModel;
 
 // Facade + Singleton
 public class FacadeView {
@@ -65,5 +66,13 @@ public class FacadeView {
 	
 	CorPeao getCorJogadorAtual() {
 		return Turno.getInstance().getCorJogadorAtual();
+	}
+	
+	boolean posicaoAtualEhPropriedade() {
+		return FacadeModel.getInstance().ehPropriedade(FacadeModel.getInstance().getPosJogadorAtual());
+	}
+	
+	int getPosJogadorAtual() {
+		return Turno.getInstance().getPosJogadorAtual();
 	}
 }

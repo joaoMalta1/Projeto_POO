@@ -1,15 +1,16 @@
 package model;
 
-import model.Peao.CorPeao;
+import controller.CorPeao;
 
+// FUTURAMENTE SERÁ SUBSTITUÍDA POR CENTRALPARTIDA
 class Partida {
     private Jogador[] jogadores;
     private int qtd_jogadores;
     private int jogadorAtual;
-    private Peao.CorPeao[] cores = {
-        Peao.CorPeao.AZUL, Peao.CorPeao.VERMELHA,
-        Peao.CorPeao.AMARELA, CorPeao.CINZA,
-        Peao.CorPeao.LARANJA, Peao.CorPeao.ROXA
+    private CorPeao[] cores = {
+        CorPeao.AZUL, CorPeao.VERMELHA,
+        CorPeao.AMARELA, CorPeao.CINZA,
+        CorPeao.LARANJA, CorPeao.ROXA
     };
     VaParaPrisao vaParaPrisao;
 
@@ -22,7 +23,7 @@ class Partida {
         this.jogadores = new Jogador[qtd_jogadores];
 
         for (int i = 0; i < qtd_jogadores; i++) {
-            this.jogadores[i] = new Jogador(new Peao(cores[i]));
+            this.jogadores[i] = new Jogador("AA", new Peao(cores[i]));
         }
 
         this.jogadorAtual = 0;
