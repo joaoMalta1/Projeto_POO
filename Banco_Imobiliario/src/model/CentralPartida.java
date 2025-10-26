@@ -6,7 +6,7 @@ import controller.CorPeao;
 
 class CentralPartida {
 	private static CentralPartida ctrl = null;
-	private ArrayList<Jogador> jogadores = null;
+	private static ArrayList<Jogador> jogadores = null;
 	private int jogadorAtual = 0; // no turno
 	private static Tabuleiro tabuleiro = null;
 	private static Banco banco = null;
@@ -18,6 +18,7 @@ class CentralPartida {
 			ctrl = new CentralPartida();
 			banco = new Banco();
 			tabuleiro = new Tabuleiro(banco);
+			jogadores = new ArrayList<Jogador>();
 		}
 		return ctrl;
 	}
