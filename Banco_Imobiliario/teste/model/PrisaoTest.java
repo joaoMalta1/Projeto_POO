@@ -3,6 +3,7 @@ package model;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import controller.CorPeao;
 
 public class PrisaoTest {
 
@@ -14,7 +15,7 @@ public class PrisaoTest {
     @Before
     public void setUp() {
         banco = new Banco();
-        jogador = new Jogador(new Peao(Peao.CorPeao.ROXA));
+        jogador = new Jogador("AAA", new Peao(CorPeao.ROXA));
         prisao = new Prisao("PRISÃO", 0);
         vaParaPrisao = new VaParaPrisao("Vá para prisão", 0);
     }

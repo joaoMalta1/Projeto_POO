@@ -1,6 +1,7 @@
 package model;
 
 import static org.junit.Assert.*;
+import controller.CorPeao;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,8 +13,8 @@ public class EmpresaTest {
 
     @Before
     public void setUp() {
-        jogador = new Jogador(new Peao(Peao.CorPeao.VERMELHA));
-        outroJogador = new Jogador(new Peao(Peao.CorPeao.AZUL));
+        jogador = new Jogador("AAA", new Peao(CorPeao.VERMELHA));
+        outroJogador = new Jogador("AAA", new Peao(CorPeao.AZUL));
         banco = new Banco();
         empresa = new Empresa("Companhia Teste", 150, 750); // precoCompra = 5 * precoPassagem
     }
@@ -29,7 +30,7 @@ public class EmpresaTest {
 
     @Test
     public void testComprarEmpresa_SaldoInsuficiente() {
-        Jogador jogadorPobre = new Jogador(new Peao(Peao.CorPeao.AMARELA));
+        Jogador jogadorPobre = new Jogador("AAA", new Peao(CorPeao.AMARELA));
         jogadorPobre.removerValor(3999); // Saldo 1
         
         Propriedade.ResultadoTransacao resultado = empresa.comprar(jogadorPobre, banco);

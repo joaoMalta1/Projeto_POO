@@ -4,6 +4,7 @@ package model;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import controller.CorPeao;
 
 public class JogadorTest {
 
@@ -13,8 +14,8 @@ public class JogadorTest {
     @Before
     public void setUp() {
         // Garante que o estado é redefinido antes de cada teste
-        peao = new Peao(Peao.CorPeao.VERMELHA);
-        jogador = new Jogador(peao);
+        peao = new Peao(CorPeao.VERMELHA);
+        jogador = new Jogador("AAA", peao);
     }
 
     // Teste de inicialização do jogador

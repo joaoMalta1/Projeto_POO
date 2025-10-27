@@ -67,3 +67,9 @@ class VaParaPrisao extends Campo {
         jogador.setRodadasPreso(0);
     }
 }
+
+class SorteReves extends Campo{
+	SorteReves(String nome, double precoPassagem){
+		super(nome, precoPassagem);
+	}
+}

@@ -72,6 +72,10 @@ public class FacadeView {
 		return FacadeModel.getInstance().ehPropriedade(FacadeModel.getInstance().getPosJogadorAtual());
 	}
 	
+	boolean ehPropriedade(int posicao) {
+		return FacadeModel.getInstance().ehPropriedade(posicao);
+	}
+	
 	int getPosJogadorAtual() {
 		return Turno.getInstance().getPosJogadorAtual();
 	}

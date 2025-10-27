@@ -20,77 +20,91 @@ class Tabuleiro {
     	ArrayList<String> nomesDosCampos = new ArrayList<>();
         ArrayList<Double> precosPassagem = new ArrayList<>();
         
-    	final String nomes = """
+    	final String nomes = """	
     			PARTIDA
-    			Leblon
-    			Av. Presidente Vargas
-    			Av. Nossa Sra. De Copacabana
-    			Companhia Ferroviária
-    			Av. Brigadeiro Faria Lima
-    			Companhia de Viação
-    			Av. Rebouças
-    			Av. 9 de Julho
-    			PRISÃO
-    			Av. Europa
-    			Rua Augusta
-    			Av. Pacaembú
-    			Companhia de Táxi
-    			Interlagos
-    			Lucros ou Dividendos ($$)
-    			Morumbi
-    			PARADA LIVRE
-    			Flamengo
-    			Botafogo
-    			Imposto de Renda ($$)
-    			Companhia de Navegação
-    			Av. Brasil
-    			Av. Paulista
-    			Jardim Europa
-    			VÁ PARA A PRISÃO
-    			Copacabana
-    			Companhia de Aviação
-    			Av. Vieira Souto
-    			Av. Atlântica
-    			Companhia de Táxi Aéreo
-    			Ipanema
-    			Jardim Paulista
-    			Brooklin""";
+				Leblon
+				SORTE OU REVES
+				Av. Presidente Vargas
+				Av. Nossa Sra. De Copacabana
+				Companhia Ferroviária
+				Av. Brigadeiro Faria Lima
+				Companhia de Viação
+				Av. Rebouças
+				Av. 9 de Julho
+				PRISÃO
+				Av. Europa
+				SORTE OU REVES
+				Rua Augusta
+				Av. Pacaembú
+				Companhia de Táxi
+				SORTE OU REVES
+				Interlagos
+				Lucros ou Dividendos ($$)
+				Morumbi
+				PARADA LIVRE
+				Flamengo
+				SORTE OU REVES
+				Botafogo
+				Imposto de Renda ($$)
+				Companhia de Navegação
+				Av. Brasil
+				SORTE OU REVES
+				Av. Paulista
+				Jardim Europa
+				VÁ PARA A PRISÃO
+				Copacabana
+				Companhia de Aviação
+				Av. Vieira Souto
+				Av. Atlântica
+				Companhia de Táxi Aéreo
+				Ipanema
+				SORTE OU REVES
+				Jardim Paulista
+				Brooklin
+				""";
     	
-    	final String precos = """
-		    	-200
-		    	100
-		    	60
-		    	60
-		    	200
-		    	240
-		    	200
-		    	220
-		    	220
-		    	0
-		    	200
-		    	180
-		    	180
-		    	150
-		    	350
-		    	-200
-		    	400
-		    	0
-		    	120
-		    	100
-		    	200
-		    	150
-		    	160
-		    	140
-		    	140
-		    	0
-		    	260
-		    	200
-		    	320
-		    	300
-		    	200
-		    	300
-		    	280
-		    	260""";
+    	final String precos = """		    	
+				-200
+				100
+				0
+				60
+				60
+				200
+				240
+				200
+				220
+				220
+				0
+				200
+				0
+				180
+				180
+				150
+				0
+				350
+				-200
+				400
+				0
+				120
+				0
+				100
+				200
+				150
+				160
+				0
+				140
+				140
+				0
+				260
+				200
+				320
+				300
+				200
+				300
+				0
+				280
+				260
+				""";
 
 //    	converte string de nomes (da tabela) em arraylist de nomes (String)
     	String[] linhasNomes = nomes.split("\\r?\\n");
@@ -114,8 +128,10 @@ class Tabuleiro {
         for(int i = 0; i < nomesDosCampos.size(); i++){
         	String nome  = nomesDosCampos.get(i);
         	double precoPassagem = precosPassagem.get(i);
-        	
-            if(nome.equals("PRISÃO")) {
+        	if(nome.equals("SORTE OU REVES")) {
+        		campos.add(new SorteReves(nome, precoPassagem));
+        	}
+        	else if(nome.equals("PRISÃO")) {
             	campos.add(new Prisao(nome, precoPassagem));}
             else if(nome.equals("PARTIDA" ) || nome.equals("PARADA LIVRE" ) || 
             		nome.equals("Lucros ou Dividendos ($$)") || 

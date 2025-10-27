@@ -14,6 +14,9 @@ import java.awt.Point;
 import java.util.HashMap;
 
 import javax.swing.Timer;
+
+import model.FacadeModel;
+
 import java.awt.event.ActionEvent; //  para o Timer
 import java.awt.event.ActionListener;
 
@@ -51,7 +54,7 @@ public class PainelTabuleiro extends JPanel {
         inicializarCoordenadasCasas();
         carregarImagemDoPeao();
         iniciarTesteDeLoop();
-        this.exibirCartaPropriedade("1");
+//        this.exibirCartaPropriedade("1");
     }
 
     private void criarBotaoDados() {
@@ -147,17 +150,21 @@ public class PainelTabuleiro extends JPanel {
     }
 
     private void iniciarTesteDeLoop() {
-        int velocidadeDoTeste = 500; // 500ms (meio segundo) por casa. Mude se quiser mais rápido/lento.
+        int velocidadeDoTeste = 700; // 500ms (meio segundo) por casa. Mude se quiser mais rápido/lento.
 
         ActionListener loopListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	ocultarCartaPropriedade();
                 // 1. Avança para a próxima posição
                 posicaoDeTeste++;
 
                 // 2. Se passar da 40 (última casa), volta para a 1
                 if (posicaoDeTeste > 40) {
                     posicaoDeTeste = 1;
+                }
+                if(FacadeModel.getInstance().ehPropriedade(posicaoDeTeste - 1)){
+                	exibirCartaPropriedade(((Integer)(posicaoDeTeste - 1)).toString());
                 }
 
                 // 3. Manda o painel se redesenhar (o que vai chamar o desenharPeao)

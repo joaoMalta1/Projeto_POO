@@ -1,5 +1,6 @@
 package model;
 
+import controller.CorPeao;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.After;
@@ -15,8 +16,8 @@ public class TerrenoTest {
 	
     @Before
     public void setUp() {
-        jogador = new Jogador(new Peao(Peao.CorPeao.VERMELHA));
-        outroJogador = new Jogador(new Peao(Peao.CorPeao.AZUL));
+        jogador = new Jogador("AAA", new Peao(CorPeao.VERMELHA));
+        outroJogador = new Jogador("AAA", new Peao(CorPeao.AZUL));
         banco = new Banco();
         terreno = new Terreno("Terreno Teste", 100, 500);
     }

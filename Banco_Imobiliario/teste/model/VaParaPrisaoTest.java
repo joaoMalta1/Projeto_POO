@@ -1,5 +1,6 @@
 package model;
 
+import controller.CorPeao;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -16,7 +17,7 @@ public class VaParaPrisaoTest {
     public void setUp() {
         banco = new Banco();
         tabuleiro = new Tabuleiro(banco);
-        jogador = new Jogador(new Peao(Peao.CorPeao.AZUL));
+        jogador = new Jogador("AAA", new Peao(CorPeao.AZUL));
         prisao = new Prisao("PRISÃO", 0);
     }
 
@@ -82,7 +83,7 @@ public class VaParaPrisaoTest {
     // Teste 5: Verifica múltiplos jogadores
     @Test
     public void testCaiuNoCampo_MultiplosJogadores() {
-        Jogador jogador2 = new Jogador(new Peao(Peao.CorPeao.AMARELA));
+        Jogador jogador2 = new Jogador("AAA", new Peao(CorPeao.AMARELA));
         VaParaPrisao vaParaPrisao = new VaParaPrisao("VÁ PARA A PRISÃO", 0);
 
         vaParaPrisao.caiuNoCampo(jogador, tabuleiro);

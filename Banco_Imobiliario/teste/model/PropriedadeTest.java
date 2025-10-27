@@ -1,5 +1,6 @@
 package model;
 
+import controller.CorPeao;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +12,7 @@ public class PropriedadeTest {
 
     @Before
     public void setUp() {
-        jogador = new Jogador(new Peao(Peao.CorPeao.VERMELHA));
+        jogador = new Jogador("AAAA", new Peao(CorPeao.VERMELHA));
         banco = new Banco();
         propriedadeTest = new Propriedade("Teste", 100, 500);
     }
@@ -27,7 +28,7 @@ public class PropriedadeTest {
     
     @Test
     public void testComprarPropriedade_SaldoInsuficiente() {
-        Jogador jogadorPobre = new Jogador(new Peao(Peao.CorPeao.AZUL));
+        Jogador jogadorPobre = new Jogador("AAAA", new Peao(CorPeao.AZUL));
         jogadorPobre.removerValor(3999);
         
         Propriedade.ResultadoTransacao resultado = propriedadeTest.comprar(jogadorPobre, banco);
@@ -38,7 +39,7 @@ public class PropriedadeTest {
     
     @Test
     public void testComprarPropriedade_JaTemDono() {
-        Jogador outroJogador = new Jogador(new Peao(Peao.CorPeao.AMARELA));
+        Jogador outroJogador = new Jogador("AAAA", new Peao(CorPeao.AMARELA));
         propriedadeTest.comprar(outroJogador, banco); // Primeira compra
         
         Propriedade.ResultadoTransacao resultado = propriedadeTest.comprar(jogador, banco);

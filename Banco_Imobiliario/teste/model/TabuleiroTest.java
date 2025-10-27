@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.util.Scanner;
+import controller.CorPeao;
 
 public class TabuleiroTest {
     private Tabuleiro tabuleiro;
@@ -17,8 +18,8 @@ public class TabuleiroTest {
     public void setUp() {
         banco = new Banco();
         tabuleiro = new Tabuleiro(banco);
-        peao = new Peao(Peao.CorPeao.VERMELHA);
-        jogador = new Jogador(peao);
+        peao = new Peao(CorPeao.VERMELHA);
+        jogador = new Jogador("AAA", peao);
     }
 
     @Test
