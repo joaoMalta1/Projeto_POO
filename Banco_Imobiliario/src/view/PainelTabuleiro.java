@@ -13,8 +13,6 @@ import java.util.Map;
 import java.awt.Point;
 import java.util.HashMap;
 
-import javax.swing.Timer;
-
 import model.FacadeModel;
 
 import java.awt.event.ActionEvent; //  para o Timer
@@ -33,9 +31,6 @@ public class PainelTabuleiro extends JPanel {
     private final int TAMANHO_PEAO = 25;
     private Map<Integer, Point> coordenadasCasas;
 
-    private Timer testeTimer; // timer
-    private int posicaoDeTeste = 1;
-
     private Image imagemCartaPropriedade = null;
     private final int LARGURA_CARTA = 229;
     private final int ALTURA_CARTA = 229;
@@ -53,8 +48,6 @@ public class PainelTabuleiro extends JPanel {
 
         inicializarCoordenadasCasas();
         carregarImagemDoPeao();
-        iniciarTesteDeLoop();
-//        this.exibirCartaPropriedade("1");
     }
 
     private void criarBotaoDados() {
@@ -67,8 +60,28 @@ public class PainelTabuleiro extends JPanel {
             if (dados != null && dados.length >= 2) {
                 dadosVisiveis = true;
             }
+            atualizarPeao();
             remove(botaoDados);
             repaint();
+            int delayMs = 1500; // tempo em ms que os dados ficam visíveis
+            new javax.swing.Timer(delayMs, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    // avança para o próximo jogador
+                    FacadeView.getInstance().proxJogador();
+
+                    // esconde os dados e atualiza a UI para o próximo jogador
+                    dadosVisiveis = false;
+                    atualizarPeao();
+
+                    // re-adiciona o botão para que o próximo jogador possa jogar
+                    add(botaoDados);
+                    repaint();
+
+                    // para o timer (uma execução apenas)
+                    ((javax.swing.Timer) evt.getSource()).stop();
+                }
+            }).start();
         });
 
         add(botaoDados);
@@ -104,77 +117,49 @@ public class PainelTabuleiro extends JPanel {
     private void inicializarCoordenadasCasas() {
         coordenadasCasas = new HashMap<>();
         // ajustar coordenadas
-        coordenadasCasas.put(1, new Point(670, 650));
-        coordenadasCasas.put(2, new Point(585, 650));
-        coordenadasCasas.put(3, new Point(535, 650));
-        coordenadasCasas.put(4, new Point(484, 650));
-        coordenadasCasas.put(5, new Point(422, 650));
-        coordenadasCasas.put(6, new Point(360, 650));
-        coordenadasCasas.put(7, new Point(298, 650));
-        coordenadasCasas.put(8, new Point(236, 650));
-        coordenadasCasas.put(9, new Point(174, 650));
-        coordenadasCasas.put(10, new Point(112, 650));
-        coordenadasCasas.put(11, new Point(50, 650));
+        coordenadasCasas.put(0, new Point(670, 650));
+        coordenadasCasas.put(1, new Point(585, 650));
+        coordenadasCasas.put(2, new Point(535, 650));
+        coordenadasCasas.put(3, new Point(484, 650));
+        coordenadasCasas.put(4, new Point(422, 650));
+        coordenadasCasas.put(5, new Point(360, 650));
+        coordenadasCasas.put(6, new Point(298, 650));
+        coordenadasCasas.put(7, new Point(236, 650));
+        coordenadasCasas.put(8, new Point(174, 650));
+        coordenadasCasas.put(9, new Point(112, 650));
+        coordenadasCasas.put(10, new Point(50, 650));
 
-        coordenadasCasas.put(12, new Point(50, 590));
-        coordenadasCasas.put(13, new Point(50, 530));
-        coordenadasCasas.put(14, new Point(50, 470));
-        coordenadasCasas.put(15, new Point(50, 410));
-        coordenadasCasas.put(16, new Point(50, 350));
-        coordenadasCasas.put(17, new Point(50, 290));
-        coordenadasCasas.put(18, new Point(50, 230));
-        coordenadasCasas.put(19, new Point(50, 170));
-        coordenadasCasas.put(20, new Point(50, 110));
-        coordenadasCasas.put(21, new Point(50, 50));
+        coordenadasCasas.put(11, new Point(50, 590));
+        coordenadasCasas.put(12, new Point(50, 530));
+        coordenadasCasas.put(13, new Point(50, 470));
+        coordenadasCasas.put(14, new Point(50, 410));
+        coordenadasCasas.put(15, new Point(50, 350));
+        coordenadasCasas.put(16, new Point(50, 290));
+        coordenadasCasas.put(17, new Point(50, 230));
+        coordenadasCasas.put(18, new Point(50, 170));
+        coordenadasCasas.put(19, new Point(50, 110));
+        coordenadasCasas.put(20, new Point(50, 50));
 
-        coordenadasCasas.put(22, new Point(112, 50));
-        coordenadasCasas.put(23, new Point(174, 50));
-        coordenadasCasas.put(24, new Point(236, 50));
-        coordenadasCasas.put(25, new Point(298, 50));
-        coordenadasCasas.put(26, new Point(360, 50));
-        coordenadasCasas.put(27, new Point(422, 50));
-        coordenadasCasas.put(28, new Point(484, 50));
-        coordenadasCasas.put(29, new Point(546, 50));
-        coordenadasCasas.put(30, new Point(608, 50));
-        coordenadasCasas.put(31, new Point(670, 50));
+        coordenadasCasas.put(21, new Point(112, 50));
+        coordenadasCasas.put(22, new Point(174, 50));
+        coordenadasCasas.put(23, new Point(236, 50));
+        coordenadasCasas.put(24, new Point(298, 50));
+        coordenadasCasas.put(25, new Point(360, 50));
+        coordenadasCasas.put(26, new Point(422, 50));
+        coordenadasCasas.put(27, new Point(484, 50));
+        coordenadasCasas.put(28, new Point(546, 50));
+        coordenadasCasas.put(29, new Point(608, 50));
+        coordenadasCasas.put(30, new Point(670, 50));
 
-        coordenadasCasas.put(32, new Point(670, 110));
-        coordenadasCasas.put(33, new Point(670, 170));
-        coordenadasCasas.put(34, new Point(670, 230));
-        coordenadasCasas.put(35, new Point(670, 290));
-        coordenadasCasas.put(36, new Point(670, 350));
-        coordenadasCasas.put(37, new Point(670, 410));
-        coordenadasCasas.put(38, new Point(670, 470));
-        coordenadasCasas.put(39, new Point(670, 530));
-        coordenadasCasas.put(40, new Point(670, 590));
-    }
-
-    private void iniciarTesteDeLoop() {
-        int velocidadeDoTeste = 700; // 500ms (meio segundo) por casa. Mude se quiser mais rápido/lento.
-
-        ActionListener loopListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	ocultarCartaPropriedade();
-                // 1. Avança para a próxima posição
-                posicaoDeTeste++;
-
-                // 2. Se passar da 40 (última casa), volta para a 1
-                if (posicaoDeTeste > 40) {
-                    posicaoDeTeste = 1;
-                }
-                if(FacadeModel.getInstance().ehPropriedade(posicaoDeTeste - 1)){
-                	exibirCartaPropriedade(((Integer)(posicaoDeTeste - 1)).toString());
-                }
-
-                // 3. Manda o painel se redesenhar (o que vai chamar o desenharPeao)
-                repaint();
-            }
-        };
-
-        // Cria e inicia o Timer
-        testeTimer = new Timer(velocidadeDoTeste, loopListener);
-        testeTimer.start();
+        coordenadasCasas.put(31, new Point(670, 110));
+        coordenadasCasas.put(32, new Point(670, 170));
+        coordenadasCasas.put(33, new Point(670, 230));
+        coordenadasCasas.put(34, new Point(670, 290));
+        coordenadasCasas.put(35, new Point(670, 350));
+        coordenadasCasas.put(36, new Point(670, 410));
+        coordenadasCasas.put(37, new Point(670, 470));
+        coordenadasCasas.put(38, new Point(670, 530));
+        coordenadasCasas.put(39, new Point(670, 590));
     }
 
     private void desenharPeao(Graphics2D g2d) {
@@ -182,9 +167,10 @@ public class PainelTabuleiro extends JPanel {
             return;
         }
 
+        
         // ASSUME-SE que FacadeView.getInstance().getPosicaoJogadorAtual() retorna o ID
         // da casa (ex: 1, 2, 3...)
-        int posicaoAtual = this.posicaoDeTeste; // FacadeView.getInstance().getPosicaoJogadorAtual();
+        int posicaoAtual = FacadeView.getInstance().getPosJogadorAtual();
         Point coordsRelativas = coordenadasCasas.get(posicaoAtual);
 
         if (coordsRelativas == null) {
