@@ -16,11 +16,15 @@ import java.util.HashMap;
 import javax.swing.Timer;
 
 import model.FacadeModel;
+import controller.Observador;
+import controller.CorPeao;
+import controller.ControlePartida;
+import controller.PartidaEvent;
 
 import java.awt.event.ActionEvent; //  para o Timer
 import java.awt.event.ActionListener;
 
-public class PainelTabuleiro extends JPanel {
+public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> {
 
     private static final long serialVersionUID = 1L;
     private final Janela janelaPrincipal;
@@ -30,6 +34,7 @@ public class PainelTabuleiro extends JPanel {
     private Image[] imagensDados;
     private boolean dadosVisiveis = false;
     private Image imagemPeao;
+    private java.util.Map<CorPeao, Image> imagensPinos;
     private final int TAMANHO_PEAO = 25;
     private Map<Integer, Point> coordenadasCasas;
 
@@ -52,9 +57,11 @@ public class PainelTabuleiro extends JPanel {
         criarBotaoDados();
 
         inicializarCoordenadasCasas();
-        carregarImagemDoPeao();
+        carregarImagensPinos();
         iniciarTesteDeLoop();
 //        this.exibirCartaPropriedade("1");
+        // Registra este painel como observer do modelo para ser notificado sobre mudancas
+        FacadeModel.getInstance().addObserver(this);
     }
 
     private void criarBotaoDados() {
@@ -63,12 +70,18 @@ public class PainelTabuleiro extends JPanel {
         botaoDados.setAlignmentY(CENTER_ALIGNMENT);
 
         botaoDados.addActionListener(e -> {
-            dados = FacadeView.getInstance().jogarDados();
-            if (dados != null && dados.length >= 2) {
-                dadosVisiveis = true;
+            // Use the controller to roll and move the current player
+            // remove button immediately so the NEXT_PLAYER event handler can re-add it
+            if (botaoDados.getParent() != null) {
+                remove(botaoDados);
+                revalidate();
+                repaint();
             }
-            remove(botaoDados);
-            repaint();
+            int[] resultado = ControlePartida.getInstance().jogarDadosEAndar();
+            if (resultado != null && resultado.length == 2) {
+                this.dados = new int[] { resultado[0], resultado[1] };
+                this.dadosVisiveis = true;
+            }
         });
 
         add(botaoDados);
@@ -150,24 +163,22 @@ public class PainelTabuleiro extends JPanel {
     }
 
     private void iniciarTesteDeLoop() {
-        int velocidadeDoTeste = 700; // 500ms (meio segundo) por casa. Mude se quiser mais rápido/lento.
+        int velocidadeDoTeste = 2000; // 500ms (meio segundo) por casa. Mude se quiser mais rápido/lento.
 
         ActionListener loopListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	ocultarCartaPropriedade();
-                // 1. Avança para a próxima posição
+                // Visual demo: advance the test pawn position only. Do NOT show
+                // property cards here — property display is driven by the model
+                // notifications (observer) so only the current pawn's card appears.
                 posicaoDeTeste++;
 
-                // 2. Se passar da 40 (última casa), volta para a 1
+                // Se passar da 40 (última casa), volta para a 1
                 if (posicaoDeTeste > 40) {
                     posicaoDeTeste = 1;
                 }
-                if(FacadeModel.getInstance().ehPropriedade(posicaoDeTeste - 1)){
-                	exibirCartaPropriedade(((Integer)(posicaoDeTeste - 1)).toString());
-                }
 
-                // 3. Manda o painel se redesenhar (o que vai chamar o desenharPeao)
+                // Apenas redesenhar
                 repaint();
             }
         };
@@ -178,56 +189,115 @@ public class PainelTabuleiro extends JPanel {
     }
 
     private void desenharPeao(Graphics2D g2d) {
-        if (imagemPeao == null || coordenadasCasas == null) {
-            return;
-        }
+        if (coordenadasCasas == null) return;
 
-        // ASSUME-SE que FacadeView.getInstance().getPosicaoJogadorAtual() retorna o ID
-        // da casa (ex: 1, 2, 3...)
-        int posicaoAtual = this.posicaoDeTeste; // FacadeView.getInstance().getPosicaoJogadorAtual();
-        Point coordsRelativas = coordenadasCasas.get(posicaoAtual);
-
-        if (coordsRelativas == null) {
-            System.err.println("AVISO: Coordenadas da casa " + posicaoAtual + " não encontradas. Peão não desenhado.");
-            return;
-        }
-
-        // Calcular o deslocamento do mapa (para centralizar o peão na tela)
         int mapaLargura = LARGURA_MAPA;
         int mapaAltura = ALTURA_MAPA;
         int deslocamentoXMapa = (getWidth() - mapaLargura) / 2;
         int deslocamentoYMapa = (getHeight() - mapaAltura) / 2;
 
-        // Calcular a posição ABSOLUTA do canto superior esquerdo do peão
-        // coordsRelativas armazena o CENTRO da casa (relativo ao canto do mapa)
-        int xPeao = deslocamentoXMapa + coordsRelativas.x - TAMANHO_PEAO / 2;
-        int yPeao = deslocamentoYMapa + coordsRelativas.y - TAMANHO_PEAO / 2;
+        int qtd = 0;
+        try {
+            qtd = FacadeModel.getInstance().getQtdJogadores();
+        } catch (Exception e) {
+            qtd = 0;
+        }
 
-        // Desenhar o peão
-        g2d.drawImage(imagemPeao, xPeao, yPeao, TAMANHO_PEAO, TAMANHO_PEAO, this);
+        if (qtd <= 0) {
+            // fallback: draw test pawn
+            int posicaoAtual;
+            try {
+                int modeloPos = FacadeModel.getInstance().getPosJogadorAtual();
+                posicaoAtual = modeloPos + 1;
+            } catch (Exception ex) {
+                posicaoAtual = this.posicaoDeTeste;
+            }
+            Point coordsRelativas = coordenadasCasas.get(posicaoAtual);
+            if (coordsRelativas == null) return;
+            int xPeao = deslocamentoXMapa + coordsRelativas.x - TAMANHO_PEAO / 2;
+            int yPeao = deslocamentoYMapa + coordsRelativas.y - TAMANHO_PEAO / 2;
+            if (imagemPeao != null) g2d.drawImage(imagemPeao, xPeao, yPeao, TAMANHO_PEAO, TAMANHO_PEAO, this);
+            return;
+        }
+
+        // Group pawns by their map position so we can offset multiple pawns on the same square
+        java.util.Map<Integer, java.util.List<Integer>> posToPlayers = new java.util.HashMap<>();
+        for (int i = 0; i < qtd; i++) {
+            int posModelo = FacadeModel.getInstance().getPosicaoJogador(i); // 0-based
+            posToPlayers.computeIfAbsent(posModelo, k -> new java.util.ArrayList<>()).add(i);
+        }
+
+        for (java.util.Map.Entry<Integer, java.util.List<Integer>> e : posToPlayers.entrySet()) {
+            int posModelo = e.getKey();
+            java.util.List<Integer> playersHere = e.getValue();
+            int countHere = playersHere.size();
+            int posMapa = posModelo + 1; // 1-based for coordenadasCasas
+            Point coordsRelativas = coordenadasCasas.get(posMapa);
+            if (coordsRelativas == null) continue;
+
+            // base position (center of the house)
+            int baseX = deslocamentoXMapa + coordsRelativas.x;
+            int baseY = deslocamentoYMapa + coordsRelativas.y;
+
+            // compute offsets depending on how many pawns are on the same house
+            for (int idx = 0; idx < countHere; idx++) {
+                int playerIndex = playersHere.get(idx);
+                int offsetX = 0;
+                int offsetY = 0;
+
+                if (countHere == 1) {
+                    offsetX = 0; offsetY = 0;
+                } else if (countHere == 2) {
+                    // left / right
+                    offsetX = (idx == 0) ? -TAMANHO_PEAO/2 : TAMANHO_PEAO/2;
+                    offsetY = 0;
+                } else if (countHere == 3) {
+                    // triangle: top, bottom-left, bottom-right
+                    if (idx == 0) { offsetX = 0; offsetY = -TAMANHO_PEAO/2; }
+                    if (idx == 1) { offsetX = -TAMANHO_PEAO/2; offsetY = TAMANHO_PEAO/4; }
+                    if (idx == 2) { offsetX = TAMANHO_PEAO/2; offsetY = TAMANHO_PEAO/4; }
+                } else if (countHere == 4) {
+                    // grid 2x2
+                    if (idx == 0) { offsetX = -TAMANHO_PEAO/2; offsetY = -TAMANHO_PEAO/2; }
+                    if (idx == 1) { offsetX = TAMANHO_PEAO/2; offsetY = -TAMANHO_PEAO/2; }
+                    if (idx == 2) { offsetX = -TAMANHO_PEAO/2; offsetY = TAMANHO_PEAO/2; }
+                    if (idx == 3) { offsetX = TAMANHO_PEAO/2; offsetY = TAMANHO_PEAO/2; }
+                } else {
+                    // more than 4: place in a small circle
+                    double angle = (2 * Math.PI * idx) / countHere;
+                    int radius = TAMANHO_PEAO;
+                    offsetX = (int) Math.round(Math.cos(angle) * radius);
+                    offsetY = (int) Math.round(Math.sin(angle) * radius);
+                }
+
+                int xPeao = baseX + offsetX - TAMANHO_PEAO / 2;
+                int yPeao = baseY + offsetY - TAMANHO_PEAO / 2;
+                CorPeao cor = FacadeModel.getInstance().getCorJogador(playerIndex);
+                Image img = imagensPinos != null ? imagensPinos.get(cor) : null;
+                if (img != null) {
+                    g2d.drawImage(img, xPeao, yPeao, TAMANHO_PEAO, TAMANHO_PEAO, this);
+                }
+            }
+        }
     }
 
     private void carregarImagemDoPeao() {
-        Object corPeaoEnum = FacadeView.getInstance().getCorJogadorAtual();
-        // passa enum pra string lowercase
-        String corJogador = corPeaoEnum.toString().toLowerCase();
+        // deprecated: we now use imagensPinos map
+    }
 
-        try {
-            File file = new File("src/resources/Pinos/" + corJogador + ".png");
-
-            if (file.exists()) {
-                Image imagemOriginal = ImageIO.read(file);
-                // ajusta tamanho peao
-                imagemPeao = imagemOriginal.getScaledInstance(
-                        TAMANHO_PEAO, TAMANHO_PEAO, Image.SCALE_SMOOTH);
-            } else {
-                System.err.println("ERRO: Imagem do peão não encontrada para a cor " + corJogador + " no caminho: "
-                        + file.getAbsolutePath());
-                imagemPeao = null;
+    private void carregarImagensPinos() {
+        imagensPinos = new HashMap<>();
+        for (controller.CorPeao cor : controller.CorPeao.values()) {
+            String nome = cor.toString().toLowerCase();
+            try {
+                File file = new File("src/resources/Pinos/" + nome + ".png");
+                if (file.exists()) {
+                    Image imagemOriginal = ImageIO.read(file);
+                    imagensPinos.put(cor, imagemOriginal.getScaledInstance(TAMANHO_PEAO, TAMANHO_PEAO, Image.SCALE_SMOOTH));
+                }
+            } catch (IOException e) {
+                System.err.println("Erro ao carregar imagem do pino " + nome + ": " + e.getMessage());
             }
-        } catch (IOException e) {
-            System.err.println("Erro ao carregar imagem do peão: " + e.getMessage());
-            imagemPeao = null;
         }
     }
 
@@ -324,5 +394,63 @@ public class PainelTabuleiro extends JPanel {
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(janelaPrincipal.LARG_DEFAULT, janelaPrincipal.ALT_DEFAULT);
+    }
+
+    @Override
+    public void notify(PartidaEvent event) {
+        if (event == null) return;
+
+        switch (event.type) {
+            case DICE_ROLLED:
+                try {
+                    int[] dadosRolados = (int[]) event.payload;
+                    if (dadosRolados != null && dadosRolados.length == 2) {
+                        this.dados = new int[] { dadosRolados[0], dadosRolados[1] };
+                        this.dadosVisiveis = true;
+                    }
+                } catch (Exception ex) {
+                    // ignore malformed payload
+                }
+                break;
+            case MOVE:
+                // payload is Object[] { pos(Integer), dados(int[]) }
+                try {
+                    Object[] payload = (Object[]) event.payload;
+                    Integer pos = (Integer) payload[0];
+                    // atualiza peao e redesenha
+                    atualizarPeao();
+                    // if landed on property, property event will follow; otherwise hide
+                    if (!FacadeModel.getInstance().ehPropriedade(pos)) {
+                        ocultarCartaPropriedade();
+                    }
+                } catch (Exception ex) {
+                    atualizarPeao();
+                }
+                break;
+            case PROPERTY_LANDED:
+                try {
+                    Integer pos = (Integer) event.payload;
+                    // resources are numbered 1-based; convert
+                    exibirCartaPropriedade(Integer.toString(pos));
+                } catch (Exception ex) {
+                    // ignore
+                }
+                break;
+            case NEXT_PLAYER:
+                // re-enable the roll button for the next player
+                if (botaoDados.getParent() == null) {
+                    add(botaoDados);
+                    revalidate();
+                    repaint();
+                }
+                // also update pawn image/background
+                atualizarPeao();
+                break;
+            case INFO:
+                // ignore or log
+                break;
+        }
+        // sempre repinta ao final de um evento
+        repaint();
     }
 }

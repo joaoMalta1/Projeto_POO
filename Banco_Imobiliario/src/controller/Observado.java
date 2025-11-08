@@ -1,8 +1,11 @@
 package controller;
 
-public interface Observado<T> {
-	 void add(Observador<T> o);
-	 void remove(Observador<T> o);
-	 void notifyObservers();
-	 T get(int index); // Mantido para compatibilidade com o código existente
+/**
+ * Observed interface: implementations can add/remove observers and notify them with events.
+ */
+public interface Observado<E> {
+	void add(Observador<E> o);
+	void remove(Observador<E> o);
+	void notifyObservers(E event);
+	E get(int index); // compatibility helper (kept)
 }
