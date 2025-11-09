@@ -117,7 +117,7 @@ class Tabuleiro {
         for (String linha : linhasPrecos) {
             precosPassagem.add(Double.parseDouble(linha.trim()));
         }
-        
+
 // 		verifica se os tamanhos dos arraylist sao iguais
         if (nomesDosCampos.size() != precosPassagem.size()) {
         	throw new IllegalArgumentException("Erro na inicialização do Tabuleiro!"); // aborta programa

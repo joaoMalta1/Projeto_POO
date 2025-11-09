@@ -13,22 +13,19 @@ import java.util.Map;
 import java.awt.Point;
 import java.util.HashMap;
 
-import javax.swing.Timer;
-
 import model.FacadeModel;
 import controller.Observador;
 import controller.CorPeao;
 import controller.ControlePartida;
 import controller.PartidaEvent;
 
-import java.awt.event.ActionEvent; //  para o Timer
-import java.awt.event.ActionListener;
-
 public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> {
 
     private static final long serialVersionUID = 1L;
     private final Janela janelaPrincipal;
     private BotaoEstilizado botaoDados;
+    private BotaoEstilizado botaoComprar; // novo botão para comprar propriedade
+
     private int[] dados = { 1, 1 };
     private Image imagemMapa;
     private Image[] imagensDados;
@@ -38,7 +35,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     private final int TAMANHO_PEAO = 25;
     private Map<Integer, Point> coordenadasCasas;
 
-    private Timer testeTimer; // timer
     private int posicaoDeTeste = 1;
 
     private Image imagemCartaPropriedade = null;
@@ -58,9 +54,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
 
         inicializarCoordenadasCasas();
         carregarImagensPinos();
-        iniciarTesteDeLoop();
-//        this.exibirCartaPropriedade("1");
-        // Registra este painel como observer do modelo para ser notificado sobre mudancas
         FacadeModel.getInstance().addObserver(this);
     }
 
@@ -70,8 +63,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         botaoDados.setAlignmentY(CENTER_ALIGNMENT);
 
         botaoDados.addActionListener(e -> {
-            // Use the controller to roll and move the current player
-            // remove button immediately so the NEXT_PLAYER event handler can re-add it
             if (botaoDados.getParent() != null) {
                 remove(botaoDados);
                 revalidate();
@@ -84,7 +75,48 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
             }
         });
 
+        // se parou em propriedade disponível, mostrar botão comprar
+        if (FacadeView.getInstance().propriedadeDisponivelAtual()) 
+        {
+            System.out.println("AAAAAAAAAAAAAAAAAAAAA");
+            criarBotaoComprarPropriedade();
+        } else {
+            
+            System.out.println("BBBBBBBBBBBBBBBBBBB");
+            removerBotaoComprarSeExistir(); //após clicar uma vez o botao ta sumindo, ajustar essa logica
+        }
         add(botaoDados);
+        revalidate();
+        repaint();
+    }
+
+    private void criarBotaoComprarPropriedade() {
+        if (botaoComprar != null && botaoComprar.getParent() != null)
+            return; 
+        botaoComprar = new BotaoEstilizado("Comprar Propriedade", 200, 120);
+        botaoComprar.addActionListener(ev -> {
+            boolean sucesso = true; //funcionou a compra FacadeView.getInstance().comprarPropriedadeAtual();
+            if (sucesso) {
+                removerBotaoComprarSeExistir();
+                atualizarPeao();
+                repaint();
+                System.out.println("PROPRIEDADE COMPRADA");
+                // opcional: mostrar diálogo informando compra e saldo
+            } else {
+                System.out.println("SALDO ISUFICIENTE");// opcional: mostrar mensagem "saldo insuficiente" ou "já comprada"
+            }
+        });
+        add(botaoComprar);
+        revalidate();
+        repaint();
+    }
+
+    private void removerBotaoComprarSeExistir() {
+        if (botaoComprar != null && botaoComprar.getParent() != null) {
+            remove(botaoComprar);
+            revalidate();
+            repaint();
+        }
     }
 
     private void carregarImagensDados() {
@@ -162,34 +194,9 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         coordenadasCasas.put(40, new Point(670, 590));
     }
 
-    private void iniciarTesteDeLoop() {
-        int velocidadeDoTeste = 2000; // 500ms (meio segundo) por casa. Mude se quiser mais rápido/lento.
-
-        ActionListener loopListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Visual demo: advance the test pawn position only. Do NOT show
-                // property cards here — property display is driven by the model
-                // notifications (observer) so only the current pawn's card appears.
-                posicaoDeTeste++;
-
-                // Se passar da 40 (última casa), volta para a 1
-                if (posicaoDeTeste > 40) {
-                    posicaoDeTeste = 1;
-                }
-
-                // Apenas redesenhar
-                repaint();
-            }
-        };
-
-        // Cria e inicia o Timer
-        testeTimer = new Timer(velocidadeDoTeste, loopListener);
-        testeTimer.start();
-    }
-
     private void desenharPeao(Graphics2D g2d) {
-        if (coordenadasCasas == null) return;
+        if (coordenadasCasas == null)
+            return;
 
         int mapaLargura = LARGURA_MAPA;
         int mapaAltura = ALTURA_MAPA;
@@ -213,14 +220,17 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                 posicaoAtual = this.posicaoDeTeste;
             }
             Point coordsRelativas = coordenadasCasas.get(posicaoAtual);
-            if (coordsRelativas == null) return;
+            if (coordsRelativas == null)
+                return;
             int xPeao = deslocamentoXMapa + coordsRelativas.x - TAMANHO_PEAO / 2;
             int yPeao = deslocamentoYMapa + coordsRelativas.y - TAMANHO_PEAO / 2;
-            if (imagemPeao != null) g2d.drawImage(imagemPeao, xPeao, yPeao, TAMANHO_PEAO, TAMANHO_PEAO, this);
+            if (imagemPeao != null)
+                g2d.drawImage(imagemPeao, xPeao, yPeao, TAMANHO_PEAO, TAMANHO_PEAO, this);
             return;
         }
 
-        // Group pawns by their map position so we can offset multiple pawns on the same square
+        // Group pawns by their map position so we can offset multiple pawns on the same
+        // square
         java.util.Map<Integer, java.util.List<Integer>> posToPlayers = new java.util.HashMap<>();
         for (int i = 0; i < qtd; i++) {
             int posModelo = FacadeModel.getInstance().getPosicaoJogador(i); // 0-based
@@ -233,7 +243,8 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
             int countHere = playersHere.size();
             int posMapa = posModelo + 1; // 1-based for coordenadasCasas
             Point coordsRelativas = coordenadasCasas.get(posMapa);
-            if (coordsRelativas == null) continue;
+            if (coordsRelativas == null)
+                continue;
 
             // base position (center of the house)
             int baseX = deslocamentoXMapa + coordsRelativas.x;
@@ -246,22 +257,44 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                 int offsetY = 0;
 
                 if (countHere == 1) {
-                    offsetX = 0; offsetY = 0;
+                    offsetX = 0;
+                    offsetY = 0;
                 } else if (countHere == 2) {
                     // left / right
-                    offsetX = (idx == 0) ? -TAMANHO_PEAO/2 : TAMANHO_PEAO/2;
+                    offsetX = (idx == 0) ? -TAMANHO_PEAO / 2 : TAMANHO_PEAO / 2;
                     offsetY = 0;
                 } else if (countHere == 3) {
                     // triangle: top, bottom-left, bottom-right
-                    if (idx == 0) { offsetX = 0; offsetY = -TAMANHO_PEAO/2; }
-                    if (idx == 1) { offsetX = -TAMANHO_PEAO/2; offsetY = TAMANHO_PEAO/4; }
-                    if (idx == 2) { offsetX = TAMANHO_PEAO/2; offsetY = TAMANHO_PEAO/4; }
+                    if (idx == 0) {
+                        offsetX = 0;
+                        offsetY = -TAMANHO_PEAO / 2;
+                    }
+                    if (idx == 1) {
+                        offsetX = -TAMANHO_PEAO / 2;
+                        offsetY = TAMANHO_PEAO / 4;
+                    }
+                    if (idx == 2) {
+                        offsetX = TAMANHO_PEAO / 2;
+                        offsetY = TAMANHO_PEAO / 4;
+                    }
                 } else if (countHere == 4) {
                     // grid 2x2
-                    if (idx == 0) { offsetX = -TAMANHO_PEAO/2; offsetY = -TAMANHO_PEAO/2; }
-                    if (idx == 1) { offsetX = TAMANHO_PEAO/2; offsetY = -TAMANHO_PEAO/2; }
-                    if (idx == 2) { offsetX = -TAMANHO_PEAO/2; offsetY = TAMANHO_PEAO/2; }
-                    if (idx == 3) { offsetX = TAMANHO_PEAO/2; offsetY = TAMANHO_PEAO/2; }
+                    if (idx == 0) {
+                        offsetX = -TAMANHO_PEAO / 2;
+                        offsetY = -TAMANHO_PEAO / 2;
+                    }
+                    if (idx == 1) {
+                        offsetX = TAMANHO_PEAO / 2;
+                        offsetY = -TAMANHO_PEAO / 2;
+                    }
+                    if (idx == 2) {
+                        offsetX = -TAMANHO_PEAO / 2;
+                        offsetY = TAMANHO_PEAO / 2;
+                    }
+                    if (idx == 3) {
+                        offsetX = TAMANHO_PEAO / 2;
+                        offsetY = TAMANHO_PEAO / 2;
+                    }
                 } else {
                     // more than 4: place in a small circle
                     double angle = (2 * Math.PI * idx) / countHere;
@@ -293,7 +326,8 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                 File file = new File("src/resources/Pinos/" + nome + ".png");
                 if (file.exists()) {
                     Image imagemOriginal = ImageIO.read(file);
-                    imagensPinos.put(cor, imagemOriginal.getScaledInstance(TAMANHO_PEAO, TAMANHO_PEAO, Image.SCALE_SMOOTH));
+                    imagensPinos.put(cor,
+                            imagemOriginal.getScaledInstance(TAMANHO_PEAO, TAMANHO_PEAO, Image.SCALE_SMOOTH));
                 }
             } catch (IOException e) {
                 System.err.println("Erro ao carregar imagem do pino " + nome + ": " + e.getMessage());
@@ -342,8 +376,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         try {
             File file = new File("src/resources/Propriedades/" + nomeArquivo + ".png");
             if (file.exists()) {
-                imagemCartaPropriedade = ImageIO.read(file)
-                        .getScaledInstance(LARGURA_CARTA, ALTURA_CARTA, Image.SCALE_SMOOTH);
+                imagemCartaPropriedade = ImageIO.read(file).getScaledInstance(LARGURA_CARTA, ALTURA_CARTA, Image.SCALE_SMOOTH);
                 repaint();
             } else {
                 System.err.println("ERRO: Carta não encontrada: " + file.getAbsolutePath());
@@ -398,7 +431,8 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
 
     @Override
     public void notify(PartidaEvent event) {
-        if (event == null) return;
+        if (event == null)
+            return;
 
         switch (event.type) {
             case DICE_ROLLED:
