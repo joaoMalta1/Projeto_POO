@@ -24,7 +24,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     private static final long serialVersionUID = 1L;
     private final Janela janelaPrincipal;
     private BotaoEstilizado botaoDados;
-    private BotaoEstilizado botaoComprar; // novo botão para comprar propriedade
+    private BotaoEstilizado botaoComprar; // novo botao para comprar propriedade
 
     private int[] dados = { 1, 1 };
     private Image imagemMapa;
@@ -69,6 +69,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                 repaint();
             }
             int[] resultado = ControlePartida.getInstance().jogarDadosEAndar();
+
             if (resultado != null && resultado.length == 2) {
                 this.dados = new int[] { resultado[0], resultado[1] };
                 this.dadosVisiveis = true;
@@ -76,7 +77,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         });
 
         // se parou em propriedade disponível, mostrar botão comprar
-        if (FacadeView.getInstance().propriedadeDisponivelAtual()) 
+        if (FacadeModel.getInstance().propriedadeDisponivelAtual()) 
         {
             System.out.println("AAAAAAAAAAAAAAAAAAAAA");
             criarBotaoComprarPropriedade();
@@ -95,15 +96,14 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
             return; 
         botaoComprar = new BotaoEstilizado("Comprar Propriedade", 200, 120);
         botaoComprar.addActionListener(ev -> {
-            boolean sucesso = true; //funcionou a compra FacadeView.getInstance().comprarPropriedadeAtual();
+            System.out.println(FacadeModel.getInstance().getPosJogadorAtual());
+            boolean sucesso = FacadeModel.getInstance().comprarPropriedadeAtualJogador(FacadeModel.getInstance().getPosJogadorAtual());
             if (sucesso) {
                 removerBotaoComprarSeExistir();
                 atualizarPeao();
                 repaint();
-                System.out.println("PROPRIEDADE COMPRADA");
-                // opcional: mostrar diálogo informando compra e saldo
             } else {
-                System.out.println("SALDO ISUFICIENTE");// opcional: mostrar mensagem "saldo insuficiente" ou "já comprada"
+                System.out.println("SALDO ISUFICIENTE");
             }
         });
         add(botaoComprar);
@@ -141,7 +141,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
 
     public void atualizarPeao() {
         carregarImagemDoPeao();
-        // Opcional: Atualiza o fundo se ele depender da cor do jogador
         setBackground(Cores.getInstance().corCorrespondente(FacadeView.getInstance().getCorJogadorAtual()));
         repaint();
     }
@@ -443,17 +442,28 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                         this.dadosVisiveis = true;
                     }
                 } catch (Exception ex) {
-                    // ignore malformed payload
+                    //
                 }
                 break;
+
+            case PURCHASED_PROPERTY:
+                try {
+                    Integer pos = (Integer) event.payload;
+                    System.out.println("PainelTabuleiro: propriedade comprada na pos " + pos);
+                } catch (Exception e) { /* ignore */ }
+                // garantir remoção do botão comprar, atualizar peao e repintar
+                removerBotaoComprarSeExistir();
+                atualizarPeao();
+                revalidate();
+                repaint();
+                break;
+
             case MOVE:
-                // payload is Object[] { pos(Integer), dados(int[]) }
                 try {
                     Object[] payload = (Object[]) event.payload;
                     Integer pos = (Integer) payload[0];
                     // atualiza peao e redesenha
                     atualizarPeao();
-                    // if landed on property, property event will follow; otherwise hide
                     if (!FacadeModel.getInstance().ehPropriedade(pos)) {
                         ocultarCartaPropriedade();
                     }
@@ -461,27 +471,33 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                     atualizarPeao();
                 }
                 break;
+
             case PROPERTY_LANDED:
                 try {
                     Integer pos = (Integer) event.payload;
-                    // resources are numbered 1-based; convert
                     exibirCartaPropriedade(Integer.toString(pos));
+                    boolean disponivel = model.FacadeModel.getInstance().propriedadeDisponivel(pos);
+                    System.out.println("Propriedade disponivel? " + disponivel);
+                    if (disponivel) {
+                        criarBotaoComprarPropriedade();
+                    } else {
+                        removerBotaoComprarSeExistir();
+                    }
                 } catch (Exception ex) {
-                    // ignore
+                    //
                 }
                 break;
+
             case NEXT_PLAYER:
-                // re-enable the roll button for the next player
                 if (botaoDados.getParent() == null) {
                     add(botaoDados);
                     revalidate();
                     repaint();
                 }
-                // also update pawn image/background
                 atualizarPeao();
                 break;
             case INFO:
-                // ignore or log
+            // log ? ou salvar 
                 break;
         }
         // sempre repinta ao final de um evento

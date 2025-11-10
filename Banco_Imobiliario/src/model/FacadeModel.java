@@ -3,7 +3,6 @@ package model;
 import java.util.ArrayList;
 
 import controller.CorPeao;
-import controller.PartidaEvent;
 
 public class FacadeModel {
 	private static FacadeModel fm = null;
@@ -22,10 +21,11 @@ public class FacadeModel {
 		return Dados.getInstance().jogar();
 	}
 
+
 	/**
-	 * Permite ao testador definir valores fixos para os dados (ou null para
-	 * reativar aleatoriedade)
+	 * permite definir valores fixos para os dados (ou null para reativar aleatoriedade)
 	 */
+
 	public void setDadosDeTeste(Integer d1, Integer d2) {
 		Dados.getInstance().setDadosDeTeste(d1, d2);
 	}
@@ -61,8 +61,6 @@ public class FacadeModel {
 		return CentralPartida.getInstance().andarJogadorAtual(dados);
 	}
 
-	// Observer relay methods: permite que a view se registre para receber
-	// atualizacoes do modelo
 	public void addObserver(controller.Observador<controller.PartidaEvent> o) {
 		CentralPartida.getInstance().add(o);
 	}
@@ -83,14 +81,32 @@ public class FacadeModel {
 		return CentralPartida.getInstance().getPosicaoJogador(indice);
 	}
 
+
+	public boolean propriedadeDisponivelAtual() {
+		return CentralPartida.getInstance().propriedadeDisponivel(getPosJogadorAtual());
+	}
+
 	public controller.CorPeao getCorJogador(int indice) {
 		return CentralPartida.getInstance().getCorJogador(indice);
 	}
+
+    public boolean comprarPropriedadeAtualJogador(int posicao) 
+	{
+		return CentralPartida.getInstance().comprarPropriedadeAtualJogador(posicao);
+    }
 
 	public boolean propriedadeDisponivel(int posicao) {
 		return CentralPartida.getInstance().propriedadeDisponivel(posicao);
 	}
 
+	// public int getPrecoPosicaoAtual() {
+	// 	return FacadeModel.getInstance().getPrecoPropriedade(getPosJogadorAtual());
+	// }
+
+	// public boolean comprarPropriedadeAtual() {
+	// 	return FacadeModel.getInstance().comprarPropriedadeAtualJogador(getPosJogadorAtual());
+	// }
+	
 	// public int getPrecoPropriedade(int posicao) {
 	// 	Propriedade p = mapa.getPropriedade(posicao);
 	// 	return p != null ? p.getPreco() : -1;

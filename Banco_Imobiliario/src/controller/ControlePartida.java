@@ -15,8 +15,6 @@ public class ControlePartida {
         return instancia;
     }
 
-    // Rola os dados (pode ser controlado via FacadeModel.setDadosDeTeste)
-    // e move o jogador atual. Retorna os valores dos dados.
     public int[] jogarDadosEAndar() {
         int[] dados = FacadeModel.getInstance().jogarDados();
         if (dados != null && dados.length == 2) {

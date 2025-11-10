@@ -23,10 +23,8 @@ class Propriedade extends Campo {
 			comprador.removerValor(precoCompra);
 			banco.recebeDinheiro(precoCompra);
 			this.dono = comprador;
-			
 			return ResultadoTransacao.SUCESSO;
 		}
-
 //		não tem saldo para comprar
 		System.err.println("Saldo insuficiente!");
 		return ResultadoTransacao.SALDO_INSUFICIENTE;

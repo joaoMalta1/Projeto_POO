@@ -34,7 +34,6 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		for (int i = 0; i < nomeJogadores.size(); i++) {
 			jogadores.add(new Jogador(nomeJogadores.get(i), new Peao(corJogadores.get(i))));
 		}
-		// notify that players were created
 		notifyObservers(PartidaEvent.info("players_created"));
 	}
 
@@ -83,9 +82,10 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		this.ultimoDados = new int[] { dados[0], dados[1] };
 		int soma = dados[0] + dados[1];
 		int posAtual = jogadores.get(jogadorAtual).getPeao().getPosicao(); // 0-based
+		System.err.println("posi atual: " + posAtual + ", soma dados: " + soma);
+
 		int novaPos = (posAtual + soma) % 40; // mantém em 0..39
 		jogadores.get(jogadorAtual).getPeao().setPosicao(novaPos);
-		// notify dice rolled and move (positions are 0-based)
 		notifyObservers(PartidaEvent.diceRolled(new int[] { dados[0], dados[1] }));
 		notifyObservers(PartidaEvent.move(novaPos, new int[] { dados[0], dados[1] }));
 		if (ehPropriedade(novaPos)) {
@@ -118,29 +118,21 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	 * Retorna true se a compra foi bem sucedida.
 	 */
 	// aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-	// public boolean comprarPropriedadeAtualJogador(int posicao) {
-	// 	if (!propriedadeDisponivel(posicao))
-	// 		return false;
+	public boolean comprarPropriedadeAtualJogador(int posicao) 
+	{
+		if (!propriedadeDisponivel(posicao))
+			return false;
 
-	// 	int idJogador = getJogadorAtual();
-	// 	Jogador j = getJogador(idJogador); // adapte conforme API existente
-	// 	Propriedade prop = (Propriedade) tabuleiro.getCampo(posicao);
-	// 	int preco = (int) prop.getPrecoCompra(); // adapte
-
-	// 	if (j.getSaldo() < preco)
-	// 		return false;
-
-	// 	// debita do jogador e atribui dono
-	// 	j.debit(preco); // adapte para o método real que debita saldo
-	// 	prop.setDono(idJogador); // adapte para o método real de atribuir dono
-
-	// 	// notificar observers da compra (PartidaEvent.Tipo.PROPRIEDADE_COMPRADA)
-	// 	PartidaEvent ev = new PartidaEvent(PartidaEvent.Tipo.PROPRIEDADE_COMPRADA, posicao);
-	// 	// supondo que exista um método para notificar observadores
-	// 	this.notificarObservadores(ev); // adaptar para o nome real (ex: notifyAllObservers)
-
-	// 	return true;
-	// }
+		Jogador j = jogadores.get(jogadorAtual);
+		Propriedade prop = (Propriedade) tabuleiro.getCampo(posicao);
+		prop.comprar(j, banco);
+		j.adicionarPropriedade(prop);
+		System.out.println("nome da propriedade: " + prop.nome);
+		System.out.println("Jogador " + j.getPeao().getCor() + " comprou propriedade na pos " + posicao + "saldo restante: " + j.getSaldo());
+		System.out.println("propriedades do jogador " + j.getPropriedades().get(0).nome);
+		notifyObservers(PartidaEvent.purchased_property());
+		return true;
+	}
 
 	// Observado interface implementation
 	@Override
@@ -175,7 +167,6 @@ public class CentralPartida implements Observado<PartidaEvent> {
 
 	@Override
 	public PartidaEvent get(int index) {
-		// compat API: return a generic info event with minimal data
 		return PartidaEvent.info("central_partida");
 	}
 

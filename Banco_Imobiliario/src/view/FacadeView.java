@@ -77,20 +77,8 @@ public class FacadeView {
 		return FacadeModel.getInstance().ehPropriedade(posicao);
 	}
 
-	int getPosJogadorAtual() {
-		return Turno.getInstance().getPosJogadorAtual();
+	public boolean comprarPropriedadeAtual() {
+		int pos = FacadeModel.getInstance().getPosJogadorAtual();
+		return FacadeModel.getInstance().comprarPropriedadeAtualJogador(pos);
 	}
-
-	public boolean propriedadeDisponivelAtual() {
-		return FacadeModel.getInstance().propriedadeDisponivel(getPosJogadorAtual());
-
-	}
-
-	// public int getPrecoPosicaoAtual() {
-	// 	return FacadeModel.getInstance().getPrecoPropriedade(getPosJogadorAtual());
-	// }
-
-	// public boolean comprarPropriedadeAtual() {
-	// 	return FacadeModel.getInstance().comprarPropriedadeAtualJogador(getPosJogadorAtual());
-	// }
 }

@@ -36,14 +36,5 @@ class Peao {
     public String toString() {
         return "Peão " + cor + " na posição " + posicao;
     }
-    
-//    TODO: trocar essa referência e todas outras pela pública do controller
-//    enum CorPeao {
-//        VERMELHA,
-//        AZUL,
-//        LARANJA,
-//        AMARELA,
-//        ROXA,
-//        CINZA
-//    }
+
 }

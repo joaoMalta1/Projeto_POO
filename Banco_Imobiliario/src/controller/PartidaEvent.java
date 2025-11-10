@@ -2,11 +2,12 @@ package controller;
 
 public class PartidaEvent {
     public enum Type {
-        MOVE, // player moved; payload: position (Integer) and dice (int[])
-        DICE_ROLLED, // dice rolled; payload: dice
-        PROPERTY_LANDED, // landed on property; payload: property id/name (String or Integer)
-        NEXT_PLAYER, // next player turn
-        INFO // generic info/message
+        MOVE, 
+        DICE_ROLLED,
+        PROPERTY_LANDED, 
+        NEXT_PLAYER, 
+        INFO,
+        PURCHASED_PROPERTY,
     }
 
     public final Type type;
@@ -31,6 +32,10 @@ public class PartidaEvent {
 
     public static PartidaEvent nextPlayer() {
         return new PartidaEvent(Type.NEXT_PLAYER, null);
+    }
+
+    public static PartidaEvent purchased_property() {
+        return new PartidaEvent(Type.PURCHASED_PROPERTY, null);
     }
 
     public static PartidaEvent info(String msg) {
