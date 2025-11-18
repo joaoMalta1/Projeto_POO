@@ -70,11 +70,15 @@ class Jogador {
     }
 
     boolean removerValor(double valor) {
-        if (valor > 0 && saldo >= valor) {
+    	if(valor <= 0) {
+    		return false;
+    	}
+    	else if (saldo >= valor) {
             saldo -= valor;
             return true; // sucesso
         } else {
             faliu = true;
+            falencia();
             return false; // jogador perdeu
         }
     }
@@ -93,9 +97,8 @@ class Jogador {
     }
 
     // ---- Falência ----
-    void falencia(Banco banco) {
+    void falencia() {
         if (this.faliu) {
-            banco.recebeDinheiro(this.saldo);
             for (Propriedade p : new ArrayList<>(this.propriedades)) {
                 p.dono = null; 
                 if (p instanceof Terreno) {
@@ -105,12 +108,18 @@ class Jogador {
             this.propriedades.clear();
             this.saldo = 0.0; 
             System.out.println("jogador faliu");
+            CentralPartida.getInstance().checaFimJogo();
         }
     }
-
+    
+    String getNome() {
+    	return nome;
+    }
+    
     @Override
     public String toString() {
-        return "Peão: " + peao +
+        return "Nome: " + nome + 
+        	   "\nPeão: " + peao.toString() +
                "\nSaldo: R$" + String.format("%.2f", saldo) +
                "\nNa prisão: " + naPrisao +
                "\nRodadas preso: " + rodadasPreso +

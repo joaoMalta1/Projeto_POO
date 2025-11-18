@@ -49,6 +49,11 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	void proxJogador() {
 		jogadorAtual = (++jogadorAtual) % jogadores.size();
 		notifyObservers(PartidaEvent.nextPlayer());
+		
+//		DEBUG
+		for(Jogador j : jogadores) {
+			System.out.println("Nome: " + j.getNome() + "\nSaldo: " + String.format("%.2f\n\n", j.getSaldo()));
+		}
 	}
 
 	CorPeao getCorJogadorAtual() {
@@ -94,7 +99,7 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		return novaPos;
 	}
 
-	public boolean propriedadeDisponivel(int posicao) {
+	boolean propriedadeDisponivel(int posicao) {
 		if (!tabuleiro.ehPropriedade(posicao))
 			return false;
 		Propriedade prop = (Propriedade) tabuleiro.getCampo(posicao);
@@ -104,7 +109,7 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	/**
 	 * Retorna o preço de compra da propriedade (ou -1 se não for propriedade).
 	 */
-	public float getPrecoPropriedade(int posicao) {
+	float getPrecoPropriedade(int posicao) {
 		if (!tabuleiro.ehPropriedade(posicao))
 			return -1;
 		Propriedade prop = (Propriedade) tabuleiro.getCampo(posicao);
@@ -118,7 +123,7 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	 * Retorna true se a compra foi bem sucedida.
 	 */
 	// aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-	public boolean comprarPropriedadeAtualJogador(int posicao) 
+	boolean comprarPropriedadeAtualJogador(int posicao) 
 	{
 		if (!propriedadeDisponivel(posicao))
 			return false;
@@ -133,7 +138,42 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		notifyObservers(PartidaEvent.purchased_property());
 		return true;
 	}
-
+	
+//	retorna jogador mais rico de acordo com a formatação para string da função getNomeCorString da classe Jogador
+	int jogadorMaisRico() {
+		int maisRico = 0;
+		for(int i = 0; i < jogadores.size(); i++) {
+			Jogador j  = jogadores.get(i);
+			if(j.getSaldo() > jogadores.get(maisRico).getSaldo()) {
+				maisRico = i;
+			}
+		}
+		return maisRico;
+	}
+	
+//	quando um jogador ganha a partida, ele automaticamente vira o jogador atual
+	void fimDeJogo() {
+		int posVencedor = jogadorMaisRico();
+		jogadorAtual = posVencedor;
+		notifyObservers(PartidaEvent.fimDeJogo());
+	}
+	
+//	checa se jogo chegou ao fim (se todos os jogadores faliram menos um, não checa para clique no botão de fim)
+	void checaFimJogo() {
+		int qtd_falidos = 0;
+		for(Jogador j : jogadores) {
+			if(j.isFaliu()) {
+				qtd_falidos++;
+			}
+		}
+		if(qtd_falidos + 1 == jogadores.size()) {
+			fimDeJogo();
+		}
+		if(qtd_falidos >= jogadores.size()) {
+			throw new IllegalStateException("Algo deu errado na checagem de fim de jogo");
+		}
+	}
+	
 	// Observado interface implementation
 	@Override
 	public void add(Observador<PartidaEvent> o) {

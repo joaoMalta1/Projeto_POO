@@ -166,7 +166,64 @@ class Tabuleiro {
     	throw new IllegalArgumentException("Nome inexistente!");
     }
 
-    // Calcula a nova posição após o movimento e lida com pagamentos
+//    // Calcula a nova posição após o movimento e lida com pagamentos
+//    int moverJogador(Jogador jogador, int posicaoAtual, int[] dados, Scanner scanner) {
+//    	if(dados.length != 2) { throw new IllegalArgumentException("Jogada de dados inválida!");}
+//    	if(jogador.getIsNaPrisao()) {
+//    		Campo campo = campos.get(this.getPosicaoPrisao());
+//    		if(campo instanceof Prisao) {
+//    			Prisao prisao = (Prisao) campo; 
+//
+////    			PODE SAIR DA PRISAO
+//        		if(prisao.podeSairDaPrisao(jogador, dados[0], dados[1])) {
+//        			if(jogador.getRodadasPreso() >= 4) {
+//        				int novaPosicao = posicaoAtual + dados[0] + dados[1];
+//            			prisao.sairDaPrisao(jogador);
+//        				return novaPosicao;
+//        			}
+//        			prisao.sairDaPrisao(jogador);
+//            		return this.moverJogador(jogador, posicaoAtual, Dados.getInstance().jogar(), scanner);
+//        		}
+//
+////        		CONTINUA PRESO
+//        		else {
+//        			prisao.passouUmaRodadaPreso(jogador);
+//        			return posicaoAtual;
+//        		} 
+//    		}
+//    		else { throw new IllegalStateException("Erro: Prisão não encontrada!");}
+//        }
+////        CASO: jogador NÃO está na prisão
+//        
+//        int passos = dados[0] + dados[1];
+//        int novaPosicao = (posicaoAtual + passos) % tamanho;
+//        
+////      caso jogador passe, mas não pare no campo inicial (recebe dinheiro)
+//        if((posicaoAtual + passos) > tamanho) {
+//            campos.get(0).caiuNoCampo(jogador, banco);
+//        }
+//        
+//        if(novaPosicao == this.getPosicaoVaParaPrisao() 
+//        		&& campos.get(novaPosicao) instanceof VaParaPrisao) {
+//        	VaParaPrisao campoVPP = (VaParaPrisao)campos.get(novaPosicao);
+//            campoVPP.caiuNoCampo(jogador, this);
+//            return this.getPosicaoPrisao();
+//        }
+//        if(campos.get(novaPosicao) instanceof Propriedade) {
+//        	Propriedade prop = (Propriedade)campos.get(novaPosicao); 
+//            prop.caiuNoCampo(jogador, banco, scanner);
+//        } 
+//        
+//        else {
+////          caso não seja nem propriedade nem vaParaPrisao
+//            campos.get(novaPosicao).caiuNoCampo(jogador, banco);
+//        }
+//            	               
+//        return novaPosicao;
+//    }
+
+    
+    // Calcula a nova posição após o movimento
     int moverJogador(Jogador jogador, int posicaoAtual, int[] dados, Scanner scanner) {
     	if(dados.length != 2) { throw new IllegalArgumentException("Jogada de dados inválida!");}
     	if(jogador.getIsNaPrisao()) {
@@ -222,6 +279,8 @@ class Tabuleiro {
         return novaPosicao;
     }
 
+    
+    
     int getPosicaoPrisao() {
         for(int i = 0; i < campos.size(); i++) {
         	if(campos.get(i) instanceof Prisao) {

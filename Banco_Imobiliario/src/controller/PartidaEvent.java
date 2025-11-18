@@ -8,6 +8,7 @@ public class PartidaEvent {
         NEXT_PLAYER, 
         INFO,
         PURCHASED_PROPERTY,
+        FIM_DE_JOGO,
     }
 
     public final Type type;
@@ -40,5 +41,9 @@ public class PartidaEvent {
 
     public static PartidaEvent info(String msg) {
         return new PartidaEvent(Type.INFO, msg);
+    }
+    
+    public static PartidaEvent fimDeJogo() {
+    	return new PartidaEvent(Type.FIM_DE_JOGO, null);
     }
 }

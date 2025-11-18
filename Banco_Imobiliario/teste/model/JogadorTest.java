@@ -76,7 +76,7 @@ public class JogadorTest {
         assertTrue(jogador.isFaliu());
         assertEquals(saldoInicialJogador, jogador.getSaldo(), 0.001);
 
-        jogador.falencia(banco);
+//        jogador.falencia(banco);
         assertEquals(0.0, jogador.getSaldo(), 0.001);
         assertEquals(saldoBancoAntes + saldoInicialJogador, banco.getSaldo(), 0.001);
         assertTrue(jogador.getPropriedades().isEmpty());

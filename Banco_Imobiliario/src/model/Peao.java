@@ -31,10 +31,14 @@ class Peao {
             return 1;
         }
     }
-
+    
+    String getCorString() {
+    	return cor.toString();
+    }
+    
     @Override // metodo pra printar o objeto
     public String toString() {
-        return "Peão " + cor + " na posição " + posicao;
+        return "Peão: " + cor.toString() + "\nNa posição: " + posicao;
     }
 
 }

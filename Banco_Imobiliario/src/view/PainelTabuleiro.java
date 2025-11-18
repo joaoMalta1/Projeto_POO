@@ -8,7 +8,6 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.util.Map;
@@ -519,9 +518,14 @@ private void abrirSelecaoDeDados() {
                 }
                 atualizarPeao();
                 break;
-            case INFO:
-            // log ? ou salvar 
-                break;
+            case FIM_DE_JOGO:
+                janelaPrincipal.mostrarTela(Telas.FIM_DE_JOGO);
+            	break;
+//            case INFO:
+//            // log ? ou salvar 
+//                break;
+              default:
+            	  break;
         }
         // sempre repinta ao final de um evento
         repaint();
