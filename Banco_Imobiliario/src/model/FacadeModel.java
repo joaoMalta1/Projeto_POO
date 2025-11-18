@@ -31,9 +31,6 @@ public class FacadeModel {
 	}
 
 
-	boolean isModoTesteDados() {
-    return Dados.getInstance().isModoTeste();
-}
 
 	public boolean ehPropriedade(int posicao) {
 		return CentralPartida.getInstance().ehPropriedade(posicao);
@@ -104,36 +101,4 @@ public class FacadeModel {
 		return CentralPartida.getInstance().propriedadeDisponivel(posicao);
 	}
 
-	// public int getPrecoPosicaoAtual() {
-	// 	return FacadeModel.getInstance().getPrecoPropriedade(getPosJogadorAtual());
-	// }
-
-	// public boolean comprarPropriedadeAtual() {
-	// 	return FacadeModel.getInstance().comprarPropriedadeAtualJogador(getPosJogadorAtual());
-	// }
-	
-	// public int getPrecoPropriedade(int posicao) {
-	// 	Propriedade p = mapa.getPropriedade(posicao);
-	// 	return p != null ? p.getPreco() : -1;
-	// 	return CentralPartida.getInstance().getPrecoPropriedade(posicao);
-	// }
-
-	// public boolean comprarPropriedadeAtualJogador(int posicao) {
-	// 	if (!propriedadeDisponivel(posicao))
-	// 		return false;
-	// 	int jogador = getJogadorAtual();
-	// 	int preco = getPrecoPropriedade(posicao);
-	
-	// 	if (getSaldoJogador(jogador) < preco)
-	// 		return false;
-
-	// 	debitarSaldoJogador(jogador, preco);
-	// 	atribuirDonoPropriedade(posicao, jogador);
-
-	// 	// notificar observers para atualizar UI (ex: repaint e atualizar lista de
-	// 	// propriedades)
-	// 	notifyObservers(new PartidaEvent(PartidaEvent.Tipo.PROPRIEDADE_COMPRADA, posicao));
-	// 	return true;
-	// 	return CentralPartida.getInstance().comprarPropriedadeAtualJogador(posicao);
-	// }
 }
