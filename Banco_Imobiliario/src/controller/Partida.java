@@ -31,4 +31,8 @@ class Partida {
 	ArrayList<CorPeao> getCorJogadores(){
 		return corJogadores;
 	}
+	
+	void reset() {
+		ctrl = null;
+	}
 }

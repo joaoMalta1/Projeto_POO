@@ -42,7 +42,12 @@ public class ControlePartida {
         return FacadeModel.getInstance().ehPropriedade(getPosJogadorAtual());
     }
 
-    public controller.CorPeao getCorJogadorAtual() {
+    public CorPeao getCorJogadorAtual() {
         return FacadeModel.getInstance().getCorJogadorAtual();
+    }
+    
+    public void reset() {
+    	Partida.getInstance().reset();
+    	CriacaoJogadores.getInstance().reset();
     }
 }

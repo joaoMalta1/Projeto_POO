@@ -14,6 +14,8 @@ class Janela extends JFrame {
 	private CardLayout cardLayout;
     private JPanel cardPanel;
     private String telaAtual;
+    
+    private PainelTabuleiro painelTabuleiro;
 	
 	Janela(String nome) {	
 		super(nome);
@@ -99,18 +101,24 @@ class Janela extends JFrame {
         cardPanel.repaint();	
     }
     
+    PainelTabuleiro getPainelTabuleiro() {
+    	return painelTabuleiro;
+    }
+    
     private JPanel criarTela(String nomeTela) {
 //    	DEBUG
 //    	nomeTela = Telas.CARTAS_PROPRIEDADES; 
         switch (nomeTela) {
             case Telas.INICIO:
+            	
                 return new PainelJanelaInicial(this);
             case Telas.QUANTIDADE_JOGADORES:
                 return new PainelQuantidadeJogadores(this);
             case Telas.CRIACAO_JOGADORES:
             	return new PainelCriacaoJogadores(this);
             case Telas.TABULEIRO:
-                return new PainelTabuleiro(this);
+                painelTabuleiro = new PainelTabuleiro(this); 
+            	return painelTabuleiro;
             case Telas.FIM_DE_JOGO:
             	return new PainelFimDeJogo(this);
             default:
@@ -118,7 +126,6 @@ class Janela extends JFrame {
         }
     }
 }
-
 
 
 

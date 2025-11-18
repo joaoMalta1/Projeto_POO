@@ -1,5 +1,6 @@
 package view;
 
+import controller.ControlePartida;
 import controller.CorPeao;
 import controller.CriacaoJogadores;
 import controller.Turno;
@@ -8,7 +9,6 @@ import model.FacadeModel;
 // Facade + Singleton
 public class FacadeView {
 	private static FacadeView fv = null;
-	private static CriacaoJogadores ctrl;
 
 	private FacadeView() {
 	}
@@ -16,49 +16,48 @@ public class FacadeView {
 	public static FacadeView getInstance() {
 		if (fv == null) {
 			fv = new FacadeView();
-			ctrl = CriacaoJogadores.getInstance();
 		}
 		return fv;
 	}
 
 	void setQtdJogadores(int qtd) {
-		ctrl.setQtdJogadores(qtd);
+		CriacaoJogadores.getInstance().setQtdJogadores(qtd);
 	}
 
 	int getJogadorAtual() {
-		return ctrl.getJogadorAtual();
+		return FacadeModel.getInstance().getJogadorAtual();
 	}
 
 	boolean nomeJaExiste(String nome) {
-		return ctrl.nomeJaExiste(nome);
+		return CriacaoJogadores.getInstance().nomeJaExiste(nome);
 	}
 
 	boolean corJaExiste(CorPeao cor) {
-		return ctrl.corJaExiste(cor);
+		return CriacaoJogadores.getInstance().corJaExiste(cor);
 	}
 
 	boolean addJogador(int i, String nome, CorPeao cor) {
-		return ctrl.addJogador(i, nome, cor);
+		return CriacaoJogadores.getInstance().addJogador(i, nome, cor);
 	}
 
 	boolean ehUltimoJogador() {
-		return ctrl.ehUltimoJogador();
+		return CriacaoJogadores.getInstance().ehUltimoJogador();
 	}
 
 	void finalizaCriacao() {
-		ctrl.finalizaCriacao();
+		CriacaoJogadores.getInstance().finalizaCriacao();
 	}
 
 	int getQtdJogadores() {
-		return ctrl.getQtdJogadores();
+		return CriacaoJogadores.getInstance().getQtdJogadores();
 	}
 
 	String getNomeJogador(int i) {
-		return ctrl.getNomeJogador(i);
+		return CriacaoJogadores.getInstance().getNomeJogador(i);
 	}
 
 	void proxJogador() {
-		ctrl.proxJogador();
+		CriacaoJogadores.getInstance().proxJogador();
 	}
 
 	int[] jogarDados() {
@@ -80,5 +79,14 @@ public class FacadeView {
 	public boolean comprarPropriedadeAtual() {
 		int pos = FacadeModel.getInstance().getPosJogadorAtual();
 		return FacadeModel.getInstance().comprarPropriedadeAtualJogador(pos);
+	}
+	
+	void botaoFimDeJogoApertado() {
+		FacadeModel.getInstance().fimDeJogo();
+	}
+	
+	void reset() {
+		FacadeModel.getInstance().reset();
+		ControlePartida.getInstance().reset();
 	}
 }

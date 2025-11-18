@@ -147,4 +147,8 @@ public class CriacaoJogadores {
         nome_jogadores = novosNomes;
         cor_jogadores = novasCores;
 	}
+	
+	void reset() {
+		ctrl = null;
+	}
 }

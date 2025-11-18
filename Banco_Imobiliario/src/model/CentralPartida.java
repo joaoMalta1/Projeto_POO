@@ -17,15 +17,15 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	private int[] ultimoDados = null;
 
 	private CentralPartida() {
+		banco = new Banco();
+		tabuleiro = new Tabuleiro(banco);
+		jogadores = new ArrayList<Jogador>();
+		observers = new ArrayList<>();
 	}
 
 	static CentralPartida getInstance() {
 		if (ctrl == null) {
 			ctrl = new CentralPartida();
-			banco = new Banco();
-			tabuleiro = new Tabuleiro(banco);
-			jogadores = new ArrayList<Jogador>();
-			ctrl.observers = new ArrayList<>();
 		}
 		return ctrl;
 	}
@@ -153,8 +153,8 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	
 //	quando um jogador ganha a partida, ele automaticamente vira o jogador atual
 	void fimDeJogo() {
-		int posVencedor = jogadorMaisRico();
-		jogadorAtual = posVencedor;
+		jogadorAtual = jogadorMaisRico();
+		System.out.println(jogadorAtual);
 		notifyObservers(PartidaEvent.fimDeJogo());
 	}
 	
@@ -172,6 +172,16 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		if(qtd_falidos >= jogadores.size()) {
 			throw new IllegalStateException("Algo deu errado na checagem de fim de jogo");
 		}
+	}
+	
+	public void reset() {
+//	    banco = new Banco();
+//	    tabuleiro = new Tabuleiro(banco);
+//	    jogadores.clear();
+//	    jogadorAtual = 0;
+//	    ultimoDados = null;
+	    // Mantém os observers para reuse entre partidas
+		ctrl = null;
 	}
 	
 	// Observado interface implementation

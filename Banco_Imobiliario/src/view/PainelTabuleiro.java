@@ -12,11 +12,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.util.Map;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import model.FacadeModel;
 import controller.Observador;
 import controller.CorPeao;
+import controller.Observado;
 import controller.ControlePartida;
 import controller.PartidaEvent;
 
@@ -27,6 +29,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     private BotaoEstilizado botaoDados;
     private BotaoEstilizado botaoSetarDados;
     private BotaoEstilizado botaoComprar; // novo botao para comprar propriedade
+    private BotaoEstilizado bFimJogo;
 
     private int[] dados = { 1, 1 };
     private Image imagemMapa;
@@ -46,43 +49,56 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     // simensao mapa
     private final int LARGURA_MAPA = 700;
     private final int ALTURA_MAPA = 700;
+    
+	private ArrayList<Observador<PartidaEvent>> observers = null;
 
     public PainelTabuleiro(Janela janela) {
         this.janelaPrincipal = janela;
+        
         setBackground(Cores.getInstance().corCorrespondente(FacadeView.getInstance().getCorJogadorAtual()));
+        
         carregarImagemDoMapa();
         carregarImagensDados();
-        criarBotaoDados();
-        inicializarCoordenadasCasas();
         carregarImagensPinos();
+
+        inicializarCoordenadasCasas();
+
+        criarBotaoDados();
         criarBotaoSetarDados();
+        criarBotaoFimJogo();
+        
         FacadeModel.getInstance().addObserver(this);
     }
-
-
-private void criarBotaoSetarDados() {
-    if (botaoSetarDados != null && botaoSetarDados.getParent() != null) return;
-    botaoSetarDados = new BotaoEstilizado("Escolher Dados", 300, 200);
-    botaoSetarDados.addActionListener(ev -> abrirSelecaoDeDados());
-    this.add(botaoSetarDados);
-}
-
-private void abrirSelecaoDeDados() {
-    try {
-        String d1Str = JOptionPane.showInputDialog(this, "Valor do dado 1 (1 a 6):");
-        String d2Str = JOptionPane.showInputDialog(this, "Valor do dado 2 (1 a 6):");
-
-        if (d1Str == null || d2Str == null) {
-            return;
-        }
-        int d1 = Integer.parseInt(d1Str);
-        int d2 = Integer.parseInt(d2Str);
-        FacadeModel.getInstance().setDadosDeTeste(d1, d2);
-        JOptionPane.showMessageDialog(this, "Dados teste definidos!");
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Valores inválidos! Use números entre 1 e 6.");
+    
+    private void criarBotaoFimJogo() {
+    	bFimJogo = new BotaoEstilizado("Encerrar Partida", 300, 200);
+    	bFimJogo.addActionListener(e -> FacadeView.getInstance().botaoFimDeJogoApertado());
+    	add(bFimJogo);
     }
-}
+
+	private void criarBotaoSetarDados() {
+	    if (botaoSetarDados != null && botaoSetarDados.getParent() != null) return;
+	    botaoSetarDados = new BotaoEstilizado("Escolher Dados", 300, 200);
+	    botaoSetarDados.addActionListener(ev -> abrirSelecaoDeDados());
+	    this.add(botaoSetarDados);
+	}
+	
+	private void abrirSelecaoDeDados() {
+	    try {
+	        String d1Str = JOptionPane.showInputDialog(this, "Valor do dado 1 (1 a 6):");
+	        String d2Str = JOptionPane.showInputDialog(this, "Valor do dado 2 (1 a 6):");
+	
+	        if (d1Str == null || d2Str == null) {
+	            return;
+	        }
+	        int d1 = Integer.parseInt(d1Str);
+	        int d2 = Integer.parseInt(d2Str);
+	        FacadeModel.getInstance().setDadosDeTeste(d1, d2);
+	        JOptionPane.showMessageDialog(this, "Dados teste definidos!");
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(this, "Valores inválidos! Use números entre 1 e 6.");
+	    }
+	}
 
 
     private void criarBotaoDados() {

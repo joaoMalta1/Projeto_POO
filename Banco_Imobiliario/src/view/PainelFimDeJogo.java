@@ -18,6 +18,8 @@ class PainelFimDeJogo extends JPanel {
 	PainelFimDeJogo(Janela janela){
 		janelaPrincipal = janela;
 		
+		System.out.println(FacadeView.getInstance().getJogadorAtual());
+		
 		nomeVencedor = FacadeView.getInstance().getNomeJogador(FacadeView.getInstance().getJogadorAtual());
 		
 		inicializarComponentes();
@@ -54,6 +56,8 @@ class PainelFimDeJogo extends JPanel {
 	
 	private void configurarEventos() {
 		bVoltarAoInicio.addActionListener(e -> { 
-        	janelaPrincipal.mostrarTela(Telas.INICIO);  });
+        	FacadeView.getInstance().reset();
+			janelaPrincipal.mostrarTela(Telas.INICIO);
+        	});
     }
 }

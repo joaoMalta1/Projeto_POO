@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
+import controller.ControlePartida;
 import controller.CorPeao;
 
 public class FacadeModel {
@@ -29,9 +30,7 @@ public class FacadeModel {
 	public void setDadosDeTeste(Integer d1, Integer d2) {
 		Dados.getInstance().setDadosDeTeste(d1, d2);
 	}
-
-
-
+	
 	public boolean ehPropriedade(int posicao) {
 		return CentralPartida.getInstance().ehPropriedade(posicao);
 	}
@@ -100,5 +99,13 @@ public class FacadeModel {
 	public boolean propriedadeDisponivel(int posicao) {
 		return CentralPartida.getInstance().propriedadeDisponivel(posicao);
 	}
+	
+	public void fimDeJogo() {
+		CentralPartida.getInstance().fimDeJogo();
+	}
 
+	
+	public void reset() {
+		CentralPartida.getInstance().reset();
+	}
 }
