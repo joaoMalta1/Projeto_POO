@@ -30,6 +30,11 @@ public class FacadeModel {
 		Dados.getInstance().setDadosDeTeste(d1, d2);
 	}
 
+
+	boolean isModoTesteDados() {
+    return Dados.getInstance().isModoTeste();
+}
+
 	public boolean ehPropriedade(int posicao) {
 		return CentralPartida.getInstance().ehPropriedade(posicao);
 	}
