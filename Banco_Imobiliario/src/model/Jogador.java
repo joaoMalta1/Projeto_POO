@@ -3,8 +3,6 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-import controller.ControlePartida;
-
 class Jogador {
 	private String nome;
     private Peao peao;
@@ -174,14 +172,24 @@ class Jogador {
     	if (dados.length != 2) {
         	throw new IllegalArgumentException("Tamanho do vetor de dados incorreto");
         }
+    	int soma = dados[0] + dados[1];
+    	int posAtual = peao.getPosicao();
+    	int tamTabuleiro = CentralPartida.getInstance().getTamanhoTabuleiro();
+    	
+    	peao.setPosicao( (soma + posAtual) % tamTabuleiro );
     	
     	if(verificarTresDuplasConsecutivas(dados)) {
-    		this.naPrisao = true;
-            this.rodadasPreso = 0;
-            this.peao.setPosicao(posicaoPrisao);
-            resetarControleDuplas();
-            System.out.println("DEBUG: Jogador " + nome + " foi para a prisão em " + posicaoPrisao);
+    		vaiParaPrisao(posicaoPrisao);
+    		System.out.println("DEBUG: Jogador " + nome + " foi para a prisão em " + posicaoPrisao);
     	}
+    }
+    
+    void vaiParaPrisao(int posicaoPrisao) {
+    	this.naPrisao = true;
+        this.rodadasPreso = 0;
+        this.peao.setPosicao(posicaoPrisao);
+        resetarControleDuplas();
+        
     }
     
     @Override

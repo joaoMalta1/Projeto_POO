@@ -30,11 +30,11 @@ public class Turno {
 		return FacadeModel.getInstance().getCorJogadorAtual();
 	}
 	
-	public int[] jogarDados() {
-		int[] dados = FacadeModel.getInstance().jogarDados();
-		FacadeModel.getInstance().andarJogadorAtual(dados);
-		return dados;
-	}
+//	public int[] jogarDados() {
+//		int[] dados = FacadeModel.getInstance().jogarDados();
+//		FacadeModel.getInstance().andarJogadorAtual(dados);
+//		return dados;
+//	}
 	
 	public int getPosJogadorAtual() {
 		return FacadeModel.getInstance().getPosJogadorAtual();

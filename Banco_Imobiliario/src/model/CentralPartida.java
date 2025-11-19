@@ -51,9 +51,9 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		notifyObservers(PartidaEvent.nextPlayer());
 		
 //		DEBUG
-		for(Jogador j : jogadores) {
-			System.out.println("Nome: " + j.getNome() + "\nSaldo: " + String.format("%.2f\n\n", j.getSaldo()));
-		}
+//		for(Jogador j : jogadores) {
+//			System.out.println("Nome: " + j.getNome() + "\nSaldo: " + String.format("%.2f\n\n", j.getSaldo()));
+//		}
 	}
 
 	CorPeao getCorJogadorAtual() {
@@ -78,6 +78,10 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	CorPeao getCorJogador(int indice) {
 		return jogadores.get(indice).getPeao().getCor();
 	}
+	
+	int getTamanhoTabuleiro() {
+		return tabuleiro.getTamanho();
+	}
 
 	// retorna nova posição (0-based)
 	int andarJogadorAtual(int[] dados) {
@@ -89,8 +93,11 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		int posAtual = jogadores.get(jogadorAtual).getPeao().getPosicao(); // 0-based
 		System.err.println("posi atual: " + posAtual + ", soma dados: " + soma);
 
-		int novaPos = (posAtual + soma) % 40; // mantém em 0..39
-		jogadores.get(jogadorAtual).getPeao().setPosicao(novaPos);
+//		TODO: implementar regras de acordo com função da classe Tabuleiro
+
+		jogadorAtualJogouDados(dados);
+		int novaPos = jogadores.get(jogadorAtual).getPeao().getPosicao();
+		
 		notifyObservers(PartidaEvent.diceRolled(new int[] { dados[0], dados[1] }));
 		notifyObservers(PartidaEvent.move(novaPos, new int[] { dados[0], dados[1] }));
 		if (ehPropriedade(novaPos)) {
@@ -105,6 +112,7 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		}
 		
 		jogadores.get(jogadorAtual).jogouDados(tabuleiro.getPosicaoPrisao(), dados);
+		notifyObservers(PartidaEvent.move(jogadores.get(jogadorAtual).getPeao().getPosicao(), dados));
 	}
 
 	boolean propriedadeDisponivel(int posicao) {
@@ -130,7 +138,6 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	 * Debita o saldo, atribui o dono e notifica observadores.
 	 * Retorna true se a compra foi bem sucedida.
 	 */
-	// aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 	boolean comprarPropriedadeAtualJogador(int posicao) 
 	{
 		if (!propriedadeDisponivel(posicao))

@@ -246,6 +246,10 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         } catch (Exception e) {
             qtd = 0;
         }
+        
+     // DEBUG: Print das posições durante o desenho
+        System.out.println("DEBUG [DESENHAR_PEAO] - Quantidade de jogadores: " + qtd);
+        
 
         if (qtd <= 0) {
             // fallback: draw test pawn
@@ -259,6 +263,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
             Point coordsRelativas = coordenadasCasas.get(posicaoAtual);
             if (coordsRelativas == null)
                 return;
+            
             int xPeao = deslocamentoXMapa + coordsRelativas.x - TAMANHO_PEAO / 2;
             int yPeao = deslocamentoYMapa + coordsRelativas.y - TAMANHO_PEAO / 2;
             if (imagemPeao != null)
@@ -272,6 +277,9 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         for (int i = 0; i < qtd; i++) {
             int posModelo = FacadeModel.getInstance().getPosicaoJogador(i); // 0-based
             posToPlayers.computeIfAbsent(posModelo, k -> new java.util.ArrayList<>()).add(i);
+            
+         // DEBUG: Print da posição de cada jogador
+            System.out.println("DEBUG [DESENHAR_PEAO] - Jogador " + i + " na posição: " + posModelo);
         }
 
         for (java.util.Map.Entry<Integer, java.util.List<Integer>> e : posToPlayers.entrySet()) {
@@ -496,17 +504,41 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                 repaint();
                 break;
 
+                
             case MOVE:
                 try {
                     Object[] payload = (Object[]) event.payload;
                     Integer pos = (Integer) payload[0];
+                    
+                    System.out.println("=== DEBUG [MOVE] ===");
+                    System.out.println("Jogador atual: " + FacadeModel.getInstance().getJogadorAtual());
+                    System.out.println("Cor do jogador: " + FacadeModel.getInstance().getCorJogadorAtual());
+                    System.out.println("Nova posição: " + pos);
                     // atualiza peao e redesenha
-                    atualizarPeao();
+//                    atualizarPeao();
+//                    if (!FacadeModel.getInstance().ehPropriedade(pos)) {
+//                        ocultarCartaPropriedade();
+//                    }
+//                } catch (Exception ex) {
+//                    atualizarPeao();
+//                }
+                 // VERIFICAÇÃO CRÍTICA: Comparar com a posição atual no modelo
+                    int posicaoAtualNoModelo = FacadeModel.getInstance().getPosJogadorAtual();
+                    System.out.println("Posição atual no modelo: " + posicaoAtualNoModelo);
+                    System.out.println("Posição no evento: " + pos);
+                    System.out.println("Coincidem? " + (posicaoAtualNoModelo == pos));
+                    System.out.println("=====================");
+                    
+                    // FORÇAR ATUALIZAÇÃO IMEDIATA - chamar repaint diretamente
+                    repaint();
+                    
                     if (!FacadeModel.getInstance().ehPropriedade(pos)) {
                         ocultarCartaPropriedade();
                     }
                 } catch (Exception ex) {
-                    atualizarPeao();
+                    System.err.println("ERRO no processamento do movimento: " + ex.getMessage());
+                    // Em caso de erro, forçar repaint de qualquer forma
+                    repaint();
                 }
                 break;
 
@@ -533,6 +565,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                     repaint();
                 }
                 atualizarPeao();
+                repaint();
                 break;
             case FIM_DE_JOGO:
                 janelaPrincipal.mostrarTela(Telas.FIM_DE_JOGO);

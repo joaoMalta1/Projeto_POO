@@ -60,9 +60,9 @@ public class FacadeView {
 		CriacaoJogadores.getInstance().proxJogador();
 	}
 
-	int[] jogarDados() {
-		return Turno.getInstance().jogarDados();
-	}
+//	int[] jogarDados() {
+//		return Turno.getInstance().jogarDados();
+//	}
 
 	CorPeao getCorJogadorAtual() {
 		return Turno.getInstance().getCorJogadorAtual();

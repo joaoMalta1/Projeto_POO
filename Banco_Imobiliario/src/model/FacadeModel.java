@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 
-import controller.ControlePartida;
 import controller.CorPeao;
 
 public class FacadeModel {
@@ -22,7 +21,7 @@ public class FacadeModel {
     public int[] jogarDados() {
         int[] dados = Dados.getInstance().jogar();
            
-        CentralPartida.getInstance().jogadorAtualJogouDados(dados);
+//        CentralPartida.getInstance().jogadorAtualJogouDados(dados);
         
         return dados;
     }
@@ -60,11 +59,11 @@ public class FacadeModel {
 		return CentralPartida.getInstance().getPosJogadorAtual();
 	}
 
-	public int andarJogadorAtual(int[] dados) {
+	public void andarJogadorAtual(int[] dados) {
 		if (dados.length != 2) {
 			throw new IllegalArgumentException("Dados têm tamanho errado");
 		}
-		return CentralPartida.getInstance().andarJogadorAtual(dados);
+		CentralPartida.getInstance().andarJogadorAtual(dados);
 	}
 
 	public void addObserver(controller.Observador<controller.PartidaEvent> o) {
