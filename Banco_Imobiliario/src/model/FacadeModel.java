@@ -18,9 +18,14 @@ public class FacadeModel {
 		return fm;
 	}
 
-	public int[] jogarDados() {
-		return Dados.getInstance().jogar();
-	}
+    // Método existente modificado para incluir verificação de duplas
+    public int[] jogarDados() {
+        int[] dados = Dados.getInstance().jogar();
+           
+        CentralPartida.getInstance().jogadorAtualJogouDados(dados);
+        
+        return dados;
+    }
 
 
 	/**

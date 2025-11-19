@@ -98,6 +98,14 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		}
 		return novaPos;
 	}
+	
+	void jogadorAtualJogouDados(int[] dados) {
+		if(dados.length != 2) {
+			throw new IllegalArgumentException("Tamanho dos dados jogados inválido");
+		}
+		
+		jogadores.get(jogadorAtual).jogouDados(tabuleiro.getPosicaoPrisao(), dados);
+	}
 
 	boolean propriedadeDisponivel(int posicao) {
 		if (!tabuleiro.ehPropriedade(posicao))
