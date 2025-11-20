@@ -8,12 +8,11 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import java.util.Map;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.*;
 
 import model.FacadeModel;
 import controller.Observador;
@@ -30,11 +29,13 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     private BotaoEstilizado botaoSetarDados;
     private BotaoEstilizado botaoComprar; // novo botao para comprar propriedade
     private BotaoEstilizado bFimJogo;
+    private BotaoEstilizado bFimTurno;
 
     private int[] dados = { 1, 1 };
     private Image imagemMapa;
     private Image[] imagensDados;
     private boolean dadosVisiveis = false;
+    private boolean dadosJogadosTurno = false;
     private Image imagemPeao;
     private java.util.Map<CorPeao, Image> imagensPinos;
     private final int TAMANHO_PEAO = 25;
@@ -66,14 +67,31 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         criarBotaoDados();
         criarBotaoSetarDados();
         criarBotaoFimJogo();
+        criarBotaoFimTurno();
         
         FacadeModel.getInstance().addObserver(this);
+    }
+    
+    private void criarBotaoFimTurno(){
+    	bFimTurno = new BotaoEstilizado("Encerrar Turno", 300, 200);
+    	bFimTurno.addActionListener(e-> {
+    		if(dadosJogadosTurno) {
+    			FacadeView.getInstance().proxJogador();    			
+    		}
+    	});
     }
     
     private void criarBotaoFimJogo() {
     	bFimJogo = new BotaoEstilizado("Encerrar Partida", 300, 200);
     	bFimJogo.addActionListener(e -> FacadeView.getInstance().botaoFimDeJogoApertado());
     	add(bFimJogo);
+    	
+//    	// Cria um painel para posicionamento no canto inferior direito
+//        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+//        panel.add(bFimJogo);
+//        
+//        // Adiciona o painel na região SOUTH do BorderLayout
+//        add(panel, BorderLayout.SOUTH);
     }
 
 	private void criarBotaoSetarDados() {
@@ -108,7 +126,10 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
 
         botaoDados.addActionListener(e -> {
             if (botaoDados.getParent() != null) {
+                dadosJogadosTurno = true;
                 remove(botaoDados);
+                remove(botaoSetarDados);
+                add(bFimTurno);
                 revalidate();
                 repaint();
             }
@@ -561,6 +582,9 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
             case NEXT_PLAYER:
                 if (botaoDados.getParent() == null) {
                     add(botaoDados);
+                    add(botaoSetarDados);
+                    remove(bFimTurno);
+                    dadosJogadosTurno = false;
                     revalidate();
                     repaint();
                 }

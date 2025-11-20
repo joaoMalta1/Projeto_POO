@@ -159,7 +159,7 @@ class PainelCriacaoJogadores extends JPanel {
         	return;
         }
         
-        ctrl.proxJogador();
+        ctrl.proxJogadorASerCriado();
         
         recarregarPainel();
         return;

@@ -56,8 +56,12 @@ public class FacadeView {
 		return CriacaoJogadores.getInstance().getNomeJogador(i);
 	}
 
-	void proxJogador() {
+	void proxJogadorASerCriado() {
 		CriacaoJogadores.getInstance().proxJogador();
+	}
+	
+	void proxJogador() {
+		ControlePartida.getInstance().proxJogador();
 	}
 
 //	int[] jogarDados() {

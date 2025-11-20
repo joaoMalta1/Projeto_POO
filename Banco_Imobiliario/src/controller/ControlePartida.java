@@ -21,7 +21,7 @@ public class ControlePartida {
             FacadeModel.getInstance().andarJogadorAtual(dados);
             // Ao finalizar a movimentação, encerra o turno atual e passa para o próximo
             // (poderíamos adicionar regras futuras aqui, como jogadas extras por duplos)
-            FacadeModel.getInstance().proxJogador();
+//            FacadeModel.getInstance().proxJogador();
         }
         return dados;
     }
