@@ -48,6 +48,9 @@ public class CentralPartida implements Observado<PartidaEvent> {
 
 	void proxJogador() {
 		jogadorAtual = (++jogadorAtual) % jogadores.size();
+		for(boolean atualFalido = jogadores.get(jogadorAtual).isFaliu(); atualFalido; atualFalido = jogadores.get(jogadorAtual).isFaliu()) {
+			jogadorAtual = (++jogadorAtual) % jogadores.size();
+		}
 		notifyObservers(PartidaEvent.nextPlayer());
 		
 //		DEBUG
