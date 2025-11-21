@@ -3,7 +3,6 @@ package model;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import java.io.ByteArrayInputStream;
 import controller.CorPeao;
 
 public class TabuleiroTest {
@@ -88,7 +87,6 @@ public class TabuleiroTest {
     public void testMoverJogadorCaindoVaParaPrisao() {
         int posicaoInicial = 20;
         int[] dados = {4, 1}; // Para cair exatamente na posição 25
-        String input = "N\n";
         
         int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados);
         

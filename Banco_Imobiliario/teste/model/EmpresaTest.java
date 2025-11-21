@@ -2,8 +2,11 @@ package model;
 
 import static org.junit.Assert.*;
 import controller.CorPeao;
+import controller.ResultadoTransacao;
+
 import org.junit.Before;
 import org.junit.Test;
+
 
 public class EmpresaTest {
     private Jogador jogador;
@@ -16,14 +19,14 @@ public class EmpresaTest {
         jogador = new Jogador("AAA", new Peao(CorPeao.VERMELHA));
         outroJogador = new Jogador("AAA", new Peao(CorPeao.AZUL));
         banco = new Banco();
-        empresa = new Empresa("Companhia Teste", 150, 750); // precoCompra = 5 * precoPassagem
+        empresa = new Empresa("Companhia Teste", 150); // precoCompra = 5 * precoPassagem
     }
     
     @Test
     public void testComprarEmpresa_Sucesso() {
-        Propriedade.ResultadoTransacao resultado = empresa.comprar(jogador, banco);
+        ResultadoTransacao resultado = empresa.comprar(jogador, banco);
         
-        assertEquals(Propriedade.ResultadoTransacao.SUCESSO, resultado);
+        assertEquals(ResultadoTransacao.SUCESSO, resultado);
         assertEquals(jogador, empresa.dono);
         assertEquals(3250, jogador.getSaldo(), 0.001); // 4000 - 750
     }
@@ -33,9 +36,9 @@ public class EmpresaTest {
         Jogador jogadorPobre = new Jogador("AAA", new Peao(CorPeao.AMARELA));
         jogadorPobre.removerValor(3999); // Saldo 1
         
-        Propriedade.ResultadoTransacao resultado = empresa.comprar(jogadorPobre, banco);
+        ResultadoTransacao resultado = empresa.comprar(jogadorPobre, banco);
         
-        assertEquals(Propriedade.ResultadoTransacao.SALDO_INSUFICIENTE, resultado);
+        assertEquals(ResultadoTransacao.SALDO_INSUFICIENTE, resultado);
         assertNull(empresa.dono);
     }
     
@@ -43,9 +46,9 @@ public class EmpresaTest {
     public void testComprarEmpresa_JaTemDono() {
         empresa.comprar(outroJogador, banco);
         
-        Propriedade.ResultadoTransacao resultado = empresa.comprar(jogador, banco);
+        ResultadoTransacao resultado = empresa.comprar(jogador, banco);
         
-        assertEquals(Propriedade.ResultadoTransacao.JA_TEM_DONO, resultado);
+        assertEquals(ResultadoTransacao.JA_TEM_DONO, resultado);
         assertEquals(outroJogador, empresa.dono);
     }
     

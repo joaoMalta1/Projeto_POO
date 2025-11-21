@@ -1,6 +1,8 @@
 package model;
 
 import controller.CorPeao;
+import controller.ResultadoTransacao;
+
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,14 +16,14 @@ public class PropriedadeTest {
     public void setUp() {
         jogador = new Jogador("AAAA", new Peao(CorPeao.VERMELHA));
         banco = new Banco();
-        propriedadeTest = new Propriedade("Teste", 100, 500);
+        propriedadeTest = new Propriedade("Teste", 100);
     }
     
     @Test
     public void testComprarPropriedade_Sucesso() {
-        Propriedade.ResultadoTransacao resultado = propriedadeTest.comprar(jogador, banco);
+        ResultadoTransacao resultado = propriedadeTest.comprar(jogador, banco);
         
-        assertEquals(Propriedade.ResultadoTransacao.SUCESSO, resultado);
+        assertEquals(ResultadoTransacao.SUCESSO, resultado);
         assertEquals(jogador, propriedadeTest.dono);
         assertEquals(3500, jogador.getSaldo(), 0.001); // 4000 - 500
     }
@@ -31,9 +33,9 @@ public class PropriedadeTest {
         Jogador jogadorPobre = new Jogador("AAAA", new Peao(CorPeao.AZUL));
         jogadorPobre.removerValor(3999);
         
-        Propriedade.ResultadoTransacao resultado = propriedadeTest.comprar(jogadorPobre, banco);
+        ResultadoTransacao resultado = propriedadeTest.comprar(jogadorPobre, banco);
         
-        assertEquals(Propriedade.ResultadoTransacao.SALDO_INSUFICIENTE, resultado);
+        assertEquals(ResultadoTransacao.SALDO_INSUFICIENTE, resultado);
         assertNull(propriedadeTest.dono);
     }
     
@@ -42,9 +44,9 @@ public class PropriedadeTest {
         Jogador outroJogador = new Jogador("AAAA", new Peao(CorPeao.AMARELA));
         propriedadeTest.comprar(outroJogador, banco); // Primeira compra
         
-        Propriedade.ResultadoTransacao resultado = propriedadeTest.comprar(jogador, banco);
+        ResultadoTransacao resultado = propriedadeTest.comprar(jogador, banco);
         
-        assertEquals(Propriedade.ResultadoTransacao.JA_TEM_DONO, resultado);
+        assertEquals(ResultadoTransacao.JA_TEM_DONO, resultado);
         assertEquals(outroJogador, propriedadeTest.dono); // Dono continua sendo o primeiro
     }
     

@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
-import java.io.ByteArrayInputStream;
+import controller.ResultadoTransacao;
 
 public class TerrenoTest {
     private Jogador jogador;
@@ -18,7 +18,7 @@ public class TerrenoTest {
         jogador = new Jogador("AAA", new Peao(CorPeao.VERMELHA));
         outroJogador = new Jogador("AAA", new Peao(CorPeao.AZUL));
         banco = new Banco();
-        terreno = new Terreno("Terreno Teste", 100, 500);
+        terreno = new Terreno("Terreno Teste", 100);
     }
     
     @After
@@ -31,9 +31,9 @@ public class TerrenoTest {
         terreno.comprar(jogador, banco);
         double saldoInicial = jogador.getSaldo();
         
-        Propriedade.ResultadoTransacao resultado = terreno.construirCasa(jogador, banco);
+        ResultadoTransacao resultado = terreno.construirCasa(jogador, banco);
         
-        assertEquals(Propriedade.ResultadoTransacao.SUCESSO, resultado);
+        assertEquals(ResultadoTransacao.SUCESSO, resultado);
         assertEquals(1, terreno.qtdCasas);
         assertEquals(saldoInicial - terreno.precoCasa, jogador.getSaldo(), 0.001);
     }
@@ -42,9 +42,9 @@ public class TerrenoTest {
     public void testConstruirCasa_NaoEDono() {
         terreno.comprar(outroJogador, banco); // Outro jogador compra
         
-        Propriedade.ResultadoTransacao resultado = terreno.construirCasa(jogador, banco);
+        ResultadoTransacao resultado = terreno.construirCasa(jogador, banco);
         
-        assertEquals(Propriedade.ResultadoTransacao.NAO_EH_DONO, resultado);
+        assertEquals(ResultadoTransacao.NAO_EH_DONO, resultado);
         assertEquals(0, terreno.qtdCasas);
     }
     
@@ -53,9 +53,9 @@ public class TerrenoTest {
         terreno.comprar(jogador, banco);
         jogador.removerValor(jogador.getSaldo() - 1); // Quase zera o saldo (para jogador não falir)
         
-        Propriedade.ResultadoTransacao resultado = terreno.construirCasa(jogador, banco);
+        ResultadoTransacao resultado = terreno.construirCasa(jogador, banco);
         
-        assertEquals(Propriedade.ResultadoTransacao.SALDO_INSUFICIENTE, resultado);
+        assertEquals(ResultadoTransacao.SALDO_INSUFICIENTE, resultado);
         assertEquals(0, terreno.qtdCasas);
     }
     
@@ -65,9 +65,9 @@ public class TerrenoTest {
         
         terreno.construirCasa(jogador, banco);
         terreno.construirCasa(jogador, banco);
-        Propriedade.ResultadoTransacao resultado = terreno.construirCasa(jogador, banco);
+        ResultadoTransacao resultado = terreno.construirCasa(jogador, banco);
         
-        assertEquals(Propriedade.ResultadoTransacao.SUCESSO, resultado);
+        assertEquals(ResultadoTransacao.SUCESSO, resultado);
         assertEquals(3, terreno.qtdCasas);
     }
     

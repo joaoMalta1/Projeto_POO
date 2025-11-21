@@ -25,6 +25,11 @@ public class ControlePartida {
         }
         return dados;
     }
+    
+    public boolean comprarPropriedadeAtualJogador() {
+    	return FacadeModel.getInstance().comprarPropriedadeAtualJogador();
+    }
+    
 
     public void proxJogador() {
         FacadeModel.getInstance().proxJogador();
@@ -50,4 +55,20 @@ public class ControlePartida {
     	Partida.getInstance().reset();
     	CriacaoJogadores.getInstance().reset();
     }
+
+	public boolean atualPodeComprarCasa() {
+		return FacadeModel.getInstance().atualPodeComprarCasa();
+	}
+	
+	public boolean atualPodeComprarHotel() {
+		return FacadeModel.getInstance().atualPodeComprarHotel();
+	}
+
+	public boolean atualComprarCasa() {
+		return FacadeModel.getInstance().atualComprarCasa();
+	}
+	
+	public boolean atualComprarHotel() {
+		return FacadeModel.getInstance().atualComprarHotel();
+	}
 }

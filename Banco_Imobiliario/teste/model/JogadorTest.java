@@ -60,8 +60,8 @@ public class JogadorTest {
     public void testFalencia() {
 
         Banco banco = new Banco(); 
-        Propriedade prop1 = new Propriedade("Avenida Ficticia", 50.0, 200.0);
-        Terreno terr1 = new Terreno("Rua Ficticia", 20.0, 100.0);
+        Propriedade prop1 = new Propriedade("Avenida Ficticia", 50.0);
+        Terreno terr1 = new Terreno("Rua Ficticia", 20.0);
 
         jogador.adicionarPropriedade(prop1);
         jogador.adicionarPropriedade(terr1); 

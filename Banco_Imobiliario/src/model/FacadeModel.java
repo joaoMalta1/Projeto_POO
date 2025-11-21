@@ -95,9 +95,9 @@ public class FacadeModel {
 		return CentralPartida.getInstance().getCorJogador(indice);
 	}
 
-    public boolean comprarPropriedadeAtualJogador(int posicao) 
+    public boolean comprarPropriedadeAtualJogador() 
 	{
-		return CentralPartida.getInstance().comprarPropriedadeAtualJogador(posicao);
+		return CentralPartida.getInstance().comprarPropriedadeAtualJogador();
     }
 
 	public boolean propriedadeDisponivel(int posicao) {
@@ -111,5 +111,21 @@ public class FacadeModel {
 	
 	public void reset() {
 		CentralPartida.getInstance().reset();
+	}
+
+	public boolean atualPodeComprarCasa() {
+		return CentralPartida.getInstance().atualPodeComprarCasa();
+	}
+	
+	public boolean atualPodeComprarHotel() {
+		return CentralPartida.getInstance().atualPodeComprarHotel();
+	}
+
+	public boolean atualComprarCasa() {
+		return CentralPartida.getInstance().atualComprarCasa();
+	}
+	
+	public boolean atualComprarHotel() {
+		return CentralPartida.getInstance().atualComprarHotel();
 	}
 }

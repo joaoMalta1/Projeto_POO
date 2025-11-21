@@ -63,10 +63,10 @@ public class FacadeView {
 	void proxJogador() {
 		ControlePartida.getInstance().proxJogador();
 	}
-
-//	int[] jogarDados() {
-//		return Turno.getInstance().jogarDados();
-//	}
+	
+	boolean comprarPropriedadeAtualJogador() {
+		return ControlePartida.getInstance().comprarPropriedadeAtualJogador();
+	}
 
 	CorPeao getCorJogadorAtual() {
 		return Turno.getInstance().getCorJogadorAtual();
@@ -75,14 +75,21 @@ public class FacadeView {
 	boolean posicaoAtualEhPropriedade() {
 		return FacadeModel.getInstance().ehPropriedade(FacadeModel.getInstance().getPosJogadorAtual());
 	}
-
-	boolean ehPropriedade(int posicao) {
-		return FacadeModel.getInstance().ehPropriedade(posicao);
+	
+	boolean atualPodeComprarCasa() {
+		return ControlePartida.getInstance().atualPodeComprarCasa();
 	}
-
-	public boolean comprarPropriedadeAtual() {
-		int pos = FacadeModel.getInstance().getPosJogadorAtual();
-		return FacadeModel.getInstance().comprarPropriedadeAtualJogador(pos);
+	
+	boolean atualPodeComprarHotel() {
+		return ControlePartida.getInstance().atualPodeComprarHotel();
+	}
+	
+	boolean atualComprarCasa() {
+		return ControlePartida.getInstance().atualComprarCasa();
+	}
+	
+	boolean atualComprarHotel() {
+		return ControlePartida.getInstance().atualComprarHotel();
 	}
 	
 	void botaoFimDeJogoApertado() {

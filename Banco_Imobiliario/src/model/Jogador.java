@@ -71,17 +71,22 @@ class Jogador {
     
     // ---- Métodos de dinheiro ----
     void adicionarValor(double valor) {
+    	System.out.println("[DEBUG] Jogador: " + nome + " Saldo antes: " + saldo);
         if (valor > 0) {
             saldo += valor;
         }
+        System.out.println("[DEBUG] Jogador: " + nome + " Saldo depois: " + saldo);
     }
 
     boolean removerValor(double valor) {
+    	System.out.println("[DEBUG] Jogador: " + nome + " Saldo antes: " + saldo);
+    	System.out.println("[DEBUG] Valor: " + valor);
     	if(valor <= 0) {
     		return false;
     	}
     	else if (saldo >= valor) {
             saldo -= valor;
+            System.out.println("[DEBUG] Jogador: " + nome + " Saldo depois: " + saldo);
             return true; // sucesso
         } else {
             faliu = true;
@@ -114,7 +119,7 @@ class Jogador {
             }
             this.propriedades.clear();
             this.saldo = 0.0; 
-            System.out.println("jogador" + nome + " faliu");
+            System.out.println("[DEBUG] Jogador" + nome + " faliu");
             CentralPartida.getInstance().checaFimJogo();
         }
     }

@@ -1,9 +1,7 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -26,11 +24,8 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
 
     private static final long serialVersionUID = 1L;
     private final Janela janelaPrincipal;
-    private BotaoEstilizado botaoDados;
-    private BotaoEstilizado botaoSetarDados;
-    private BotaoEstilizado botaoComprarProp; // novo botao para comprar propriedade
-    private BotaoEstilizado bFimJogo;
-    private BotaoEstilizado bFimTurno;
+    private BotaoEstilizado botaoDados, botaoSetarDados, botaoComprarProp, 
+    	botaoComprarCasa, bFimJogo, bFimTurno, botaoComprarHotel;
 
     private int[] dados = { 1, 1 };
     private Image imagemMapa;
@@ -83,21 +78,18 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     private void criarBotaoFimJogo() {
     	bFimJogo = new BotaoEstilizado("Encerrar Partida", 300, 200);
     	bFimJogo.addActionListener(e -> {
-    		// Exibe caixa de diálogo de confirmação
+
             int resposta = JOptionPane.showConfirmDialog(
-                this, // Componente pai
-                "Você tem certeza que deseja encerrar a partida?", // Mensagem
-                "Confirmação de Encerramento", // Título
-                JOptionPane.YES_NO_OPTION, // Tipo de opções
-                JOptionPane.QUESTION_MESSAGE // Tipo de mensagem
+                this, 
+                "Você tem certeza que deseja encerrar a partida?", 
+                "Confirmação de Encerramento", 
+                JOptionPane.YES_NO_OPTION, 
+                JOptionPane.QUESTION_MESSAGE
             );
             
-            // Verifica se o usuário escolheu "Sim"
             if (resposta == JOptionPane.YES_OPTION) {
-                // Usuário confirmou, encerra a partida
                 FacadeView.getInstance().botaoFimDeJogoApertado();
             }
-            // Caso contrário (NO_OPTION ou fechar a janela), não faz nada
     		});
     	add(bFimJogo);
     }
@@ -149,13 +141,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
             }
         });
 
-        // se parou em propriedade disponível, mostrar botão comprar
-        if (FacadeModel.getInstance().propriedadeDisponivelAtual()) 
-        {
-            criarBotaoComprarPropriedade();
-        } else {
-            removerBotaoComprarSeExistir(); //após clicar uma vez o botao ta sumindo, ajustar essa logica
-        }
         add(botaoDados);
         revalidate();
         repaint();
@@ -166,17 +151,56 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
             return; 
         botaoComprarProp  = new BotaoEstilizado("Comprar Propriedade", 200, 120);
         botaoComprarProp.addActionListener(ev -> {
-            System.out.println(FacadeModel.getInstance().getPosJogadorAtual());
-            boolean sucesso = FacadeModel.getInstance().comprarPropriedadeAtualJogador(FacadeModel.getInstance().getPosJogadorAtual());
+//            System.out.println(FacadeModel.getInstance().getPosJogadorAtual());
+            boolean sucesso = FacadeView.getInstance().comprarPropriedadeAtualJogador();
             if (sucesso) {
                 removerBotaoComprarSeExistir();
-                atualizarPeao();
+                atualizarFundo();
                 repaint();
             } else {
-                System.out.println("SALDO ISUFICIENTE");
+            	removerBotaoComprarSeExistir();
+                atualizarFundo();
+                repaint();
+                System.out.println("COMPRA NÃO EFETUADA");
             }
         });
         add(botaoComprarProp);
+        revalidate();
+        repaint();
+    }
+    
+    private void criarBotaoComprarCasa() {
+        if (botaoComprarCasa != null && botaoComprarCasa.getParent() != null)
+            return; 
+        botaoComprarCasa  = new BotaoEstilizado("Comprar Casa", 200, 120);
+        botaoComprarCasa.addActionListener(ev -> {
+//            System.out.println(FacadeModel.getInstance().getPosJogadorAtual());
+            boolean sucesso = FacadeView.getInstance().atualComprarCasa();
+            if (sucesso) {
+                removerBotaoComprarCasaSeExistir();
+                atualizarFundo();
+                repaint();
+            }
+        });
+        add(botaoComprarCasa);
+        revalidate();
+        repaint();
+    }
+    
+    private void criarBotaoComprarHotel() {
+        if (botaoComprarHotel != null && botaoComprarHotel.getParent() != null)
+            return; 
+        botaoComprarHotel  = new BotaoEstilizado("Comprar Casa", 200, 120);
+        botaoComprarHotel.addActionListener(ev -> {
+//            System.out.println(FacadeModel.getInstance().getPosJogadorAtual());
+            boolean sucesso = FacadeView.getInstance().atualComprarHotel();
+            if (sucesso) {
+                removerBotaoComprarHotelSeExistir();
+                atualizarFundo();
+                repaint();
+            }
+        });
+        add(botaoComprarHotel);
         revalidate();
         repaint();
     }
@@ -184,6 +208,22 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     private void removerBotaoComprarSeExistir() {
         if (botaoComprarProp != null && botaoComprarProp.getParent() != null) {
             remove(botaoComprarProp);
+            revalidate();
+            repaint();
+        }
+    }
+    
+    private void removerBotaoComprarCasaSeExistir() {
+        if (botaoComprarCasa != null && botaoComprarCasa.getParent() != null) {
+            remove(botaoComprarCasa);
+            revalidate();
+            repaint();
+        }
+    }
+    
+    private void removerBotaoComprarHotelSeExistir() {
+        if (botaoComprarHotel != null && botaoComprarHotel.getParent() != null) {
+            remove(botaoComprarHotel);
             revalidate();
             repaint();
         }
@@ -207,8 +247,8 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         }
     }
 
-    public void atualizarPeao() {
-        carregarImagemDoPeao();
+    public void atualizarFundo() {
+//        carregarImagemDoPeao();
         setBackground(Cores.getInstance().corCorrespondente(FacadeView.getInstance().getCorJogadorAtual()));
         repaint();
     }
@@ -388,10 +428,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         }
     }
 
-    private void carregarImagemDoPeao() {
-        // deprecated: we now use imagensPinos map
-    }
-
     private void carregarImagensPinos() {
         imagensPinos = new HashMap<>();
         for (controller.CorPeao cor : controller.CorPeao.values()) {
@@ -516,19 +552,18 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                         this.dados = new int[] { dadosRolados[0], dadosRolados[1] };
                         this.dadosVisiveis = true;
                     }
-                } catch (Exception ex) {
-                    //
-                }
+                } catch (Exception ex) {}
                 break;
 
             case PURCHASED_PROPERTY:
-                try {
-                    Integer pos = (Integer) event.payload;
-                    System.out.println("PainelTabuleiro: propriedade comprada na pos " + pos);
-                } catch (Exception e) { /* ignore */ }
-                // garantir remoção do botão comprar, atualizar peao e repintar
                 removerBotaoComprarSeExistir();
-                atualizarPeao();
+                if(FacadeView.getInstance().atualPodeComprarCasa()) {
+                	criarBotaoComprarCasa();
+                }
+                if(FacadeView.getInstance().atualPodeComprarHotel()) {
+                	criarBotaoComprarHotel();
+                }
+                atualizarFundo();
                 revalidate();
                 repaint();
                 break;
@@ -539,15 +574,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                     Object[] payload = (Object[]) event.payload;
                     Integer pos = (Integer) payload[0];
                     
-                    // atualiza peao e redesenha
-//                    atualizarPeao();
-//                    if (!FacadeModel.getInstance().ehPropriedade(pos)) {
-//                        ocultarCartaPropriedade();
-//                    }
-//                } catch (Exception ex) {
-//                    atualizarPeao();
-//                }
-                    // FORÇAR ATUALIZAÇÃO IMEDIATA - chamar repaint diretamente
                     repaint();
                     
                     if (!FacadeModel.getInstance().ehPropriedade(pos)) {
@@ -555,7 +581,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                     }
                 } catch (Exception ex) {
                     System.err.println("ERRO no processamento do movimento: " + ex.getMessage());
-                    // Em caso de erro, forçar repaint de qualquer forma
                     repaint();
                 }
                 break;
@@ -565,15 +590,23 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                     Integer pos = (Integer) event.payload;
                     exibirCartaPropriedade(Integer.toString(pos));
                     boolean disponivel = FacadeModel.getInstance().propriedadeDisponivel(pos);
-                    System.out.println("Propriedade disponivel? " + disponivel);
+                    boolean casaDisponivel = FacadeModel.getInstance().atualPodeComprarCasa();
+                    boolean hotelDisponivel = FacadeModel.getInstance().atualPodeComprarHotel();
+
                     if (disponivel) {
                         criarBotaoComprarPropriedade();
+                        if(casaDisponivel) {
+                        	criarBotaoComprarCasa();
+                        }
+                        if(hotelDisponivel) {
+                        	criarBotaoComprarHotel();
+                        }
                     } else {
                         removerBotaoComprarSeExistir();
+                        removerBotaoComprarCasaSeExistir();
+                        removerBotaoComprarHotelSeExistir();
                     }
-                } catch (Exception ex) {
-                    //
-                }
+                } catch (Exception ex) {}
                 break;
 
             case NEXT_PLAYER:
@@ -587,7 +620,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                     revalidate();
                     repaint();
                 }
-                atualizarPeao();
+                atualizarFundo();
                 repaint();
                 break;
             case FIM_DE_JOGO:

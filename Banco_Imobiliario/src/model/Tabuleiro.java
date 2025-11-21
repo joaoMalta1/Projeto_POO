@@ -138,12 +138,10 @@ class Tabuleiro {
             	campos.add(new Campo(nome, precoPassagem));}
             else if(nome.equals("VÁ PARA A PRISÃO")) {
             	campos.add(new VaParaPrisao(nome, precoPassagem));}
-//          ASSUMIMOS, como não consta em uma tabela o preço de compra de um terreno, que ele é
-//            igual a 5 vezes o preço que se paga por casa ao passar pelo terreno
             else if(nome.startsWith("Companhia")) {
-            	campos.add(new Empresa(nome, precoPassagem, 5*precoPassagem));}
+            	campos.add(new Empresa(nome, precoPassagem));}
             else {
-            	campos.add(new Terreno(nome, precoPassagem, 5*precoPassagem));}
+            	campos.add(new Terreno(nome, precoPassagem));}
         }
         tamanho = campos.size();
     }
