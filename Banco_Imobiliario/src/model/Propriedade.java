@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Scanner;
-
 class Propriedade extends Campo {
 	protected Jogador dono;
 	protected final double precoCompra;
@@ -29,24 +27,7 @@ class Propriedade extends Campo {
 		System.err.println("Saldo insuficiente!");
 		return ResultadoTransacao.SALDO_INSUFICIENTE;
 	}
-	
-//	S = true ; N = false;
-    protected boolean scannerSN(String mensagem, Scanner scanner) {
-        while (true) {
-            System.out.print(mensagem + " (S/N): ");
-            String resposta = scanner.nextLine().trim().toUpperCase();
-            
-            if (resposta.equals("S")) {
-                return true;
-            } else if (resposta.equals("N")) {
-                return false;
-            }
-            System.out.println("Resposta inválida! Digite apenas S ou N.");
-        }
-    }
-    
-    void caiuNoCampo(Jogador jogador, Banco banco, Scanner scanner) {}
-	
+		
 	//Enum para resultados consistentes
 	enum ResultadoTransacao {
 	 SUCESSO,
@@ -96,34 +77,40 @@ class Terreno extends Propriedade {
 //	Posteriormente, quando criarmos este módulo, esta integração será mudada.
 //	Esta é uma solução PROVISÓRIA
 	@Override
-	void caiuNoCampo(Jogador jogador, Banco banco, Scanner scanner) {
+	void caiuNoCampo(Jogador jogador, Banco banco) {
 		double precoAPagar = precoPassagem * qtdCasas;
 //		CASO: ninguém possui (pode ser comprado OU apenas pagará taxa de passagem ao banco)
-		if(this.dono == null) {
-//			Jogador decide pelo console se deseja comprar terreno
-	        boolean vaiComprar = scannerSN("Deseja comprar o Terreno?", scanner);
-			if(vaiComprar) {
-				this.comprar(jogador, banco);
-			}
-			else {
-				jogador.removerValor(precoPassagem);
-				banco.recebeDinheiro(precoPassagem);				
-			}
+//		if(this.dono == null) {
+////			Jogador decide pelo console se deseja comprar terreno
+//	        boolean vaiComprar = scannerSN("Deseja comprar o Terreno?", scanner);
+//			if(vaiComprar) {
+//				this.comprar(jogador, banco);
+//			}
+//			else {
+//				jogador.removerValor(precoPassagem);
+//				banco.recebeDinheiro(precoPassagem);				
+//			}
+//			return;
+//		}
+		if(dono == null) {
+			jogador.removerValor(precoPassagem);
+			banco.recebeDinheiro(precoPassagem);
 			return;
 		}
+		
 //		CASO: já possui dono e o jogador que está no campo não é o dono
-		else if(jogador != dono) {
+		if(jogador != dono) {
 			jogador.removerValor(precoAPagar);
 			this.dono.adicionarValor(precoAPagar);
 			return;
 		}
 //		CASO: é o dono (pode comprar casa)
-		else {
-			boolean vaiComprarCasa = scannerSN("Deseja comprar uma Casa?", scanner);
-			if(vaiComprarCasa) {
-				this.construirCasa(jogador, banco);
-			}
-		}
+//		else {
+//			boolean vaiComprarCasa = scannerSN("Deseja comprar uma Casa?", scanner);
+//			if(vaiComprarCasa) {
+//				this.construirCasa(jogador, banco);
+//			}
+//		}
 		return;
 	}
 }
@@ -140,20 +127,26 @@ class Empresa extends Propriedade {
 //	Posteriormente, quando criarmos este módulo, esta integração será mudada.
 //	Esta é uma solução PROVISÓRIA
 	@Override
-	void caiuNoCampo(Jogador jogador, Banco banco, Scanner scanner) {
+	void caiuNoCampo(Jogador jogador, Banco banco) {
 //		CASO: empresa não tem dono (pode ser comprada ou apenas será pago o preço de passagem)
-		if(this.dono == null) {
-//			Lê do teclado se o jogador quer comprar a empresa
-			boolean querComprar = this.scannerSN("Quer comprar a empresa?", scanner);
-			if(querComprar) {
-				this.comprar(jogador, banco);
-			}
-			else {
-				jogador.removerValor(precoPassagem);
-				banco.recebeDinheiro(precoPassagem);				
-			}
+//		if(this.dono == null) {
+////			Lê do teclado se o jogador quer comprar a empresa
+//			boolean querComprar = this.scannerSN("Quer comprar a empresa?", scanner);
+//			if(querComprar) {
+//				this.comprar(jogador, banco);
+//			}
+//			else {
+//				jogador.removerValor(precoPassagem);
+//				banco.recebeDinheiro(precoPassagem);				
+//			}
+//			return;
+//		}
+		if(dono == null) {
+			jogador.removerValor(precoPassagem);
+			banco.recebeDinheiro(precoPassagem);
+			return;
 		}
-		else if(jogador != dono) {
+		if(jogador != dono) {
 			jogador.removerValor(precoPassagem);
 			this.dono.adicionarValor(precoPassagem);
 		}

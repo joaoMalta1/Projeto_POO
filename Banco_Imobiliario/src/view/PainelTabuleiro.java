@@ -10,14 +10,13 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.util.Map;
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.swing.*;
 
 import model.FacadeModel;
 import controller.Observador;
 import controller.CorPeao;
-import controller.Observado;
 import controller.ControlePartida;
 import controller.PartidaEvent;
 
@@ -51,8 +50,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     private final int LARGURA_MAPA = 700;
     private final int ALTURA_MAPA = 700;
     
-	private ArrayList<Observador<PartidaEvent>> observers = null;
-
     public PainelTabuleiro(Janela janela) {
         this.janelaPrincipal = janela;
         
@@ -269,7 +266,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         }
         
      // DEBUG: Print das posições durante o desenho
-        System.out.println("DEBUG [DESENHAR_PEAO] - Quantidade de jogadores: " + qtd);
+//        System.out.println("DEBUG [DESENHAR_PEAO] - Quantidade de jogadores: " + qtd);
         
 
         if (qtd <= 0) {
@@ -300,10 +297,10 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
             posToPlayers.computeIfAbsent(posModelo, k -> new java.util.ArrayList<>()).add(i);
             
          // DEBUG: Print da posição de cada jogador
-            System.out.println("DEBUG [DESENHAR_PEAO] - Jogador " + i + " na posição: " + posModelo);
+//            System.out.println("DEBUG [DESENHAR_PEAO] - Jogador " + i + " na posição: " + posModelo);
         }
 
-        for (java.util.Map.Entry<Integer, java.util.List<Integer>> e : posToPlayers.entrySet()) {
+        for (Map.Entry<Integer, List<Integer>> e : posToPlayers.entrySet()) {
             int posModelo = e.getKey();
             java.util.List<Integer> playersHere = e.getValue();
             int countHere = playersHere.size();
@@ -531,10 +528,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                     Object[] payload = (Object[]) event.payload;
                     Integer pos = (Integer) payload[0];
                     
-                    System.out.println("=== DEBUG [MOVE] ===");
-                    System.out.println("Jogador atual: " + FacadeModel.getInstance().getJogadorAtual());
-                    System.out.println("Cor do jogador: " + FacadeModel.getInstance().getCorJogadorAtual());
-                    System.out.println("Nova posição: " + pos);
                     // atualiza peao e redesenha
 //                    atualizarPeao();
 //                    if (!FacadeModel.getInstance().ehPropriedade(pos)) {
@@ -543,13 +536,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
 //                } catch (Exception ex) {
 //                    atualizarPeao();
 //                }
-                 // VERIFICAÇÃO CRÍTICA: Comparar com a posição atual no modelo
-                    int posicaoAtualNoModelo = FacadeModel.getInstance().getPosJogadorAtual();
-                    System.out.println("Posição atual no modelo: " + posicaoAtualNoModelo);
-                    System.out.println("Posição no evento: " + pos);
-                    System.out.println("Coincidem? " + (posicaoAtualNoModelo == pos));
-                    System.out.println("=====================");
-                    
                     // FORÇAR ATUALIZAÇÃO IMEDIATA - chamar repaint diretamente
                     repaint();
                     
@@ -594,9 +580,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
             case FIM_DE_JOGO:
                 janelaPrincipal.mostrarTela(Telas.FIM_DE_JOGO);
             	break;
-//            case INFO:
-//            // log ? ou salvar 
-//                break;
               default:
             	  break;
         }

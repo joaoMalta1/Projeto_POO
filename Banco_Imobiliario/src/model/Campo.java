@@ -43,8 +43,7 @@ class Prisao extends Campo {
             System.out.println("Jogador não está preso. Nenhuma rodada descontada.");
         }
         if (jogador.getIsNaPrisao()) {
-        	int rodadasFaltantes = jogador.getRodadasPreso() + 1;
-        	jogador.setRodadasPreso(rodadasFaltantes);
+        	jogador.setRodadasPreso(jogador.getRodadasPreso() + 1);
         }
     }
     
@@ -60,11 +59,13 @@ class VaParaPrisao extends Campo {
 	void caiuNoCampo(Jogador jogador, Tabuleiro tabuleiro) {
 		jogador.getPeao().setPosicao(tabuleiro.getPosicaoPrisao());
 		this.irParaPrisao(jogador);
+		jogador.vaiParaPrisao();
 	}
 	
     void irParaPrisao(Jogador jogador) {
         jogador.setNaPrisao(true);
         jogador.setRodadasPreso(0);
+        jogador.vaiParaPrisao();
     }
 }
 

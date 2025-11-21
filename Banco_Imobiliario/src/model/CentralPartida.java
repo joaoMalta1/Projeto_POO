@@ -98,9 +98,16 @@ public class CentralPartida implements Observado<PartidaEvent> {
 
 //		TODO: implementar regras de acordo com função da classe Tabuleiro
 
-		jogadorAtualJogouDados(dados);
-		int novaPos = jogadores.get(jogadorAtual).getPeao().getPosicao();
+		System.out.println("[DEBUG] Jogador atual: " + jogadores.get(jogadorAtual).getPeao().getCorString()
+				+ " | Saldo antes: " + jogadores.get(jogadorAtual).getSaldo() );
 		
+		jogadorAtualJogouDados(dados);
+//		int novaPos = jogadores.get(jogadorAtual).getPeao().getPosicao();
+		int novaPos = tabuleiro.moverJogador(jogadores.get(jogadorAtual), posAtual, dados);
+//		tabuleiro;
+		
+		System.out.println("[DEBUG] Jogador atual: " + jogadores.get(jogadorAtual).getPeao().getCorString()
+				+ " | Saldo depois: " + jogadores.get(jogadorAtual).getSaldo() );
 		notifyObservers(PartidaEvent.diceRolled(new int[] { dados[0], dados[1] }));
 		notifyObservers(PartidaEvent.move(novaPos, new int[] { dados[0], dados[1] }));
 		if (ehPropriedade(novaPos)) {

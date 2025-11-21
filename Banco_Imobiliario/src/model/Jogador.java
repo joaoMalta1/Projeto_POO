@@ -179,15 +179,15 @@ class Jogador {
     	peao.setPosicao( (soma + posAtual) % tamTabuleiro );
     	
     	if(verificarTresDuplasConsecutivas(dados)) {
-    		vaiParaPrisao(posicaoPrisao);
+//    		vaiParaPrisao(posicaoPrisao);
     		System.out.println("DEBUG: Jogador " + nome + " foi para a prisão em " + posicaoPrisao);
     	}
     }
     
-    void vaiParaPrisao(int posicaoPrisao) {
+    void vaiParaPrisao(/*int posicaoPrisao*/) {
     	this.naPrisao = true;
         this.rodadasPreso = 0;
-        this.peao.setPosicao(posicaoPrisao);
+//        this.peao.setPosicao(posicaoPrisao);
         resetarControleDuplas();
         
     }

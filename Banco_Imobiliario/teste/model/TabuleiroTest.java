@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.io.ByteArrayInputStream;
-import java.util.Scanner;
 import controller.CorPeao;
 
 public class TabuleiroTest {
@@ -64,32 +63,25 @@ public class TabuleiroTest {
     public void testMoverJogadorNormal() {
         int posicaoInicial = 0;
         int[] dados = {3, 4};
-        String input = "N\n";
-        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         
-        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados, scanner);
+        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados);
         
         assertEquals(7, novaPosicao);
         assertFalse(jogador.getIsNaPrisao());
-        
-        scanner.close();
     }
 
     @Test
     public void testMoverJogadorPassandoInicio() {
         int posicaoInicial = 32;
         int[] dados = {5, 6};
-        String input = "N\n";
-        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         
         double saldoInicial = jogador.getSaldo();
-        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados, scanner);
+        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados);
         
         assertEquals(9, novaPosicao);
         // Deve receber bônus por passar pelo início
         assertEquals(saldoInicial + 200, jogador.getSaldo(), 0.001);
         
-        scanner.close();
     }
 
     @Test
@@ -97,30 +89,23 @@ public class TabuleiroTest {
         int posicaoInicial = 20;
         int[] dados = {4, 1}; // Para cair exatamente na posição 25
         String input = "N\n";
-        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         
-        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados, scanner);
+        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados);
         
         assertEquals(tabuleiro.getPosicaoPrisao(), novaPosicao);
         assertTrue(jogador.getIsNaPrisao());
-        
-        scanner.close();
     }
 
     @Test
     public void testMoverJogadorPresoComDadosIguais() {
         jogador.setNaPrisao(true);
         int[] dados = {2, 2};
-        String input = "N\n";
-        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         
-        int novaPosicao = tabuleiro.moverJogador(jogador, 9, dados, scanner);
+        int novaPosicao = tabuleiro.moverJogador(jogador, 9, dados);
         
         assertFalse(jogador.getIsNaPrisao());
         assertEquals(0, jogador.getRodadasPreso());
         assertTrue(novaPosicao > 9 && novaPosicao < tabuleiro.getTamanho());
-        
-        scanner.close();
     }
 
     @Test
@@ -128,16 +113,13 @@ public class TabuleiroTest {
         jogador.setNaPrisao(true);
         jogador.setRodadasPreso(4);
         int[] dados = {1, 2};
-        String input = "N\n";
-        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         
-        int novaPosicao = tabuleiro.moverJogador(jogador, 9, dados, scanner);
+        int novaPosicao = tabuleiro.moverJogador(jogador, 9, dados);
         
         assertFalse(jogador.getIsNaPrisao());
         assertEquals(0, jogador.getRodadasPreso());
         assertEquals(9 + 3, novaPosicao);
         
-        scanner.close();
     }
 
     @Test
@@ -145,58 +127,47 @@ public class TabuleiroTest {
         jogador.setNaPrisao(true);
         jogador.setRodadasPreso(2);
         int[] dados = {1, 2};
-        String input = "N\n";
-        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         
-        int novaPosicao = tabuleiro.moverJogador(jogador, 9, dados, scanner);
+        int novaPosicao = tabuleiro.moverJogador(jogador, 9, dados);
         
         assertTrue(jogador.getIsNaPrisao());
         assertEquals(3, jogador.getRodadasPreso());
         assertEquals(9, novaPosicao);
         
-        scanner.close();
     }
 
     @Test
     public void testMoverJogadorCaindoTerrenoSemDono() {
         int posicaoInicial = 0;
         int[] dados = {1, 1}; // Para cair na Av. Presidente Vargas (posição 2)
-        String input = "S\n";
-        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         
         double saldoInicial = jogador.getSaldo();
-        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados, scanner);
+        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados);
         
         assertEquals(2, novaPosicao);
         // Deve ter comprado o terreno (preço 5x passagem = 500)
         assertTrue(jogador.getSaldo() < saldoInicial);
         
-        scanner.close();
     }
 
     @Test
     public void testMoverJogadorCaindoEmpresa() {
         int posicaoInicial = 2;
         int[] dados = {1, 1}; // Para cair na Companhia Ferroviária (posição 4)
-        String input = "S\n";
-        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         
         double saldoInicial = jogador.getSaldo();
-        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados, scanner);
+        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados);
         
         assertEquals(4, novaPosicao);
         // Deve ter comprado a empresa (preço 5x passagem = 1000)
         assertTrue(jogador.getSaldo() < saldoInicial);
         
-        scanner.close();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testMoverJogadorDadosInvalidos() {
         int[] dadosInvalidos = {1};
-        String input = "S\n";
-        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
-        tabuleiro.moverJogador(jogador, 0, dadosInvalidos, scanner);
+        tabuleiro.moverJogador(jogador, 0, dadosInvalidos);
     }
 
     @Test

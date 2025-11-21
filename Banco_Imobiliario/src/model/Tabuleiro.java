@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 class Tabuleiro {
     private List<Campo> campos;
@@ -224,8 +223,15 @@ class Tabuleiro {
 
     
     // Calcula a nova posição após o movimento
-    int moverJogador(Jogador jogador, int posicaoAtual, int[] dados, Scanner scanner) {
+    int moverJogador(Jogador jogador, int posicaoAtual, int[] dados) {
     	if(dados.length != 2) { throw new IllegalArgumentException("Jogada de dados inválida!");}
+    	
+//    	CASO: jogador jogou 3 dados iguais
+    	if(jogador.verificarTresDuplasConsecutivas(dados)) {
+    		jogador.vaiParaPrisao();
+    		return getPosicaoPrisao();
+    	}
+    	
     	if(jogador.getIsNaPrisao()) {
     		Campo campo = campos.get(this.getPosicaoPrisao());
     		if(campo instanceof Prisao) {
@@ -239,7 +245,7 @@ class Tabuleiro {
         				return novaPosicao;
         			}
         			prisao.sairDaPrisao(jogador);
-            		return this.moverJogador(jogador, posicaoAtual, Dados.getInstance().jogar(), scanner);
+            		return this.moverJogador(jogador, posicaoAtual, Dados.getInstance().jogar());
         		}
 
 //        		CONTINUA PRESO
@@ -268,7 +274,7 @@ class Tabuleiro {
         }
         if(campos.get(novaPosicao) instanceof Propriedade) {
         	Propriedade prop = (Propriedade)campos.get(novaPosicao); 
-            prop.caiuNoCampo(jogador, banco, scanner);
+            prop.caiuNoCampo(jogador, banco);
         } 
         
         else {
