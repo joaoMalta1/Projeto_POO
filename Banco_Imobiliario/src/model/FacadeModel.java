@@ -17,24 +17,24 @@ public class FacadeModel {
 		return fm;
 	}
 
-    // Método existente modificado para incluir verificação de duplas
-    public int[] jogarDados() {
-        int[] dados = Dados.getInstance().jogar();
-           
-//        CentralPartida.getInstance().jogadorAtualJogouDados(dados);
-        
-        return dados;
-    }
+	// Método existente modificado para incluir verificação de duplas
+	public int[] jogarDados() {
+		int[] dados = Dados.getInstance().jogar();
 
+		// CentralPartida.getInstance().jogadorAtualJogouDados(dados);
+
+		return dados;
+	}
 
 	/**
-	 * permite definir valores fixos para os dados (ou null para reativar aleatoriedade)
+	 * permite definir valores fixos para os dados (ou null para reativar
+	 * aleatoriedade)
 	 */
 
 	public void setDadosDeTeste(Integer d1, Integer d2) {
 		Dados.getInstance().setDadosDeTeste(d1, d2);
 	}
-	
+
 	public boolean ehPropriedade(int posicao) {
 		return CentralPartida.getInstance().ehPropriedade(posicao);
 	}
@@ -86,7 +86,6 @@ public class FacadeModel {
 		return CentralPartida.getInstance().getPosicaoJogador(indice);
 	}
 
-
 	public boolean propriedadeDisponivelAtual() {
 		return CentralPartida.getInstance().propriedadeDisponivel(getPosJogadorAtual());
 	}
@@ -95,20 +94,18 @@ public class FacadeModel {
 		return CentralPartida.getInstance().getCorJogador(indice);
 	}
 
-    public boolean comprarPropriedadeAtualJogador() 
-	{
+	public boolean comprarPropriedadeAtualJogador() {
 		return CentralPartida.getInstance().comprarPropriedadeAtualJogador();
-    }
+	}
 
 	public boolean propriedadeDisponivel(int posicao) {
 		return CentralPartida.getInstance().propriedadeDisponivel(posicao);
 	}
-	
+
 	public void fimDeJogo() {
 		CentralPartida.getInstance().fimDeJogo();
 	}
 
-	
 	public void reset() {
 		CentralPartida.getInstance().reset();
 	}
@@ -116,7 +113,7 @@ public class FacadeModel {
 	public boolean atualPodeComprarCasa() {
 		return CentralPartida.getInstance().atualPodeComprarCasa();
 	}
-	
+
 	public boolean atualPodeComprarHotel() {
 		return CentralPartida.getInstance().atualPodeComprarHotel();
 	}
@@ -124,8 +121,20 @@ public class FacadeModel {
 	public boolean atualComprarCasa() {
 		return CentralPartida.getInstance().atualComprarCasa();
 	}
-	
+
 	public boolean atualComprarHotel() {
 		return CentralPartida.getInstance().atualComprarHotel();
+	}
+
+	public String getNomeJogadorAtual() {
+		return CentralPartida.getInstance().getNomeJogadorAtual();
+	}
+
+	public double getSaldoJogadorAtual() {
+		return CentralPartida.getInstance().getSaldoJogadorAtual();
+	}
+
+	public ArrayList<String> getNomesPropriedadesJogadorAtual() {
+		return CentralPartida.getInstance().getNomesPropriedadesJogadorAtual();
 	}
 }

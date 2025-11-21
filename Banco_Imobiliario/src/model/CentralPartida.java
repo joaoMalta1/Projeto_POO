@@ -48,7 +48,8 @@ public class CentralPartida implements Observado<PartidaEvent> {
 
 	void proxJogador() {
 		jogadorAtual = (++jogadorAtual) % jogadores.size();
-		for(boolean atualFalido = jogadores.get(jogadorAtual).isFaliu(); atualFalido; atualFalido = jogadores.get(jogadorAtual).isFaliu()) {
+		for (boolean atualFalido = jogadores.get(jogadorAtual).isFaliu(); atualFalido; atualFalido = jogadores
+				.get(jogadorAtual).isFaliu()) {
 			jogadorAtual = (++jogadorAtual) % jogadores.size();
 		}
 		notifyObservers(PartidaEvent.nextPlayer());
@@ -76,11 +77,11 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	CorPeao getCorJogador(int indice) {
 		return jogadores.get(indice).getPeao().getCor();
 	}
-	
+
 	int getTamanhoTabuleiro() {
 		return tabuleiro.getTamanho();
 	}
-	
+
 	Tabuleiro getTabuleiro() {
 		return tabuleiro;
 	}
@@ -94,11 +95,11 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		int soma = dados[0] + dados[1];
 		int posAtual = jogadores.get(jogadorAtual).getPeao().getPosicao(); // 0-based
 		System.out.println("[DEBUG] Posição atual: " + posAtual + ", soma dados: " + soma);
-		
+
 		jogadorAtualJogouDados(dados);
-		
+
 		int novaPos = tabuleiro.moverJogador(jogadores.get(jogadorAtual), posAtual, dados);
-		
+
 		notifyObservers(PartidaEvent.diceRolled(new int[] { dados[0], dados[1] }));
 		notifyObservers(PartidaEvent.move(novaPos, new int[] { dados[0], dados[1] }));
 		if (ehPropriedade(novaPos)) {
@@ -106,12 +107,12 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		}
 		return novaPos;
 	}
-	
+
 	void jogadorAtualJogouDados(int[] dados) {
-		if(dados.length != 2) {
+		if (dados.length != 2) {
 			throw new IllegalArgumentException("Tamanho dos dados jogados inválido");
 		}
-		
+
 		jogadores.get(jogadorAtual).jogouDados(tabuleiro.getPosicaoPrisao(), dados);
 		notifyObservers(PartidaEvent.move(jogadores.get(jogadorAtual).getPeao().getPosicao(), dados));
 	}
@@ -128,67 +129,68 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	 * Debita o saldo, atribui o dono e notifica observadores.
 	 * Retorna true se a compra foi bem sucedida.
 	 */
-	boolean comprarPropriedadeAtualJogador() 
-	{
+	boolean comprarPropriedadeAtualJogador() {
 		Jogador j = jogadores.get(jogadorAtual);
 		int posicao = j.getPeao().getPosicao();
-		
+
 		if (!propriedadeDisponivel(posicao))
 			return false;
 
 		Propriedade prop = (Propriedade) tabuleiro.getCampo(posicao);
-		
+
 		ResultadoTransacao resultado = prop.comprar(j, banco);
-		
-		if(resultado != ResultadoTransacao.SUCESSO) {
+
+		if (resultado != ResultadoTransacao.SUCESSO) {
 			System.out.println("Compra não efetuada por motivos de " + ResultadoTransacao.SUCESSO.toString());
 			return false;
 		}
-		
+
 		System.out.println("[DEBUG] nome da propriedade: " + prop.nome);
 		notifyObservers(PartidaEvent.purchased_property());
 		return true;
 	}
-	
-//	retorna jogador mais rico de acordo com a formatação para string da função getNomeCorString da classe Jogador
+
+	// retorna jogador mais rico de acordo com a formatação para string da função
+	// getNomeCorString da classe Jogador
 	int jogadorMaisRico() {
 		int maisRico = 0;
-		for(int i = 0; i < jogadores.size(); i++) {
-			Jogador j  = jogadores.get(i);
-			if(j.getSaldo() > jogadores.get(maisRico).getSaldo()) {
+		for (int i = 0; i < jogadores.size(); i++) {
+			Jogador j = jogadores.get(i);
+			if (j.getSaldo() > jogadores.get(maisRico).getSaldo()) {
 				maisRico = i;
 			}
 		}
 		return maisRico;
 	}
-	
-//	quando um jogador ganha a partida, ele automaticamente vira o jogador atual
+
+	// quando um jogador ganha a partida, ele automaticamente vira o jogador atual
 	void fimDeJogo() {
 		jogadorAtual = jogadorMaisRico();
 		System.out.println(jogadorAtual);
 		notifyObservers(PartidaEvent.fimDeJogo());
 	}
-	
-//	checa se jogo chegou ao fim (se todos os jogadores faliram menos um, não checa para clique no botão de fim)
+
+	// checa se jogo chegou ao fim (se todos os jogadores faliram menos um, não
+	// checa para clique no botão de fim)
 	void checaFimJogo() {
 		int qtd_falidos = 0;
-		for(Jogador j : jogadores) {
-			if(j.isFaliu()) {
+		for (Jogador j : jogadores) {
+			if (j.isFaliu()) {
 				qtd_falidos++;
 			}
 		}
-		if(qtd_falidos + 1 == jogadores.size()) {
+		if (qtd_falidos + 1 == jogadores.size()) {
 			fimDeJogo();
 		}
-		if(qtd_falidos >= jogadores.size()) {
+		if (qtd_falidos >= jogadores.size()) {
 			throw new IllegalStateException("Algo deu errado na checagem de fim de jogo");
 		}
 	}
-	
+
 	public void reset() {
 		ctrl = null;
 	}
-	
+
 	// Observado interface implementation
 	@Override
 	public void add(Observador<PartidaEvent> o) {
@@ -234,57 +236,73 @@ public class CentralPartida implements Observado<PartidaEvent> {
 
 	boolean atualPodeComprarCasa() {
 		int pos = jogadores.get(jogadorAtual).getPeao().getPosicao();
-		
+
 		Campo campo = tabuleiro.getCampo(pos);
-		
-		if(campo instanceof Terreno) {
+
+		if (campo instanceof Terreno) {
 			Terreno prop = (Terreno) campo;
 			return prop.podeComprarCasa(jogadores.get(jogadorAtual));
 		}
-		
+
 		return false;
 	}
-	
+
 	boolean atualPodeComprarHotel() {
 		int pos = jogadores.get(jogadorAtual).getPeao().getPosicao();
-		
+
 		Campo campo = tabuleiro.getCampo(pos);
-		
-		if(campo instanceof Terreno) {
+
+		if (campo instanceof Terreno) {
 			Terreno prop = (Terreno) campo;
 			return prop.podeComprarHotel(jogadores.get(jogadorAtual));
 		}
-		
+
 		return false;
 	}
 
 	boolean atualComprarCasa() {
 		int pos = jogadores.get(jogadorAtual).getPeao().getPosicao();
-		
+
 		Campo campo = tabuleiro.getCampo(pos);
-		
-		if(campo instanceof Terreno) {
+
+		if (campo instanceof Terreno) {
 			Terreno prop = (Terreno) campo;
 			ResultadoTransacao resultado = prop.construirCasa(jogadores.get(jogadorAtual), banco);
-			if(resultado == ResultadoTransacao.SUCESSO) {
+			if (resultado == ResultadoTransacao.SUCESSO) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	boolean atualComprarHotel() {
 		int pos = jogadores.get(jogadorAtual).getPeao().getPosicao();
-		
+
 		Campo campo = tabuleiro.getCampo(pos);
-		
-		if(campo instanceof Terreno) {
+
+		if (campo instanceof Terreno) {
 			Terreno prop = (Terreno) campo;
 			ResultadoTransacao resultado = prop.construirHotel(jogadores.get(jogadorAtual), banco);
-			if(resultado == ResultadoTransacao.SUCESSO) {
+			if (resultado == ResultadoTransacao.SUCESSO) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public String getNomeJogadorAtual() {
+		return jogadores.get(jogadorAtual).getNome();
+	}
+
+	public double getSaldoJogadorAtual() {
+		return jogadores.get(jogadorAtual).getSaldo();
+	}
+
+	public ArrayList<String> getNomesPropriedadesJogadorAtual() {
+		ArrayList<String> nomes = new ArrayList<>();
+		for (Propriedade p : jogadores.get(jogadorAtual).getPropriedades()) {
+			nomes.add(p.nome);
+		}
+		return nomes;
 	}
 }
