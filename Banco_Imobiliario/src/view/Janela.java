@@ -28,12 +28,6 @@ class Janela extends JFrame {
     void inicializarComponentes() {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
-
-        // cardPanel.add(new PainelJanelaInicial(this), Telas.INICIO);
-        //// cardPanel.add(new PainelTabuleiro(this), Telas.TABULEIRO);
-        // cardPanel.add(new PainelQuantidadeJogadores(this), Telas.CRIACAO_JOGADORES);
-        //
-        // mostrarTela(Telas.INICIO);
         add(cardPanel);
     }
 
@@ -67,11 +61,6 @@ class Janela extends JFrame {
         cardLayout.show(cardPanel, Telas.INICIO);
         telaAtual = Telas.INICIO;
     }
-
-    // TODO: melhorar isso para descarregar janela antiga e carregar nova
-    // void mostrarTela(String nomeTela) {
-    // cardLayout.show(cardPanel, nomeTela);
-    // }
 
     private void removeTelaAtual() {
         Component[] components = cardPanel.getComponents();
@@ -118,17 +107,10 @@ class Janela extends JFrame {
                 return new PainelCriacaoJogadores(this);
             case Telas.TABULEIRO:
                 JPanel containerJogo = new JPanel(new BorderLayout());
-
-                // Cria o tabuleiro e guarda na variável de instância (importante para o
-                // getPainelTabuleiro)
                 painelTabuleiro = new PainelTabuleiro(this);
-
-                // Cria o novo painel lateral
                 PainelStatus painelStatus = new PainelStatus();
-
-                // Adiciona ambos ao container
                 containerJogo.add(painelTabuleiro, BorderLayout.CENTER);
-                containerJogo.add(painelStatus, BorderLayout.EAST); // PainelStatus fica à direita
+                containerJogo.add(painelStatus, BorderLayout.WEST); //painel status 
 
                 return containerJogo;
             case Telas.FIM_DE_JOGO:

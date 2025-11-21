@@ -6,7 +6,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import controller.Observador;
 import controller.PartidaEvent;
-import model.CentralPartida;
 import model.FacadeModel;
 
 public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
@@ -18,62 +17,106 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
     private JList<String> listaPropriedades;
     private DefaultListModel<String> listModel;
 
+    private JLabel lblTituloFixo;
+    private JLabel lblPropFixo;
+
     public PainelStatus() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBorder(new EmptyBorder(10, 10, 10, 10));
-        setPreferredSize(new Dimension(280, 0)); // Largura fixa de 280px
-        setBackground(new Color(245, 245, 245)); // Cor de fundo leve
-
+        setBorder(new EmptyBorder(15, 15, 15, 15));
+        setOpaque(false); // para poder pintar
+        setPreferredSize(new Dimension(220, 0));  
         inicializarComponentes();
-        
-        // Regista-se para receber atualizações do jogo
-        FacadeModel.getInstance().addObserver(this);
+        FacadeModel.getInstance().addObserver(this); // registra como observador para receber eventos
+
+        atualizarFundo(); 
         atualizarInformacoes();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+        int w = getWidth();
+        int h = getHeight();
+        Color corBase = getBackground();
+        Color corEscura = corBase.darker().darker(); //efeito de sombra
+        GradientPaint gp = new GradientPaint(0, 0, corBase, 0, h, corEscura); //gradiente no efeito de sombra
+        g2d.setPaint(gp);
+        g2d.fillRect(0, 0, w, h);
+    }
+
+    public void atualizarFundo() {
+        Color corAtual = Cores.getInstance().corCorrespondente(FacadeView.getInstance().getCorJogadorAtual());
+        this.setBackground(corAtual);
+        Color corTexto = isCorEscura(corAtual) ? Color.WHITE : Color.BLACK;
+        
+        // atualiza cor texto
+        if(lblNomeJogador != null) lblNomeJogador.setForeground(corTexto);
+        if(lblSaldo != null) lblSaldo.setForeground(corTexto);
+        if(lblPosicao != null) lblPosicao.setForeground(corTexto);
+        if(lblTituloFixo != null) lblTituloFixo.setForeground(corTexto);
+        if(lblPropFixo != null) lblPropFixo.setForeground(corTexto);
+        this.repaint();
+    }
+
+    private boolean isCorEscura(Color color) {
+        //decide a cor da fonte se vai ser clara ou escura 
+        double brightness = (0.299 * color.getRed() + 0.587 * color.getGreen() + 0.114 * color.getBlue()) / 255; //snippet para calcular brilho
+        return brightness < 0.5;
     }
 
     private void inicializarComponentes() {
         Font fonteTitulo = new Font("Arial", Font.BOLD, 18);
         Font fonteTexto = new Font("Arial", Font.PLAIN, 14);
 
-        // -- Cabeçalho --
-        JLabel lblTitulo = new JLabel("JOGADOR ATUAL");
-        lblTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 12));
-        
+        // jogador atual
+        lblTituloFixo = new JLabel("JOGADOR ATUAL");
+        lblTituloFixo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblTituloFixo.setFont(new Font("Arial", Font.BOLD, 12));
+
         lblNomeJogador = new JLabel("---");
         lblNomeJogador.setFont(fonteTitulo);
-        lblNomeJogador.setForeground(new Color(0, 51, 102)); // Azul escuro
         lblNomeJogador.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // -- Saldo --
+        // saldos
         lblSaldo = new JLabel("Saldo: R$ 0.00");
         lblSaldo.setFont(fonteTexto);
         lblSaldo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // -- Posição --
+        // posicoes
         lblPosicao = new JLabel("Posição: Início");
         lblPosicao.setFont(fonteTexto);
         lblPosicao.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
-        // -- Mensagens de Status (ex: Compra efetuada) --
+
+        // status mensagem
         lblStatusMensagem = new JLabel(" ");
-        lblStatusMensagem.setFont(new Font("Arial", Font.ITALIC, 13));
-        lblStatusMensagem.setForeground(new Color(34, 139, 34)); // Verde
+        lblStatusMensagem.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
+        lblStatusMensagem.setForeground(new Color(0, 255, 0)); //verde zoado pra mostrar compra efetivada 
         lblStatusMensagem.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // -- Lista de Propriedades --
-        JLabel lblProp = new JLabel("Minhas Propriedades:");
-        lblProp.setAlignmentX(Component.LEFT_ALIGNMENT);
-        lblProp.setFont(new Font("Arial", Font.BOLD, 13));
-        
+        // propriedades-
+        lblPropFixo = new JLabel("Minhas Propriedades:");
+        lblPropFixo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblPropFixo.setFont(new Font("Arial", Font.BOLD, 13));
+
         listModel = new DefaultListModel<>();
         listaPropriedades = new JList<>(listModel);
-        listaPropriedades.setVisibleRowCount(15);
+        listaPropriedades.setVisibleRowCount(12);
+
+        listaPropriedades.setOpaque(false);
+        listaPropriedades.setBackground(new Color(255, 255, 255, 150)); // branco meio transparente
+        listaPropriedades.setSelectionBackground(new Color(255, 255, 255, 200));
+        listaPropriedades.setSelectionForeground(Color.BLACK);
+        
         JScrollPane scrollPropriedades = new JScrollPane(listaPropriedades);
         scrollPropriedades.setAlignmentX(Component.LEFT_ALIGNMENT);
+        scrollPropriedades.setOpaque(false);
+        scrollPropriedades.getViewport().setOpaque(false);
+        scrollPropriedades.setBorder(BorderFactory.createLineBorder(new Color(255,255,255,100)));
 
-        // Adiciona tudo ao painel com espaçamentos
-        add(lblTitulo);
+        add(lblTituloFixo);
         add(lblNomeJogador);
         add(Box.createVerticalStrut(15));
         add(lblSaldo);
@@ -82,23 +125,22 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
         add(Box.createVerticalStrut(15));
         add(lblStatusMensagem);
         add(Box.createVerticalStrut(15));
-        add(lblProp);
+        add(lblPropFixo);
         add(Box.createVerticalStrut(5));
         add(scrollPropriedades);
     }
 
     private void atualizarInformacoes() {
         try {
-            // Busca dados atualizados da Facade
             String nome = FacadeModel.getInstance().getNomeJogadorAtual();
-            double saldo = FacadeModel.getInstance().getJogadorAtual();
+            double saldo = FacadeModel.getInstance().getSaldoJogadorAtual();
             int pos = FacadeModel.getInstance().getPosJogadorAtual();
             ArrayList<String> props = FacadeModel.getInstance().getNomesPropriedadesJogadorAtual();
+            
             lblNomeJogador.setText(nome);
             lblSaldo.setText(String.format("Saldo: R$ %.2f", saldo));
-            lblPosicao.setText("Posição: " + (pos + 1)); // Mostra 1 a 40
+            lblPosicao.setText("Posição: " + (pos + 1));
 
-            // Atualiza lista de propriedades
             listModel.clear();
             if (props.isEmpty()) {
                 listModel.addElement("(Nenhuma)");
@@ -107,27 +149,23 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
                     listModel.addElement(p);
                 }
             }
-            repaint();
+            atualizarFundo(); 
+
         } catch (Exception e) {
-            // Ignora erros na inicialização se o jogo ainda não tiver começado
         }
     }
 
     @Override
     public void notify(PartidaEvent event) {
         if (event == null) return;
-        
+
         switch (event.type) {
             case NEXT_PLAYER:
-                lblStatusMensagem.setText(" "); // Limpa mensagem ao mudar turno
-                atualizarInformacoes();
+                lblStatusMensagem.setText(" ");
+                atualizarInformacoes(); 
                 break;
             case PURCHASED_PROPERTY:
                 lblStatusMensagem.setText("Compra Efetuada!");
-                atualizarInformacoes();
-                break;
-            case MOVE:
-            case DICE_ROLLED:
                 atualizarInformacoes();
                 break;
             default:

@@ -501,15 +501,17 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         repaint();
     }
 
-    private void desenharCartaPropriedade(Graphics2D g2d) {
-        if (imagemCartaPropriedade == null)
-            return;
+private void desenharCartaPropriedade(Graphics2D g2d) {
+    if (imagemCartaPropriedade == null)
+        return;
+    double escala = 0.8;
+    int largura = (int) (imagemCartaPropriedade.getWidth(this) * escala);
+    int altura = (int) (imagemCartaPropriedade.getHeight(this) * escala);
 
-        int margem = 20;
-        int x = getWidth() - LARGURA_CARTA - margem;
-        int y = margem;
-        g2d.drawImage(imagemCartaPropriedade, x, y, this);
-    }
+    int x = getWidth() - largura +15;
+    int y = 20;
+    g2d.drawImage(imagemCartaPropriedade, x, y, largura, altura, this);
+}
 
     @Override
     protected void paintComponent(Graphics g) {
