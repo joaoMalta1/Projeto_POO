@@ -93,7 +93,7 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
         // status mensagem
         lblStatusMensagem = new JLabel(" ");
         lblStatusMensagem.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
-        lblStatusMensagem.setForeground(new Color(0, 255, 0)); //verde zoado pra mostrar compra efetivada 
+        lblStatusMensagem.setForeground(new Color(57, 181, 74)); //verde zoado pra mostrar compra efetivada 
         lblStatusMensagem.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // propriedades-
