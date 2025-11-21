@@ -13,6 +13,7 @@ class Campo {
 	}
 	
 	void caiuNoCampo(Jogador pagador, Banco banco) {
+		System.out.println("[DEBUG] Caiu em um campo normal");
 		if (precoPassagem < 0) {
             pagador.adicionarValor(-precoPassagem);
             banco.daDinheiro(-precoPassagem); // banco perde esse valor
@@ -47,7 +48,9 @@ class Prisao extends Campo {
         }
     }
     
-	void caiuNoCampo(Jogador jogador, Banco banco) {}
+	void caiuNoCampo(Jogador jogador, Banco banco) {
+		System.out.println("[DEBUG] Caiu na prisão");
+	}
 }
 
 class VaParaPrisao extends Campo {
@@ -57,6 +60,7 @@ class VaParaPrisao extends Campo {
 	}
 	
 	void caiuNoCampo(Jogador jogador, Tabuleiro tabuleiro) {
+		System.out.println("[DEBUG] Caiu no Vá para a prisão");
 		jogador.getPeao().setPosicao(tabuleiro.getPosicaoPrisao());
 		this.irParaPrisao(jogador);
 		jogador.vaiParaPrisao();
@@ -72,5 +76,9 @@ class VaParaPrisao extends Campo {
 class SorteReves extends Campo{
 	SorteReves(String nome, double precoPassagem){
 		super(nome, precoPassagem);
+	}
+	
+	void CaiuNoCampo(Jogador pagador, Banco banco) {
+		System.out.println("[DEBUG] Caiu em Sorte ou Revés");	
 	}
 }

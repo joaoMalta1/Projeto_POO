@@ -239,13 +239,11 @@ class Tabuleiro {
 
 //    			PODE SAIR DA PRISAO
         		if(prisao.podeSairDaPrisao(jogador, dados[0], dados[1])) {
-        			if(jogador.getRodadasPreso() >= 4) {
-        				int novaPosicao = posicaoAtual + dados[0] + dados[1];
-            			prisao.sairDaPrisao(jogador);
-        				return novaPosicao;
-        			}
-        			prisao.sairDaPrisao(jogador);
-            		return this.moverJogador(jogador, posicaoAtual, Dados.getInstance().jogar());
+        			int novaPosicao = getPosicaoPrisao() + dados[0] + dados[1];
+            		prisao.sairDaPrisao(jogador);
+        			return novaPosicao;
+//        			prisao.sairDaPrisao(jogador);
+//            		return this.moverJogador(jogador, posicaoAtual, Dados.getInstance().jogar());
         		}
 
 //        		CONTINUA PRESO
@@ -272,6 +270,11 @@ class Tabuleiro {
             campoVPP.caiuNoCampo(jogador, this);
             return this.getPosicaoPrisao();
         }
+        if(campos.get(novaPosicao) instanceof SorteReves) {
+        	SorteReves sorteReves = (SorteReves)campos.get(novaPosicao);
+        	sorteReves.CaiuNoCampo(jogador, banco);
+        }
+        
         if(campos.get(novaPosicao) instanceof Propriedade) {
         	Propriedade prop = (Propriedade)campos.get(novaPosicao); 
             prop.caiuNoCampo(jogador, banco);
@@ -317,6 +320,9 @@ class Tabuleiro {
     }
     
     boolean ehPropriedade(int posicao) {
+    	if(posicao > 40) {
+    		throw new IllegalArgumentException("Posição out of bounds");
+    	}
     	return campos.get(posicao) instanceof Propriedade;
     }
 }

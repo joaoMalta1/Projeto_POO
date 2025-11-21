@@ -1,7 +1,9 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -26,7 +28,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     private final Janela janelaPrincipal;
     private BotaoEstilizado botaoDados;
     private BotaoEstilizado botaoSetarDados;
-    private BotaoEstilizado botaoComprar; // novo botao para comprar propriedade
+    private BotaoEstilizado botaoComprarProp; // novo botao para comprar propriedade
     private BotaoEstilizado bFimJogo;
     private BotaoEstilizado bFimTurno;
 
@@ -80,15 +82,24 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     
     private void criarBotaoFimJogo() {
     	bFimJogo = new BotaoEstilizado("Encerrar Partida", 300, 200);
-    	bFimJogo.addActionListener(e -> FacadeView.getInstance().botaoFimDeJogoApertado());
+    	bFimJogo.addActionListener(e -> {
+    		// Exibe caixa de diálogo de confirmação
+            int resposta = JOptionPane.showConfirmDialog(
+                this, // Componente pai
+                "Você tem certeza que deseja encerrar a partida?", // Mensagem
+                "Confirmação de Encerramento", // Título
+                JOptionPane.YES_NO_OPTION, // Tipo de opções
+                JOptionPane.QUESTION_MESSAGE // Tipo de mensagem
+            );
+            
+            // Verifica se o usuário escolheu "Sim"
+            if (resposta == JOptionPane.YES_OPTION) {
+                // Usuário confirmou, encerra a partida
+                FacadeView.getInstance().botaoFimDeJogoApertado();
+            }
+            // Caso contrário (NO_OPTION ou fechar a janela), não faz nada
+    		});
     	add(bFimJogo);
-    	
-//    	// Cria um painel para posicionamento no canto inferior direito
-//        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-//        panel.add(bFimJogo);
-//        
-//        // Adiciona o painel na região SOUTH do BorderLayout
-//        add(panel, BorderLayout.SOUTH);
     }
 
 	private void criarBotaoSetarDados() {
@@ -151,10 +162,10 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     }
 
     private void criarBotaoComprarPropriedade() {
-        if (botaoComprar != null && botaoComprar.getParent() != null)
+        if (botaoComprarProp != null && botaoComprarProp.getParent() != null)
             return; 
-        botaoComprar = new BotaoEstilizado("Comprar Propriedade", 200, 120);
-        botaoComprar.addActionListener(ev -> {
+        botaoComprarProp  = new BotaoEstilizado("Comprar Propriedade", 200, 120);
+        botaoComprarProp.addActionListener(ev -> {
             System.out.println(FacadeModel.getInstance().getPosJogadorAtual());
             boolean sucesso = FacadeModel.getInstance().comprarPropriedadeAtualJogador(FacadeModel.getInstance().getPosJogadorAtual());
             if (sucesso) {
@@ -165,14 +176,14 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                 System.out.println("SALDO ISUFICIENTE");
             }
         });
-        add(botaoComprar);
+        add(botaoComprarProp);
         revalidate();
         repaint();
     }
 
     private void removerBotaoComprarSeExistir() {
-        if (botaoComprar != null && botaoComprar.getParent() != null) {
-            remove(botaoComprar);
+        if (botaoComprarProp != null && botaoComprarProp.getParent() != null) {
+            remove(botaoComprarProp);
             revalidate();
             repaint();
         }
@@ -553,7 +564,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                 try {
                     Integer pos = (Integer) event.payload;
                     exibirCartaPropriedade(Integer.toString(pos));
-                    boolean disponivel = model.FacadeModel.getInstance().propriedadeDisponivel(pos);
+                    boolean disponivel = FacadeModel.getInstance().propriedadeDisponivel(pos);
                     System.out.println("Propriedade disponivel? " + disponivel);
                     if (disponivel) {
                         criarBotaoComprarPropriedade();
@@ -567,8 +578,10 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
 
             case NEXT_PLAYER:
                 if (botaoDados.getParent() == null) {
+                	ocultarCartaPropriedade();
                     add(botaoDados);
                     add(botaoSetarDados);
+                    remove(botaoComprarProp);
                     remove(bFimTurno);
                     dadosJogadosTurno = false;
                     revalidate();

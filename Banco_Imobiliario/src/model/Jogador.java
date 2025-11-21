@@ -114,7 +114,7 @@ class Jogador {
             }
             this.propriedades.clear();
             this.saldo = 0.0; 
-            System.out.println("jogador faliu");
+            System.out.println("jogador" + nome + " faliu");
             CentralPartida.getInstance().checaFimJogo();
         }
     }

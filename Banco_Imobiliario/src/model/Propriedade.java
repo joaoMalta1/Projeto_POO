@@ -78,6 +78,7 @@ class Terreno extends Propriedade {
 //	Esta é uma solução PROVISÓRIA
 	@Override
 	void caiuNoCampo(Jogador jogador, Banco banco) {
+		System.out.println("[DEBUG] Caiu em um Terreno");
 		double precoAPagar = precoPassagem * qtdCasas;
 //		CASO: ninguém possui (pode ser comprado OU apenas pagará taxa de passagem ao banco)
 //		if(this.dono == null) {
@@ -128,6 +129,7 @@ class Empresa extends Propriedade {
 //	Esta é uma solução PROVISÓRIA
 	@Override
 	void caiuNoCampo(Jogador jogador, Banco banco) {
+		System.out.println("[DEBUG] Caiu em uma Empresa");
 //		CASO: empresa não tem dono (pode ser comprada ou apenas será pago o preço de passagem)
 //		if(this.dono == null) {
 ////			Lê do teclado se o jogador quer comprar a empresa
