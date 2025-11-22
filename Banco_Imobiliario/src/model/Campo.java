@@ -62,23 +62,6 @@ class VaParaPrisao extends Campo {
 	void caiuNoCampo(Jogador jogador, Tabuleiro tabuleiro) {
 		System.out.println("[DEBUG] Caiu no Vá para a prisão");
 		jogador.getPeao().setPosicao(tabuleiro.getPosicaoPrisao());
-		this.irParaPrisao(jogador);
 		jogador.vaiParaPrisao();
-	}
-	
-    void irParaPrisao(Jogador jogador) {
-        jogador.setNaPrisao(true);
-        jogador.setRodadasPreso(0);
-        jogador.vaiParaPrisao();
-    }
-}
-
-class SorteReves extends Campo{
-	SorteReves(String nome, double precoPassagem){
-		super(nome, precoPassagem);
-	}
-	
-	void CaiuNoCampo(Jogador pagador, Banco banco) {
-		System.out.println("[DEBUG] Caiu em Sorte ou Revés");	
 	}
 }

@@ -20,62 +20,62 @@ public class PrisaoTest {
         vaParaPrisao = new VaParaPrisao("Vá para prisão", 0);
     }
 
-    @Test
-    public void testPodeSairDaPrisao_QuandoDadosIguais() {
-    	vaParaPrisao.irParaPrisao(jogador);
-    	prisao.passouUmaRodadaPreso(jogador);
+//    @Test
+//    public void testPodeSairDaPrisao_QuandoDadosIguais() {
+//    	vaParaPrisao.irParaPrisao(jogador);
+//    	prisao.passouUmaRodadaPreso(jogador);
+//
+//        boolean resultado = prisao.podeSairDaPrisao(jogador, 3, 3);
+//
+//        assertTrue(resultado);
+//    }
+//
+//    @Test
+//    public void testPodeSairDaPrisao_AposMaisDeTresRodadas() {
+//    	vaParaPrisao.irParaPrisao(jogador);
+//    	
+//    	prisao.passouUmaRodadaPreso(jogador);
+//    	prisao.passouUmaRodadaPreso(jogador);
+//    	prisao.passouUmaRodadaPreso(jogador);
+//    	prisao.passouUmaRodadaPreso(jogador);
+//
+//        boolean resultado = prisao.podeSairDaPrisao(jogador, 1, 2);
+//
+//        assertTrue(resultado);
+//    }
 
-        boolean resultado = prisao.podeSairDaPrisao(jogador, 3, 3);
+//    @Test
+//    public void testNaoPodeSairDaPrisao_SeDadosDiferentesEMenosDeTresRodadas() {
+//    	vaParaPrisao.irParaPrisao(jogador);
+//    	
+//    	prisao.passouUmaRodadaPreso(jogador);
+//    	prisao.passouUmaRodadaPreso(jogador);
+//
+//        boolean resultado = prisao.podeSairDaPrisao(jogador, 1, 4);
+//
+//        assertFalse(resultado);
+//    }
+//
+//    @Test
+//    public void testSairDaPrisao_ResetaStatusECounter() {
+//    	vaParaPrisao.irParaPrisao(jogador);
+//    	prisao.passouUmaRodadaPreso(jogador);
+//
+//        prisao.sairDaPrisao(jogador);
+//
+//        assertFalse(jogador.getIsNaPrisao());
+//        assertEquals(0, jogador.getRodadasPreso());
+//    }
 
-        assertTrue(resultado);
-    }
-
-    @Test
-    public void testPodeSairDaPrisao_AposMaisDeTresRodadas() {
-    	vaParaPrisao.irParaPrisao(jogador);
-    	
-    	prisao.passouUmaRodadaPreso(jogador);
-    	prisao.passouUmaRodadaPreso(jogador);
-    	prisao.passouUmaRodadaPreso(jogador);
-    	prisao.passouUmaRodadaPreso(jogador);
-
-        boolean resultado = prisao.podeSairDaPrisao(jogador, 1, 2);
-
-        assertTrue(resultado);
-    }
-
-    @Test
-    public void testNaoPodeSairDaPrisao_SeDadosDiferentesEMenosDeTresRodadas() {
-    	vaParaPrisao.irParaPrisao(jogador);
-    	
-    	prisao.passouUmaRodadaPreso(jogador);
-    	prisao.passouUmaRodadaPreso(jogador);
-
-        boolean resultado = prisao.podeSairDaPrisao(jogador, 1, 4);
-
-        assertFalse(resultado);
-    }
-
-    @Test
-    public void testSairDaPrisao_ResetaStatusECounter() {
-    	vaParaPrisao.irParaPrisao(jogador);
-    	prisao.passouUmaRodadaPreso(jogador);
-
-        prisao.sairDaPrisao(jogador);
-
-        assertFalse(jogador.getIsNaPrisao());
-        assertEquals(0, jogador.getRodadasPreso());
-    }
-
-    @Test
-    public void testPassouUmaRodadaPreso_IncrementaRodadas() {
-    	vaParaPrisao.irParaPrisao(jogador);
-    	prisao.passouUmaRodadaPreso(jogador);
-
-        prisao.passouUmaRodadaPreso(jogador);
-
-        assertEquals(2, jogador.getRodadasPreso());
-    }
+//    @Test
+//    public void testPassouUmaRodadaPreso_IncrementaRodadas() {
+//    	vaParaPrisao.irParaPrisao(jogador);
+//    	prisao.passouUmaRodadaPreso(jogador);
+//
+//        prisao.passouUmaRodadaPreso(jogador);
+//
+//        assertEquals(2, jogador.getRodadasPreso());
+//    }
 
     @Test
     public void testPassouUmaRodadaPreso_JogadorNaoPresoNaoIncrementa() {

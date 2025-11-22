@@ -92,17 +92,19 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		}
 
 		this.ultimoDados = new int[] { dados[0], dados[1] };
+		
 		int posAntes = jogadores.get(jogadorAtual).getPeao().getPosicao();
 
-		jogadorAtualJogouDados(dados);
 
 		int novaPos = tabuleiro.moverJogador(jogadores.get(jogadorAtual), posAntes, dados);
 
+		jogadores.get(jogadorAtual).jogouDados(tabuleiro.getPosicaoPrisao(), dados);
+
 		novaPos = jogadores.get(jogadorAtual).getPeao().getPosicao();
 
-		System.out.println("posAntes: "+posAntes+"\n");
-
-		System.out.println("novaPos: "+novaPos+"\n \n");
+		System.out.println("posAntes: "+posAntes);
+		System.out.println("novaPos: "+novaPos);
+		
 		notifyObservers(PartidaEvent.diceRolled(new int[] { dados[0], dados[1] }));
 		notifyObservers(PartidaEvent.move(novaPos, new int[] { dados[0], dados[1] }));
 
@@ -110,14 +112,6 @@ public class CentralPartida implements Observado<PartidaEvent> {
 			notifyObservers(PartidaEvent.propertyLanded(novaPos));
 		}
 		return novaPos;
-	}
-
-	void jogadorAtualJogouDados(int[] dados) {
-		if (dados.length != 2) {
-			throw new IllegalArgumentException("Tamanho dos dados jogados inválido");
-		}
-
-		jogadores.get(jogadorAtual).jogouDados(tabuleiro.getPosicaoPrisao(), dados);
 	}
 
 	boolean propriedadeDisponivel(int posicao) {

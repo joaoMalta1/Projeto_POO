@@ -128,7 +128,7 @@ class Tabuleiro {
         	String nome  = nomesDosCampos.get(i);
         	double precoPassagem = precosPassagem.get(i);
         	if(nome.equals("SORTE OU REVES")) {
-        		campos.add(new SorteReves(nome, precoPassagem));
+        		campos.add(new SorteOuReves(nome, precoPassagem));
         	}
         	else if(nome.equals("PRISÃO")) {
             	campos.add(new Prisao(nome, precoPassagem));}
@@ -163,82 +163,28 @@ class Tabuleiro {
     	throw new IllegalArgumentException("Nome inexistente!");
     }
 
-//    // Calcula a nova posição após o movimento e lida com pagamentos
-//    int moverJogador(Jogador jogador, int posicaoAtual, int[] dados, Scanner scanner) {
-//    	if(dados.length != 2) { throw new IllegalArgumentException("Jogada de dados inválida!");}
-//    	if(jogador.getIsNaPrisao()) {
-//    		Campo campo = campos.get(this.getPosicaoPrisao());
-//    		if(campo instanceof Prisao) {
-//    			Prisao prisao = (Prisao) campo; 
-//
-////    			PODE SAIR DA PRISAO
-//        		if(prisao.podeSairDaPrisao(jogador, dados[0], dados[1])) {
-//        			if(jogador.getRodadasPreso() >= 4) {
-//        				int novaPosicao = posicaoAtual + dados[0] + dados[1];
-//            			prisao.sairDaPrisao(jogador);
-//        				return novaPosicao;
-//        			}
-//        			prisao.sairDaPrisao(jogador);
-//            		return this.moverJogador(jogador, posicaoAtual, Dados.getInstance().jogar(), scanner);
-//        		}
-//
-////        		CONTINUA PRESO
-//        		else {
-//        			prisao.passouUmaRodadaPreso(jogador);
-//        			return posicaoAtual;
-//        		} 
-//    		}
-//    		else { throw new IllegalStateException("Erro: Prisão não encontrada!");}
-//        }
-////        CASO: jogador NÃO está na prisão
-//        
-//        int passos = dados[0] + dados[1];
-//        int novaPosicao = (posicaoAtual + passos) % tamanho;
-//        
-////      caso jogador passe, mas não pare no campo inicial (recebe dinheiro)
-//        if((posicaoAtual + passos) > tamanho) {
-//            campos.get(0).caiuNoCampo(jogador, banco);
-//        }
-//        
-//        if(novaPosicao == this.getPosicaoVaParaPrisao() 
-//        		&& campos.get(novaPosicao) instanceof VaParaPrisao) {
-//        	VaParaPrisao campoVPP = (VaParaPrisao)campos.get(novaPosicao);
-//            campoVPP.caiuNoCampo(jogador, this);
-//            return this.getPosicaoPrisao();
-//        }
-//        if(campos.get(novaPosicao) instanceof Propriedade) {
-//        	Propriedade prop = (Propriedade)campos.get(novaPosicao); 
-//            prop.caiuNoCampo(jogador, banco, scanner);
-//        } 
-//        
-//        else {
-////          caso não seja nem propriedade nem vaParaPrisao
-//            campos.get(novaPosicao).caiuNoCampo(jogador, banco);
-//        }
-//            	               
-//        return novaPosicao;
-//    }
-
     
     // Calcula a nova posição após o movimento
     int moverJogador(Jogador jogador, int posicaoAtual, int[] dados) {
         if (dados == null || dados.length != 2) {
             throw new IllegalArgumentException("Dados inválidos");
         }
-
+        
+        System.err.println("[DEBUG] Jogador " + jogador.getNome() + " jogou os dados " + dados[0] + " " + dados[1]);
         // Caso esteja na prisão, lógica existente (mantida)
         if (jogador.getIsNaPrisao()) {
+        	System.out.println("[DEBUG] Jogador " + jogador.getNome() + " está na prisão");
             Campo campo = campos.get(this.getPosicaoPrisao());
             if (campo instanceof Prisao) {
                 Prisao prisao = (Prisao) campo; 
 
 //    			PODE SAIR DA PRISAO
         		if(prisao.podeSairDaPrisao(jogador, dados[0], dados[1])) {
+                	System.out.println("[DEBUG] Jogador " + jogador.getNome() + " pode sair da prisão");
         			int novaPosicao = getPosicaoPrisao() + dados[0] + dados[1];
             		prisao.sairDaPrisao(jogador);
+            		jogador.getPeao().setPosicao(novaPosicao);
         			return novaPosicao;
-//        			prisao.sairDaPrisao(jogador);
-//            		return this.moverJogador(jogador, posicaoAtual, Dados.getInstance().jogar());
         		}
 
 //        		CONTINUA PRESO
@@ -275,8 +221,8 @@ class Tabuleiro {
         jogador.getPeao().setPosicao(novaPosicao);
 
         // Sorte/Reves pode alterar posição via efeitos próprios
-        if (campos.get(novaPosicao) instanceof SorteReves) {
-            SorteReves sorteReves = (SorteReves) campos.get(novaPosicao);
+        if (campos.get(novaPosicao) instanceof SorteOuReves) {
+            SorteOuReves sorteReves = (SorteOuReves) campos.get(novaPosicao);
             sorteReves.CaiuNoCampo(jogador, banco);
             // Se a carta mover o jogador, ela deve chamar setPosicao internamente
         } else if (campos.get(novaPosicao) instanceof Propriedade) {
@@ -288,8 +234,6 @@ class Tabuleiro {
 
         return jogador.getPeao().getPosicao();
     }
-
-    
     
     int getPosicaoPrisao() {
         for(int i = 0; i < campos.size(); i++) {

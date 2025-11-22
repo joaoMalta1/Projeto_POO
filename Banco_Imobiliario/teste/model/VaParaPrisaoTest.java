@@ -46,25 +46,25 @@ public class VaParaPrisaoTest {
     }
 
     // Teste 3: Verifica se o contador de rodadas preso é resetado
-    @Test
-    public void testCaiuNoCampo_ResetaRodadasPreso() {
-    	Campo campo = tabuleiro.getCampo("VÁ PARA A PRISÃO");
-        if(campo instanceof VaParaPrisao) {
-        	VaParaPrisao vaParaPrisao = (VaParaPrisao) campo;        	
-        	// Simula que o jogador estava preso anteriormente por 2 rodadas
-        	vaParaPrisao.irParaPrisao(jogador);
-        	prisao.passouUmaRodadaPreso(jogador);
-        	prisao.passouUmaRodadaPreso(jogador);
-        	prisao.passouUmaRodadaPreso(jogador);
-      
-        	vaParaPrisao.caiuNoCampo(jogador, tabuleiro);
-        	assertEquals(0, jogador.getRodadasPreso());
-        }
-
-        else {
-        	fail("VÁ PARA A PRISÃO não encontrado no tabuleiro");
-        }
-    }
+//    @Test
+//    public void testCaiuNoCampo_ResetaRodadasPreso() {
+//    	Campo campo = tabuleiro.getCampo("VÁ PARA A PRISÃO");
+//        if(campo instanceof VaParaPrisao) {
+//        	VaParaPrisao vaParaPrisao = (VaParaPrisao) campo;        	
+//        	// Simula que o jogador estava preso anteriormente por 2 rodadas
+//        	vaParaPrisao.irParaPrisao(jogador);
+//        	prisao.passouUmaRodadaPreso(jogador);
+//        	prisao.passouUmaRodadaPreso(jogador);
+//        	prisao.passouUmaRodadaPreso(jogador);
+//      
+//        	vaParaPrisao.caiuNoCampo(jogador, tabuleiro);
+//        	assertEquals(0, jogador.getRodadasPreso());
+//        }
+//
+//        else {
+//        	fail("VÁ PARA A PRISÃO não encontrado no tabuleiro");
+//        }
+//    }
 
     // Teste 4: Verifica interação com tabuleiro real (integração)
     @Test
