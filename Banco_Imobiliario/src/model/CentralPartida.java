@@ -86,22 +86,26 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		return tabuleiro;
 	}
 
-	// retorna nova posição (0-based)
 	int andarJogadorAtual(int[] dados) {
 		if (dados == null || dados.length != 2) {
 			throw new IllegalArgumentException("Dados têm tamanho errado");
 		}
+
 		this.ultimoDados = new int[] { dados[0], dados[1] };
-		int soma = dados[0] + dados[1];
-		int posAtual = jogadores.get(jogadorAtual).getPeao().getPosicao(); // 0-based
-		System.out.println("[DEBUG] Posição atual: " + posAtual + ", soma dados: " + soma);
+		int posAntes = jogadores.get(jogadorAtual).getPeao().getPosicao();
 
 		jogadorAtualJogouDados(dados);
 
-		int novaPos = tabuleiro.moverJogador(jogadores.get(jogadorAtual), posAtual, dados);
+		int novaPos = tabuleiro.moverJogador(jogadores.get(jogadorAtual), posAntes, dados);
 
+		novaPos = jogadores.get(jogadorAtual).getPeao().getPosicao();
+
+		System.out.println("posAntes: "+posAntes+"\n");
+
+		System.out.println("novaPos: "+novaPos+"\n \n");
 		notifyObservers(PartidaEvent.diceRolled(new int[] { dados[0], dados[1] }));
 		notifyObservers(PartidaEvent.move(novaPos, new int[] { dados[0], dados[1] }));
+
 		if (ehPropriedade(novaPos)) {
 			notifyObservers(PartidaEvent.propertyLanded(novaPos));
 		}
@@ -114,7 +118,6 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		}
 
 		jogadores.get(jogadorAtual).jogouDados(tabuleiro.getPosicaoPrisao(), dados);
-		notifyObservers(PartidaEvent.move(jogadores.get(jogadorAtual).getPeao().getPosicao(), dados));
 	}
 
 	boolean propriedadeDisponivel(int posicao) {
@@ -145,7 +148,6 @@ public class CentralPartida implements Observado<PartidaEvent> {
 			return false;
 		}
 
-		System.out.println("[DEBUG] nome da propriedade: " + prop.nome);
 		notifyObservers(PartidaEvent.purchased_property());
 		return true;
 	}
