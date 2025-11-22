@@ -70,7 +70,10 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     	bFimTurno = new BotaoEstilizado("Encerrar Turno", 300, 200);
     	bFimTurno.addActionListener(e-> {
     		if(dadosJogadosTurno) {
-    			FacadeView.getInstance().proxJogador();    			
+    			FacadeView.getInstance().proxJogador();    
+    			remove(bFimTurno);
+    			revalidate();
+    			repaint();
     		}
     	});
     }
@@ -154,11 +157,11 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
 //            System.out.println(FacadeModel.getInstance().getPosJogadorAtual());
             boolean sucesso = FacadeView.getInstance().comprarPropriedadeAtualJogador();
             if (sucesso) {
-                removerBotaoComprarSeExistir();
+                removerBotaoComprarPropSeExistir();
                 atualizarFundo();
                 repaint();
             } else {
-            	removerBotaoComprarSeExistir();
+            	removerBotaoComprarPropSeExistir();
                 atualizarFundo();
                 repaint();
                 System.out.println("COMPRA NÃO EFETUADA");
@@ -205,7 +208,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         repaint();
     }
 
-    private void removerBotaoComprarSeExistir() {
+    private void removerBotaoComprarPropSeExistir() {
         if (botaoComprarProp != null && botaoComprarProp.getParent() != null) {
             remove(botaoComprarProp);
             revalidate();
@@ -558,7 +561,7 @@ private void desenharCartaPropriedade(Graphics2D g2d) {
                 break;
 
             case PURCHASED_PROPERTY:
-                removerBotaoComprarSeExistir();
+                removerBotaoComprarPropSeExistir();
                 if(FacadeView.getInstance().atualPodeComprarCasa()) {
                 	criarBotaoComprarCasa();
                 }
@@ -604,7 +607,7 @@ private void desenharCartaPropriedade(Graphics2D g2d) {
                         	criarBotaoComprarHotel();
                         }
                     } else {
-                        removerBotaoComprarSeExistir();
+                        removerBotaoComprarPropSeExistir();
                         removerBotaoComprarCasaSeExistir();
                         removerBotaoComprarHotelSeExistir();
                     }
@@ -612,12 +615,19 @@ private void desenharCartaPropriedade(Graphics2D g2d) {
                 break;
 
             case NEXT_PLAYER:
-                if (botaoDados.getParent() == null) {
+                if (botaoDados != null && botaoDados.getParent() == null) {
                 	ocultarCartaPropriedade();
                     add(botaoDados);
-                    add(botaoSetarDados);
-                    remove(botaoComprarProp);
-                    remove(bFimTurno);
+                    
+                    if(botaoSetarDados != null) {
+                    	add(botaoSetarDados);                    	
+                    }
+                    if(botaoComprarProp != null){
+                    	remove(botaoComprarProp);
+                    }
+                    if(bFimTurno != null){
+                    	remove(bFimTurno);
+                    }
                     dadosJogadosTurno = false;
                     revalidate();
                     repaint();

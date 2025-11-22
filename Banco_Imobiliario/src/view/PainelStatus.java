@@ -10,7 +10,8 @@ import model.FacadeModel;
 
 public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
 
-    private JLabel lblNomeJogador;
+    private static final long serialVersionUID = 1L;
+	private JLabel lblNomeJogador;
     private JLabel lblSaldo;
     private JLabel lblPosicao;
     private JLabel lblStatusMensagem;

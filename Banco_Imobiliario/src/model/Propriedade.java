@@ -8,11 +8,9 @@ class Propriedade extends Campo {
 	protected final int proporcaoPassagemCompra = 2;
 	
 	Propriedade(String nome, double precoPassagem) {
-		super(nome, 0); /* IMPORTANTE: 	pelo que entendemos das regras oficiais do jogo, quando um terreno não tem dono,
-		 								qualquer um que por ele passar não pagará nada. Portanto, construímos a propriedade
-		 								com precoPassagem = 0*/
+		super(nome, precoPassagem);  /* IMPORTANTE: 	pelo que entendemos das regras oficiais do jogo, quando um terreno não tem dono,
+		 								qualquer um que por ele passar não pagará nada.*/
 		this.dono = null;
-//		this.precoCompra = precoCompra;
 		this.precoCompra = proporcaoPassagemCompra * precoPassagem; /* Como não há regra especificada para o preço de compra de uma propriedade, a 
 		 										definimos como 2 vezes o que está na tabela. */
 	}
@@ -108,8 +106,8 @@ class Terreno extends Propriedade {
 		
 //		CASO: ninguém possui
 		if(dono == null) {
-			jogador.removerValor(precoPassagem);
-			banco.recebeDinheiro(precoPassagem);
+//			jogador.removerValor(precoPassagem);
+//			banco.recebeDinheiro(precoPassagem);
 			return;
 		}
 		
@@ -143,8 +141,8 @@ class Empresa extends Propriedade {
 	void caiuNoCampo(Jogador jogador, Banco banco) {
 		System.out.println("[DEBUG] Caiu em uma Empresa");
 		if(dono == null) {
-			jogador.removerValor(precoPassagem);
-			banco.recebeDinheiro(precoPassagem);
+//			jogador.removerValor(precoPassagem);
+//			banco.recebeDinheiro(precoPassagem);
 			return;
 		}
 		if(jogador != dono) {
