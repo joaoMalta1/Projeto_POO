@@ -3,7 +3,6 @@ package view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.ArrayList;
 import controller.Observador;
 import controller.PartidaEvent;
 import model.FacadeModel;

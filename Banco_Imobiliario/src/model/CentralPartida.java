@@ -16,7 +16,6 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	private static Tabuleiro tabuleiro = null;
 	private static Banco banco = null;
 	private ArrayList<Observador<PartidaEvent>> observers = null;
-	private int[] ultimoDados = null;
 	private Baralho baralho = null;
 
 	private CentralPartida() {
@@ -97,8 +96,6 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		if (dados == null || dados.length != 2) {
 			throw new IllegalArgumentException("Dados têm tamanho errado");
 		}
-
-		this.ultimoDados = new int[] { dados[0], dados[1] };
 		
 		int posAntes = jogadores.get(jogadorAtual).getPeao().getPosicao();
 
@@ -246,13 +243,6 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		return PartidaEvent.info("central_partida");
 	}
 
-	// retorna os ultimos dados jogados (ou {0,0} se nao houve jogada ainda)
-	int[] getUltimosDados() {
-		if (ultimoDados == null)
-			return new int[] { 0, 0 };
-		return new int[] { ultimoDados[0], ultimoDados[1] };
-	}
-
 	boolean atualPodeComprarCasa() {
 		int pos = jogadores.get(jogadorAtual).getPeao().getPosicao();
 
@@ -379,5 +369,21 @@ public class CentralPartida implements Observado<PartidaEvent> {
 				jogador.adicionarValor(quantia);
 			}
 		}
+	}
+
+	Banco getBanco() {
+		return banco;
+	}
+
+	Baralho getBaralho() {
+		return baralho;
+	}
+
+	Tabuleiro getTabuleiro() {
+		return tabuleiro;
+	}
+
+	Jogador getJogador(int i) {
+		return jogadores.get(i);
 	}
 }

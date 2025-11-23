@@ -4,6 +4,7 @@ class Carta {
 	private double precoAReceber;
 	private String nome;
 	Baralho baralho;
+	
 	Carta(String nome, double precoAReceber, Baralho baralho){  // se for negativo, é para pagar
 		this.precoAReceber = precoAReceber;
 		this.nome = nome;
@@ -27,6 +28,10 @@ class Carta {
 	
 	String getNome() {
 		return nome;
+	}
+
+	String getPrecoAReceber() {
+		return ((Double)precoAReceber).toString();
 	}
 }
 

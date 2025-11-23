@@ -768,7 +768,13 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                 ocultarCartaPropriedade();
                 ocultarCartaSorteReves();
                 if (botaoDados != null && botaoDados.getParent() == null) {
-                    add(botaoDados);                    
+                    add(botaoDados);
+<<<<<<< Updated upstream
+                    if (botaoSetarDados != null) add(botaoSetarDados);
+                    if (botaoComprarProp != null) remove(botaoComprarProp);
+                    if (bFimTurno != null) remove(bFimTurno);
+=======
+                    
                     if(botaoSetarDados != null) {
                     	add(botaoSetarDados);                    	
                     }
@@ -779,6 +785,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                     	remove(bFimTurno);
                     }
                     criarBotaoSalvarJogo();
+>>>>>>> Stashed changes
                     dadosJogadosTurno = false;
                     revalidate();
                 }

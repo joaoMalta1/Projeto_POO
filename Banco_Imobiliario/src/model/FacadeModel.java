@@ -1,5 +1,6 @@
 package model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,10 +74,6 @@ public class FacadeModel {
 
 	public void removeObserver(controller.Observador<controller.PartidaEvent> o) {
 		CentralPartida.getInstance().remove(o);
-	}
-
-	public int[] getUltimosDados() {
-		return CentralPartida.getInstance().getUltimosDados();
 	}
 
 	public int getQtdJogadores() {
@@ -170,5 +167,16 @@ public class FacadeModel {
 		}
 
 		return ids;
+	}
+	
+	public boolean salvarJogo(String caminho) {
+		try {
+			Salvamento.getInstance().salvarJogo(caminho);
+			return true;
+			} 
+		catch (IOException e){
+			System.err.println("[DEBUG] ERRO NO SALVAMENTO DO JOGO: " + e.getMessage());
+			return false;
+		}
 	}
 }

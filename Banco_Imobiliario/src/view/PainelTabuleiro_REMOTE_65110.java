@@ -40,18 +40,12 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     private int posicaoDeTeste = 1;
 
     private Image imagemCartaPropriedade = null;
-    private Image imagemCartaSorteReves = null;
-    private final int LARGURA_CARTA_PROPRIEDADE = 229;
-    private final int ALTURA_CARTA_PROPRIEDADE = 229;
-
-    private final int LARGURA_CARTA_SORTEREVES = 208;
-    private final int ALTURA_CARTA_SORTEREVES = 238;
-
+    private final int LARGURA_CARTA = 229;
+    private final int ALTURA_CARTA = 229;
 
     // simensao mapa
     private final int LARGURA_MAPA = 700;
     private final int ALTURA_MAPA = 700;
-    
     
     public PainelTabuleiro(Janela janela) {
         this.janelaPrincipal = janela;
@@ -610,7 +604,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         try {
             File file = new File("src/resources/Propriedades/" + nomeArquivo + ".png");
             if (file.exists()) {
-                imagemCartaPropriedade = ImageIO.read(file).getScaledInstance(LARGURA_CARTA_PROPRIEDADE, ALTURA_CARTA_PROPRIEDADE, Image.SCALE_SMOOTH);
+                imagemCartaPropriedade = ImageIO.read(file).getScaledInstance(LARGURA_CARTA, ALTURA_CARTA, Image.SCALE_SMOOTH);
                 repaint();
             } else {
                 System.err.println("ERRO: Carta não encontrada: " + file.getAbsolutePath());
@@ -620,51 +614,22 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         }
     }
 
-    public void exibirCartaSorteReves(String nomeArquivo) {
-        try {
-            File file = new File("src/resources/SorteReves/" + nomeArquivo + ".png");
-            if (file.exists()) {
-                imagemCartaSorteReves = ImageIO.read(file).getScaledInstance(LARGURA_CARTA_SORTEREVES, ALTURA_CARTA_SORTEREVES, Image.SCALE_SMOOTH);
-                repaint();
-            } else {
-                System.err.println("ERRO: Carta  de Sorte ou Revés não encontrada: " + file.getAbsolutePath());
-            }
-        } catch (IOException e) {
-            System.err.println("Erro ao carregar carta de propriedade: " + e.getMessage());
-       }
-    }
-
     public void ocultarCartaPropriedade() {
         imagemCartaPropriedade = null;
         repaint();
     }
 
-    public void ocultarCartaSorteReves() {
-        imagemCartaSorteReves = null;
-        repaint();
-    }
+private void desenharCartaPropriedade(Graphics2D g2d) {
+    if (imagemCartaPropriedade == null)
+        return;
+    double escala = 0.8;
+    int largura = (int) (imagemCartaPropriedade.getWidth(this) * escala);
+    int altura = (int) (imagemCartaPropriedade.getHeight(this) * escala);
 
-    private void desenharCartaPropriedade(Graphics2D g2d) {
-        if (imagemCartaPropriedade == null) return;
-        double escala = 0.8;
-        int largura = (int) (imagemCartaPropriedade.getWidth(this) * escala);
-        int altura = (int) (imagemCartaPropriedade.getHeight(this) * escala);
-
-        int x = getWidth() - largura +15;
-        int y = 20;
-        g2d.drawImage(imagemCartaPropriedade, x, y, largura, altura, this);
-    }
-
-    private void desenharCartaSorteReves(Graphics2D g2d) {
-        if (imagemCartaSorteReves == null) return;
-        double escala = 0.8;
-        int largura = (int) (imagemCartaSorteReves.getWidth(this) * escala);
-        int altura  = (int) (imagemCartaSorteReves.getHeight(this) * escala);
-
-        int x = getWidth() - largura;
-        int y = 20;
-        g2d.drawImage(imagemCartaSorteReves, x, y, largura, altura, this);
-    }
+    int x = getWidth() - largura +15;
+    int y = 20;
+    g2d.drawImage(imagemCartaPropriedade, x, y, largura, altura, this);
+}
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -673,7 +638,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
 
         if (imagemMapa != null) {
             int mapaLargura = imagemMapa.getWidth(this);
-            int mapaAltura  = imagemMapa.getHeight(this);
+            int mapaAltura = imagemMapa.getHeight(this);
             int x = (getWidth() - mapaLargura) / 2;
             int y = (getHeight() - mapaAltura) / 2;
             g2d.drawImage(imagemMapa, x, y, this);
@@ -687,7 +652,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         desenharDados(g2d);
         desenharPeao(g2d);
         desenharCartaPropriedade(g2d);
-        desenharCartaSorteReves(g2d);
     }
 
     @Override
@@ -697,7 +661,8 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
 
     @Override
     public void notify(PartidaEvent event) {
-        if (event == null) return;
+        if (event == null)
+            return;
 
         switch (event.type) {
             case DICE_ROLLED:
@@ -729,46 +694,45 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                 try {
                     Object[] payload = (Object[]) event.payload;
                     Integer pos = (Integer) payload[0];
+                    
                     repaint();
+                    
                     if (!FacadeModel.getInstance().ehPropriedade(pos)) {
                         ocultarCartaPropriedade();
                     }
                 } catch (Exception ex) {
                     System.err.println("ERRO no processamento do movimento: " + ex.getMessage());
+                    repaint();
                 }
                 break;
 
             case PROPERTY_LANDED:
                 try {
                     Integer pos = (Integer) event.payload;
-                    ocultarCartaSorteReves();
                     exibirCartaPropriedade(Integer.toString(pos));
-                    boolean disponivel      = FacadeModel.getInstance().propriedadeDisponivel(pos);
-                    boolean casaDisponivel  = FacadeModel.getInstance().atualPodeComprarCasa();
+                    boolean disponivel = FacadeModel.getInstance().propriedadeDisponivel(pos);
+                    boolean casaDisponivel = FacadeModel.getInstance().atualPodeComprarCasa();
                     boolean hotelDisponivel = FacadeModel.getInstance().atualPodeComprarHotel();
-                    if (casaDisponivel)  criarBotaoComprarCasa();  else removerBotaoComprarCasaSeExistir();
-                    if (hotelDisponivel) criarBotaoComprarHotel(); else removerBotaoComprarHotelSeExistir();
-                    if (disponivel)      criarBotaoComprarPropriedade(); else removerBotaoComprarPropSeExistir();
-                } catch (Exception ignored) {}
-                break;
 
-            case SORTE_OU_REVES:
-                try {
-                    String nomeCarta = (String) event.payload;
-
-                    ocultarCartaPropriedade();
-                    removerBotaoComprarPropSeExistir();
-                    removerBotaoComprarCasaSeExistir();
-                    removerBotaoComprarHotelSeExistir();
-                    exibirCartaSorteReves(nomeCarta);
-                } catch (Exception ignored) {}
+                    if(casaDisponivel) {
+                    	criarBotaoComprarCasa();
+                    } else {removerBotaoComprarCasaSeExistir();}
+                    if(hotelDisponivel) {
+                    	criarBotaoComprarHotel();
+                    }else {removerBotaoComprarHotelSeExistir();}
+                    if (disponivel) {
+                        criarBotaoComprarPropriedade();
+                    } else {
+                        removerBotaoComprarPropSeExistir();
+                    }
+                } catch (Exception ex) {}
                 break;
 
             case NEXT_PLAYER:
-                ocultarCartaPropriedade();
-                ocultarCartaSorteReves();
                 if (botaoDados != null && botaoDados.getParent() == null) {
-                    add(botaoDados);                    
+                	ocultarCartaPropriedade();
+                    add(botaoDados);
+                    
                     if(botaoSetarDados != null) {
                     	add(botaoSetarDados);                    	
                     }
@@ -781,11 +745,18 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                     criarBotaoSalvarJogo();
                     dadosJogadosTurno = false;
                     revalidate();
+                    repaint();
                 }
                 atualizarFundo();
                 repaint();
                 break;
+            case GAME_ENDED:
+                janelaPrincipal.mostrarTela(Telas.FIM_DE_JOGO);
+            	break;
+              default:
+            	  break;
         }
+        // sempre repinta ao final de um evento
         repaint();
     }
 }

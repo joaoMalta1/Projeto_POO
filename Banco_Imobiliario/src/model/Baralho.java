@@ -204,4 +204,8 @@ class Baralho {
 		criarBaralho(nomeCartas, qntDeveReceber, especialidade);
 		imprimirBaralho();
 	}
+
+	Queue<Carta> getCartas() {
+		return baralho;
+	}
 }

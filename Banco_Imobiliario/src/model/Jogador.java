@@ -208,15 +208,15 @@ class Jogador {
     	}
     }
     
-    @Override
-    public String toString() {
-        return "Nome: " + nome + 
-        	   "\nPeão: " + peao.toString() +
-               "\nSaldo: R$" + String.format("%.2f", saldo) +
-               "\nNa prisão: " + naPrisao +
-               "\nRodadas preso: " + rodadasPreso +
-               "\nFalido: " + faliu;
-    }
+//    @Override
+//    public String toString() {
+//        return "Nome: " + nome + 
+//        	   "\nPeão: " + peao.toString() +
+//               "\nSaldo: R$" + String.format("%.2f", saldo) +
+//               "\nNa prisão: " + naPrisao +
+//               "\nRodadas preso: " + rodadasPreso +
+//               "\nFalido: " + faliu;
+//    }
 
 	boolean venderPropriedade(Propriedade propASerVendida, Banco banco) {
 		for (int i = 0; i < propriedades.size(); i++) {
@@ -231,5 +231,17 @@ class Jogador {
 	        }
 	    }
 		return false;
+	}
+
+	int[] getUltimoParDados() {
+		return ultimoParDados;
+	}
+
+	int[] getPenultimoParDados() {
+		return penultimoParDados;
+	}
+
+	CartaLivreDaPrisao getCartaLivreDaPrisao() {
+		return cartaLivre;
 	}
 }

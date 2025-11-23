@@ -100,4 +100,8 @@ public class FacadeView {
 		FacadeModel.getInstance().reset();
 		ControlePartida.getInstance().reset();
 	}
+	
+	boolean salvarJogo(String caminho) {
+		return ControlePartida.getInstance().salvarJogo(caminho);
+	}
 }
