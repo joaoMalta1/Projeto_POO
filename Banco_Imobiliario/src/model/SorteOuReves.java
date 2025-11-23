@@ -7,6 +7,6 @@ class SorteOuReves extends Campo{
 	
 //	retorna a posicao do jogador apos cair no campo
 	int CaiuNoCampo(Jogador jogador, Banco banco, Baralho baralho) {
-		return baralho.comprarCarta(jogador, banco);	
+		return baralho.comprarCarta(jogador, banco);
 	}
 }

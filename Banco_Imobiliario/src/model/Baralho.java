@@ -45,56 +45,56 @@ class Baralho {
         /* MUDANÇA TEMPORÁRIA PARA FINS DE TESTE */
 //      -------------------------------------------  
 
-        // MODO TESTE - COLOCAR CARTAS ESPECÍFICAS NO INÍCIO
-        List<Carta> cartasTeste = new ArrayList<>();
-        
-        // Encontrar as cartas especiais
-        Carta livrePrisao = cartasTemp.stream()
-            .filter(c -> c instanceof CartaLivreDaPrisao)
-            .findFirst().orElse(null);
-            
-        Carta vaParaPrisao = cartasTemp.stream()
-            .filter(c -> c instanceof CartaVaParaPrisao)
-            .findFirst().orElse(null);
-            
-        Carta receberJogadores = cartasTemp.stream()
-            .filter(c -> c instanceof CartaReceberDeJogadores)
-            .findFirst().orElse(null);
-            
-        Carta pontoPartida = cartasTemp.stream()
-            .filter(c -> c instanceof CartaPontoDePartida)
-            .findFirst().orElse(null);
-        
-        // Remover as cartas especiais da lista temporária
-        cartasTemp.remove(livrePrisao);
-        cartasTemp.remove(vaParaPrisao);
-        cartasTemp.remove(receberJogadores);
-        cartasTemp.remove(pontoPartida);
-        
-        // Adicionar as cartas especiais no início na ordem desejada
-        if (livrePrisao != null) cartasTeste.add(livrePrisao);
-        if (vaParaPrisao != null) cartasTeste.add(vaParaPrisao);
-        if (receberJogadores != null) cartasTeste.add(receberJogadores);
-        if (pontoPartida != null) cartasTeste.add(pontoPartida);
-        
-        // Embaralhar as cartas restantes e adicionar após as especiais
-        Collections.shuffle(cartasTemp);
-        cartasTeste.addAll(cartasTemp);
-        
-        baralho = new LinkedList<>(cartasTeste);
-        
-        // Para verificação durante testes (opcional)
-        System.out.println("[DEBUG] Primeiras 4 cartas do baralho:");
-        Iterator<Carta> iterator = baralho.iterator();
-        for (int i = 0; i < 4 && iterator.hasNext(); i++) {
-            Carta carta = iterator.next();
-            System.out.println((i+1) + ": " + carta.getNome() + " - " + carta.getClass().getSimpleName());
-        }
+//        // MODO TESTE - COLOCAR CARTAS ESPECÍFICAS NO INÍCIO
+//        List<Carta> cartasTeste = new ArrayList<>();
+//        
+//        // Encontrar as cartas especiais
+//        Carta livrePrisao = cartasTemp.stream()
+//            .filter(c -> c instanceof CartaLivreDaPrisao)
+//            .findFirst().orElse(null);
+//            
+//        Carta vaParaPrisao = cartasTemp.stream()
+//            .filter(c -> c instanceof CartaVaParaPrisao)
+//            .findFirst().orElse(null);
+//            
+//        Carta receberJogadores = cartasTemp.stream()
+//            .filter(c -> c instanceof CartaReceberDeJogadores)
+//            .findFirst().orElse(null);
+//            
+//        Carta pontoPartida = cartasTemp.stream()
+//            .filter(c -> c instanceof CartaPontoDePartida)
+//            .findFirst().orElse(null);
+//        
+//        // Remover as cartas especiais da lista temporária
+//        cartasTemp.remove(livrePrisao);
+//        cartasTemp.remove(vaParaPrisao);
+//        cartasTemp.remove(receberJogadores);
+//        cartasTemp.remove(pontoPartida);
+//        
+//        // Adicionar as cartas especiais no início na ordem desejada
+//        if (livrePrisao != null) cartasTeste.add(livrePrisao);
+//        if (vaParaPrisao != null) cartasTeste.add(vaParaPrisao);
+//        if (receberJogadores != null) cartasTeste.add(receberJogadores);
+//        if (pontoPartida != null) cartasTeste.add(pontoPartida);
+//        
+//        // Embaralhar as cartas restantes e adicionar após as especiais
+//        Collections.shuffle(cartasTemp);
+//        cartasTeste.addAll(cartasTemp);
+//        
+//        baralho = new LinkedList<>(cartasTeste);
+//        
+//        // Para verificação durante testes (opcional)
+//        System.out.println("[DEBUG] Primeiras 4 cartas do baralho:");
+//        Iterator<Carta> iterator = baralho.iterator();
+//        for (int i = 0; i < 4 && iterator.hasNext(); i++) {
+//            Carta carta = iterator.next();
+//            System.out.println((i+1) + ": " + carta.getNome() + " - " + carta.getClass().getSimpleName());
+//        }
 //      -------------------------------------------  
         /* MUDANÇA TEMPORÁRIA PARA FINS DE TESTE */
         
-//        Collections.shuffle(cartasTemp);
-//        baralho = new LinkedList<>(cartasTemp);
+        Collections.shuffle(cartasTemp);
+        baralho = new LinkedList<>(cartasTemp);
     }
     
     private void imprimirBaralho() {

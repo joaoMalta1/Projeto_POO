@@ -36,18 +36,20 @@ class Propriedade extends Campo {
 		return ResultadoTransacao.SALDO_INSUFICIENTE;
 	}
 
-	ResultadoTransacao vender(Jogador vendedor, Banco banco){
-		vendedor.adicionarValor(precoCompra);
-		vendedor.removerPropriedade(this);
-		return ResultadoTransacao.SUCESSO;
-	}
-
 	Jogador getDono() {
 		return this.dono;
 	}
 
 	void setDono(Jogador dono) {
 		this.dono = dono;
+	}
+	
+	double valorDeVenda() {
+		return 0.9 * precoCompra;
+	}
+	
+	void vendida() {
+		this.dono = null;
 	}
 }
 
@@ -144,7 +146,13 @@ class Terreno extends Propriedade {
 	}
 
 	double valorDeVenda() {
-		return 0.9 * (precoCompra + (0.5* precoCompra * qtdCasas) + (precoCompra * qtdHotel));
+		return 0.9 * (precoCompra + precoCasa * qtdCasas + precoHotel * qtdHotel);
+	}
+	
+	void vendida() {
+		this.dono = null;
+		this.qtdCasas = 0;
+		this.qtdHotel = 0;
 	}
 }
 
@@ -168,9 +176,5 @@ class Empresa extends Propriedade {
 			this.dono.adicionarValor(precoPassagem);
 		}
 		return;
-	}
-	
-	double valorDeVenda() {
-		return 0.9 * precoCompra;
 	}
 }

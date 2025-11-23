@@ -214,7 +214,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     private void criarBotaoComprarHotel() {
         if (botaoComprarHotel != null && botaoComprarHotel.getParent() != null)
             return; 
-        botaoComprarHotel  = new BotaoEstilizado("Comprar Casa", 200, 120);
+        botaoComprarHotel  = new BotaoEstilizado("Comprar Hotel", 200, 120);
         botaoComprarHotel.addActionListener(ev -> {
 //            System.out.println(FacadeModel.getInstance().getPosJogadorAtual());
             boolean sucesso = FacadeView.getInstance().atualComprarHotel();
@@ -619,18 +619,16 @@ private void desenharCartaPropriedade(Graphics2D g2d) {
                     boolean casaDisponivel = FacadeModel.getInstance().atualPodeComprarCasa();
                     boolean hotelDisponivel = FacadeModel.getInstance().atualPodeComprarHotel();
 
+                    if(casaDisponivel) {
+                    	criarBotaoComprarCasa();
+                    } else {removerBotaoComprarCasaSeExistir();}
+                    if(hotelDisponivel) {
+                    	criarBotaoComprarHotel();
+                    }else {removerBotaoComprarHotelSeExistir();}
                     if (disponivel) {
                         criarBotaoComprarPropriedade();
-                        if(casaDisponivel) {
-                        	criarBotaoComprarCasa();
-                        }
-                        if(hotelDisponivel) {
-                        	criarBotaoComprarHotel();
-                        }
                     } else {
                         removerBotaoComprarPropSeExistir();
-                        removerBotaoComprarCasaSeExistir();
-                        removerBotaoComprarHotelSeExistir();
                     }
                 } catch (Exception ex) {}
                 break;

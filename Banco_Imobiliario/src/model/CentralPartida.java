@@ -337,30 +337,36 @@ public class CentralPartida implements Observado<PartidaEvent> {
 
         Propriedade prop = (Propriedade) campo;
         Jogador jogador = jogadores.get(jogadorAtual);
-        if (prop.getDono() != jogador) {
-            return false;
+        
+        boolean vendida = jogador.venderPropriedade(prop, banco);
+        if(!vendida) {
+        	return false;
         }
-
-        double valorVenda;
-        if (prop instanceof Terreno) {
-			Terreno terreno = (Terreno) prop; 
-            valorVenda = terreno.valorDeVenda();
-            terreno.qtdCasas = 0;
-            terreno.qtdHotel = 0;
-        } else if (prop instanceof Empresa) {
-			Empresa empresa = (Empresa) prop; 
-            valorVenda = empresa.valorDeVenda();
-        } else {
-            valorVenda = prop.precoCompra * 0.9;
-        }
-
-        jogador.adicionarValor(valorVenda);
-
-        try {
-            jogador.removerPropriedade(prop);
-        } catch (Exception ignore) {}
-
-        prop.setDono(null);
+        
+//        if (prop.getDono() != jogador) {
+//            return false;
+//        }
+//
+//        double valorVenda;
+//        if (prop instanceof Terreno) {
+//			Terreno terreno = (Terreno) prop; 
+//            valorVenda = terreno.valorDeVenda();
+//            terreno.qtdCasas = 0;
+//            terreno.qtdHotel = 0;
+//        } else if (prop instanceof Empresa) {
+//			Empresa empresa = (Empresa) prop; 
+//            valorVenda = empresa.valorDeVenda();
+//        } else {
+//            valorVenda = prop.precoCompra * 0.9;
+//        }
+//
+//        jogador.adicionarValor(valorVenda);
+//
+//        try {
+//            jogador.removerPropriedade(prop);
+//        } catch (Exception ignore) {}
+//
+//        prop.setDono(null);
 
         notifyObservers(PartidaEvent.propertySold());
         return true;

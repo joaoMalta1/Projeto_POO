@@ -104,11 +104,6 @@ class Jogador {
         }
     }
 
-    // Remove a propriedade da lista do jogador (após venda ou falência)
-    void removerPropriedade(Propriedade propriedade) {
-        this.propriedades.remove(propriedade);
-    }
-
     // ---- Falência ----
     void falencia() {
         if (this.faliu) {
@@ -222,4 +217,19 @@ class Jogador {
                "\nRodadas preso: " + rodadasPreso +
                "\nFalido: " + faliu;
     }
+
+	boolean venderPropriedade(Propriedade propASerVendida, Banco banco) {
+		for (int i = 0; i < propriedades.size(); i++) {
+	        Propriedade p = propriedades.get(i);
+	        if (p == propASerVendida) {
+	            double valorVenda = p.valorDeVenda();
+	            p.vendida();
+	            propriedades.remove(i); // Remove by index
+	            this.adicionarValor(valorVenda);
+	            banco.daDinheiro(valorVenda);
+	            return true;
+	        }
+	    }
+		return false;
+	}
 }
