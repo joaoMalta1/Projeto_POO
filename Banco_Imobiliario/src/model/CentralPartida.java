@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import controller.CorPeao;
 import controller.Observador;
@@ -40,6 +41,10 @@ public class CentralPartida implements Observado<PartidaEvent> {
 
 	boolean ehPropriedade(int posicao) {
 		return tabuleiro.ehPropriedade(posicao);
+	}
+
+	List<String> getNomesDosCampos () {
+		return tabuleiro.getNomesDosCampos();
 	}
 
 	int getJogadorAtual() {
@@ -307,4 +312,45 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		}
 		return nomes;
 	}
+
+	boolean venderPropriedadeJogadorAtual(int posicao) {
+        if (posicao < 0 || posicao >= tabuleiro.getTamanho()) {
+            return false;
+        }
+
+        Campo campo = tabuleiro.getCampo(posicao);
+        if (!(campo instanceof Propriedade)) {
+            return false;
+        }
+
+        Propriedade prop = (Propriedade) campo;
+        Jogador jogador = jogadores.get(jogadorAtual);
+        if (prop.getDono() != jogador) {
+            return false;
+        }
+
+        double valorVenda;
+        if (prop instanceof Terreno) {
+			Terreno terreno = (Terreno) prop; 
+            valorVenda = terreno.valorDeVenda();
+            terreno.qtdCasas = 0;
+            terreno.qtdHotel = 0;
+        } else if (prop instanceof Empresa) {
+			Empresa empresa = (Empresa) prop; 
+            valorVenda = empresa.valorDeVenda();
+        } else {
+            valorVenda = prop.precoCompra * 0.9;
+        }
+
+        jogador.adicionarValor(valorVenda);
+
+        try {
+            jogador.removerPropriedade(prop);
+        } catch (Exception ignore) {}
+
+        prop.setDono(null);
+
+        notifyObservers(PartidaEvent.propertySold());
+        return true;
+    }
 }

@@ -15,8 +15,7 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
     private JLabel lblSaldo;
     private JLabel lblPosicao;
     private JLabel lblStatusMensagem;
-    private JList<String> listaPropriedades;
-    private DefaultListModel<String> listModel;
+    private JPanel painelListaProps;
 
     private JLabel lblTituloFixo;
     private JLabel lblPropFixo;
@@ -102,16 +101,11 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
         lblPropFixo.setAlignmentX(Component.LEFT_ALIGNMENT);
         lblPropFixo.setFont(new Font("Arial", Font.BOLD, 13));
 
-        listModel = new DefaultListModel<>();
-        listaPropriedades = new JList<>(listModel);
-        listaPropriedades.setVisibleRowCount(12);
+        painelListaProps = new JPanel();
+        painelListaProps.setLayout(new BoxLayout(painelListaProps, BoxLayout.Y_AXIS));
+        painelListaProps.setOpaque(false);
 
-        listaPropriedades.setOpaque(false);
-        listaPropriedades.setBackground(new Color(255, 255, 255, 150)); // branco meio transparente
-        listaPropriedades.setSelectionBackground(new Color(255, 255, 255, 200));
-        listaPropriedades.setSelectionForeground(Color.BLACK);
-        
-        JScrollPane scrollPropriedades = new JScrollPane(listaPropriedades);
+        JScrollPane scrollPropriedades = new JScrollPane(painelListaProps);
         scrollPropriedades.setAlignmentX(Component.LEFT_ALIGNMENT);
         scrollPropriedades.setOpaque(false);
         scrollPropriedades.getViewport().setOpaque(false);
@@ -131,42 +125,93 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
         add(scrollPropriedades);
     }
 
+    private void atualizarListaPropriedades() {
+        painelListaProps.removeAll();
+        java.util.List<Integer> ids = FacadeModel.getInstance().getIndicesPropriedadesJogadorAtual();
+
+        if (ids == null || ids.isEmpty()) {
+            JLabel vazio = new JLabel("(Nenhuma)");
+            vazio.setFont(new Font("Arial", Font.ITALIC, 12));
+            vazio.setForeground(isCorEscura(getBackground()) ? Color.WHITE : Color.BLACK);
+            painelListaProps.add(vazio);
+        } else {
+            for (int id : ids) {
+                final int pos = id;
+
+                String nomeTmp;
+                try {
+                    nomeTmp = FacadeModel.getInstance().getNomeDoCampo(pos);
+                } catch (Exception ex) {
+                    nomeTmp = "ID " + pos;
+                }
+                final String nome = nomeTmp; // efetivamente final para uso no lambda
+
+                JPanel linha = new JPanel();
+                linha.setLayout(new BoxLayout(linha, BoxLayout.X_AXIS));
+                linha.setOpaque(false);
+
+                JLabel lbl = new JLabel(String.format("%02d - %s", pos, nome));
+                lbl.setFont(new Font("Arial", Font.PLAIN, 12));
+                lbl.setForeground(isCorEscura(getBackground()) ? Color.WHITE : Color.BLACK);
+
+                JButton btVender = new JButton("Vender");
+                btVender.setFont(new Font("Arial", Font.PLAIN, 11));
+                btVender.addActionListener(e -> {
+                    int r = JOptionPane.showConfirmDialog(this,
+                            "Vender " + nome + " (ID " + pos + ") por 90% do valor?",
+                            "Confirmar venda",
+                            JOptionPane.YES_NO_OPTION);
+                    if (r == JOptionPane.YES_OPTION) {
+                        boolean ok = FacadeModel.getInstance().venderPropriedadeAtualJogador(pos);
+                        if (!ok) {
+                            JOptionPane.showMessageDialog(this, "Falha na venda.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                });
+
+                linha.add(lbl);
+                linha.add(Box.createHorizontalStrut(8));
+                linha.add(btVender);
+                linha.setAlignmentX(Component.LEFT_ALIGNMENT);
+                painelListaProps.add(linha);
+                painelListaProps.add(Box.createVerticalStrut(4));
+            }
+        }
+        painelListaProps.revalidate();
+        painelListaProps.repaint();
+    }
+
     private void atualizarInformacoes() {
         try {
             String nome = FacadeModel.getInstance().getNomeJogadorAtual();
             double saldo = FacadeModel.getInstance().getSaldoJogadorAtual();
             int pos = FacadeModel.getInstance().getPosJogadorAtual();
-            ArrayList<String> props = FacadeModel.getInstance().getNomesPropriedadesJogadorAtual();
-            
+
             lblNomeJogador.setText(nome);
             lblSaldo.setText(String.format("Saldo: R$ %.2f", saldo));
             lblPosicao.setText("Posição: " + (pos + 1));
 
-            listModel.clear();
-            if (props.isEmpty()) {
-                listModel.addElement("(Nenhuma)");
-            } else {
-                for (String p : props) {
-                    listModel.addElement(p);
-                }
-            }
-            atualizarFundo(); 
-
+            atualizarListaPropriedades();
+            atualizarFundo();
         } catch (Exception e) {
+            // silencioso
         }
     }
 
     @Override
     public void notify(PartidaEvent event) {
         if (event == null) return;
-
         switch (event.type) {
             case NEXT_PLAYER:
                 lblStatusMensagem.setText(" ");
-                atualizarInformacoes(); 
+                atualizarInformacoes();
                 break;
             case PURCHASED_PROPERTY:
                 lblStatusMensagem.setText("Compra Efetuada!");
+                atualizarInformacoes();
+                break;
+            case PROPERTY_SOLD:
+                lblStatusMensagem.setText("Venda Efetuada!");
                 atualizarInformacoes();
                 break;
             default:

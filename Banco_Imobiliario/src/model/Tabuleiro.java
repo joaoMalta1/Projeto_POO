@@ -7,6 +7,7 @@ class Tabuleiro {
     private List<Campo> campos;
     private int tamanho;
     private Banco banco;
+	private final List<String> nomesDosCampos = new ArrayList<>();
 
     Tabuleiro(Banco banco)
 	{
@@ -16,7 +17,6 @@ class Tabuleiro {
     }
 
     private void inicializarCasas() {
-    	ArrayList<String> nomesDosCampos = new ArrayList<>();
         ArrayList<Double> precosPassagem = new ArrayList<>();
         
     	final String nomes = """	
@@ -326,4 +326,8 @@ class Tabuleiro {
     	}
     	return campos.get(posicao) instanceof Propriedade;
     }
+
+	List<String> getNomesDosCampos() {
+		return this.nomesDosCampos;
+	}
 }

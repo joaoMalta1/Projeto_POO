@@ -62,6 +62,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         criarBotaoSetarDados();
         criarBotaoFimJogo();
         criarBotaoFimTurno();
+//        criarBotaoVendaBanco();
         
         FacadeModel.getInstance().addObserver(this);
     }
@@ -96,6 +97,26 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     		});
     	add(bFimJogo);
     }
+    
+//    private void criarBotaoVendaBanco() {
+//    	bVendaBanco = new BotaoEstilizado("Vender para o banco", 300, 700);
+//    	
+//    	bVendaBanco.addActionListener(e -> {
+//    		int resposta = JOptionPane.showConfirmDialog(
+//                    this, 
+//                    "Você tem certeza que deseja vender o imóvel ao banco?", 
+//                    "Confirmação de Venda", 
+//                    JOptionPane.YES_NO_OPTION, 
+//                    JOptionPane.QUESTION_MESSAGE
+//                );
+//    		
+//            if (resposta == JOptionPane.YES_OPTION) {
+//               
+//            }
+//    	});
+//    	
+//    	add(bVendaBanco);
+//    }
 
 	private void criarBotaoSetarDados() {
 	    if (botaoSetarDados != null && botaoSetarDados.getParent() != null) return;
@@ -635,7 +656,7 @@ private void desenharCartaPropriedade(Graphics2D g2d) {
                 atualizarFundo();
                 repaint();
                 break;
-            case FIM_DE_JOGO:
+            case GAME_ENDED:
                 janelaPrincipal.mostrarTela(Telas.FIM_DE_JOGO);
             	break;
               default:

@@ -35,6 +35,20 @@ class Propriedade extends Campo {
 		System.err.println("Saldo insuficiente!");
 		return ResultadoTransacao.SALDO_INSUFICIENTE;
 	}
+
+	ResultadoTransacao vender(Jogador vendedor, Banco banco){
+		vendedor.adicionarValor(precoCompra);
+		vendedor.removerPropriedade(this);
+		return ResultadoTransacao.SUCESSO;
+	}
+
+	Jogador getDono() {
+		return this.dono;
+	}
+
+	void setDono(Jogador dono) {
+		this.dono = dono;
+	}
 }
 
 class Terreno extends Propriedade {
@@ -128,6 +142,10 @@ class Terreno extends Propriedade {
 	boolean podeComprarHotel(Jogador jogador) {
 		return jogador == dono && qtdHotel == 0 && qtdCasas >= 1 && jogador.getSaldo() >= precoHotel;
 	}
+
+	double valorDeVenda() {
+		return 0.9 * (precoCompra + (0.5* precoCompra * qtdCasas) + (precoCompra * qtdHotel));
+	}
 }
 
 class Empresa extends Propriedade {
@@ -152,4 +170,7 @@ class Empresa extends Propriedade {
 		return;
 	}
 	
+	double valorDeVenda() {
+		return 0.9 * precoCompra;
+	}
 }

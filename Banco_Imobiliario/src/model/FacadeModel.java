@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import controller.CorPeao;
 
@@ -98,6 +99,11 @@ public class FacadeModel {
 		return CentralPartida.getInstance().comprarPropriedadeAtualJogador();
 	}
 
+	public boolean venderPropriedadeAtualJogador(int pos) {
+		return CentralPartida.getInstance().venderPropriedadeJogadorAtual(pos);
+	}
+
+
 	public boolean propriedadeDisponivel(int posicao) {
 		return CentralPartida.getInstance().propriedadeDisponivel(posicao);
 	}
@@ -136,5 +142,33 @@ public class FacadeModel {
 
 	public ArrayList<String> getNomesPropriedadesJogadorAtual() {
 		return CentralPartida.getInstance().getNomesPropriedadesJogadorAtual();
+	}
+
+	public String getNomeDoCampo(Number id) {
+		int index = id.intValue();
+		List<String> nomes = CentralPartida.getInstance().getNomesDosCampos();
+
+		if (index < 0 || index >= nomes.size()) {
+			throw new IllegalArgumentException("ID inválido: " + id);
+		}
+
+		return nomes.get(index);
+	}
+
+	public ArrayList<Integer> getIndicesPropriedadesJogadorAtual() {
+		List<String> todosOsCampos = CentralPartida.getInstance().getNomesDosCampos();
+		ArrayList<String> nomesPropriedadesJogadorAtual = 
+				CentralPartida.getInstance().getNomesPropriedadesJogadorAtual();
+
+		ArrayList<Integer> ids = new ArrayList<>();
+
+		for (String nome : nomesPropriedadesJogadorAtual) {
+			int index = todosOsCampos.indexOf(nome);
+			if (index != -1) {
+				ids.add(index);
+			}
+		}
+
+		return ids;
 	}
 }
