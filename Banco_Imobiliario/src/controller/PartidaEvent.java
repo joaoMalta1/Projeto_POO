@@ -9,7 +9,10 @@ public class PartidaEvent {
         INFO,
         PROPERTY_SOLD,
         NEXT_PLAYER,
-        GAME_ENDED
+        GAME_ENDED,
+        PURCHASED_HOUSE,
+        PURCHASED_HOTEL,
+        SORTE_OU_REVES,
     }
 
     public final Tipo type;
@@ -38,6 +41,18 @@ public class PartidaEvent {
 
     public static PartidaEvent purchased_property() {
         return new PartidaEvent(Tipo.PURCHASED_PROPERTY, null);
+    }
+    
+    public static PartidaEvent purchased_house() {
+        return new PartidaEvent(Tipo.PURCHASED_HOUSE, null);
+    }
+    
+    public static PartidaEvent purchased_hotel() {
+        return new PartidaEvent(Tipo.PURCHASED_HOTEL, null);
+    }
+    
+    public static PartidaEvent sorteOuReves(String nome) {
+        return new PartidaEvent(Tipo.SORTE_OU_REVES, nome);
     }
 
     public static PartidaEvent info(String msg) {

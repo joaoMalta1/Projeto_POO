@@ -17,12 +17,14 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	private static Banco banco = null;
 	private ArrayList<Observador<PartidaEvent>> observers = null;
 	private int[] ultimoDados = null;
+	private Baralho baralho = null;
 
 	private CentralPartida() {
 		banco = new Banco();
 		tabuleiro = new Tabuleiro(banco);
 		jogadores = new ArrayList<Jogador>();
 		observers = new ArrayList<>();
+		baralho   = new Baralho();
 	}
 
 	static CentralPartida getInstance() {
@@ -87,8 +89,8 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		return tabuleiro.getTamanho();
 	}
 
-	Tabuleiro getTabuleiro() {
-		return tabuleiro;
+	int getPosicaoPrisao() {
+		return tabuleiro.getPosicaoPrisao();
 	}
 
 	int andarJogadorAtual(int[] dados) {
@@ -97,17 +99,19 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		}
 
 		this.ultimoDados = new int[] { dados[0], dados[1] };
+		
 		int posAntes = jogadores.get(jogadorAtual).getPeao().getPosicao();
 
-		jogadorAtualJogouDados(dados);
 
-		int novaPos = tabuleiro.moverJogador(jogadores.get(jogadorAtual), posAntes, dados);
+		int novaPos = tabuleiro.moverJogador(jogadores.get(jogadorAtual), posAntes, dados, baralho);
+
+		jogadores.get(jogadorAtual).jogouDados(tabuleiro.getPosicaoPrisao(), dados);
 
 		novaPos = jogadores.get(jogadorAtual).getPeao().getPosicao();
 
-		System.out.println("posAntes: "+posAntes+"\n");
-
-		System.out.println("novaPos: "+novaPos+"\n \n");
+		System.out.println("posAntes: "+posAntes);
+		System.out.println("novaPos: "+novaPos);
+		
 		notifyObservers(PartidaEvent.diceRolled(new int[] { dados[0], dados[1] }));
 		notifyObservers(PartidaEvent.move(novaPos, new int[] { dados[0], dados[1] }));
 
@@ -116,13 +120,21 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		}
 		return novaPos;
 	}
-
-	void jogadorAtualJogouDados(int[] dados) {
-		if (dados.length != 2) {
-			throw new IllegalArgumentException("Tamanho dos dados jogados inválido");
-		}
-
-		jogadores.get(jogadorAtual).jogouDados(tabuleiro.getPosicaoPrisao(), dados);
+	
+	boolean ehSorteOuReves(int novaPos) {
+		return tabuleiro.ehSorteOuReves(novaPos);
+	}
+	
+	void notificaCompraCasa() {
+		notifyObservers(PartidaEvent.purchased_house());
+	}
+	
+	void notificaCompraHotel() {
+		notifyObservers(PartidaEvent.purchased_hotel());
+	}
+	
+	void notificaSorteOuReves(String nome) {
+		notifyObservers(PartidaEvent.sorteOuReves(nome));
 	}
 
 	boolean propriedadeDisponivel(int posicao) {
@@ -353,4 +365,13 @@ public class CentralPartida implements Observado<PartidaEvent> {
         notifyObservers(PartidaEvent.propertySold());
         return true;
     }
+	
+	void receberDeJogadores(Jogador jogador, double quantia){
+		for(Jogador j : jogadores) {
+			if(j != jogador) {
+				j.removerValor(quantia);
+				jogador.adicionarValor(quantia);
+			}
+		}
+	}
 }
