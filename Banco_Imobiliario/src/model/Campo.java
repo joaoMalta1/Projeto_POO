@@ -59,9 +59,16 @@ class VaParaPrisao extends Campo {
 		super(nome, precoPassagem);
 	}
 	
-	void caiuNoCampo(Jogador jogador, Tabuleiro tabuleiro) {
+	boolean caiuNoCampo(Jogador jogador, Tabuleiro tabuleiro) {
 		System.out.println("[DEBUG] Caiu no Vá para a prisão");
+		
+		if(jogador.temCartaLivreDaPrisao()) {
+			jogador.usarCartaLivreDaPrisao();
+			return false;
+		}
+		
 		jogador.getPeao().setPosicao(tabuleiro.getPosicaoPrisao());
 		jogador.vaiParaPrisao();
+		return true;
 	}
 }

@@ -5,7 +5,8 @@ class SorteOuReves extends Campo{
 		super(nome, 0);
 	}
 	
-	void CaiuNoCampo(Jogador pagador, Banco banco) {
-		System.out.println("[DEBUG] Caiu em Sorte ou Revés");	
+//	retorna a posicao do jogador apos cair no campo
+	int CaiuNoCampo(Jogador jogador, Banco banco, Baralho baralho) {
+		return baralho.comprarCarta(jogador, banco);	
 	}
 }

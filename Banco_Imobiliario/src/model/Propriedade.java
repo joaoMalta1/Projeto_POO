@@ -65,7 +65,7 @@ class Terreno extends Propriedade {
 			banco.recebeDinheiro(precoCasa);
 			qtdCasas++;
 			
-			System.out.println("[DEBUG] Jogador: " + comprador.getNome() + " comprou uma casa");
+			CentralPartida.getInstance().notificaCompraCasa();
 			
 			return ResultadoTransacao.SUCESSO;
 		}
@@ -89,7 +89,7 @@ class Terreno extends Propriedade {
 			banco.recebeDinheiro(precoHotel);
 			qtdHotel++;
 			
-			System.out.println("[DEBUG] Jogador: " + comprador.getNome() + " comprou um hotel");
+			CentralPartida.getInstance().notificaCompraHotel();
 			
 			return ResultadoTransacao.SUCESSO;
 		}

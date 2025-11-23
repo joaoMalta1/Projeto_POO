@@ -62,8 +62,9 @@ public class TabuleiroTest {
     public void testMoverJogadorNormal() {
         int posicaoInicial = 0;
         int[] dados = {3, 4};
+        Baralho baralho = new Baralho();
         
-        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados);
+        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados, baralho);
         
         assertEquals(7, novaPosicao);
         assertFalse(jogador.getIsNaPrisao());
@@ -73,9 +74,10 @@ public class TabuleiroTest {
     public void testMoverJogadorPassandoInicio() {
         int posicaoInicial = 32;
         int[] dados = {5, 6};
+        Baralho baralho = new Baralho();
         
         double saldoInicial = jogador.getSaldo();
-        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados);
+        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados, baralho);
         
         assertEquals(9, novaPosicao);
         // Deve receber bônus por passar pelo início
@@ -87,8 +89,9 @@ public class TabuleiroTest {
     public void testMoverJogadorCaindoVaParaPrisao() {
         int posicaoInicial = 20;
         int[] dados = {4, 1}; // Para cair exatamente na posição 25
+        Baralho baralho = new Baralho();
         
-        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados);
+        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados, baralho);
         
         assertEquals(tabuleiro.getPosicaoPrisao(), novaPosicao);
         assertTrue(jogador.getIsNaPrisao());
@@ -98,8 +101,9 @@ public class TabuleiroTest {
     public void testMoverJogadorPresoComDadosIguais() {
         jogador.setNaPrisao(true);
         int[] dados = {2, 2};
+        Baralho baralho = new Baralho();
         
-        int novaPosicao = tabuleiro.moverJogador(jogador, 9, dados);
+        int novaPosicao = tabuleiro.moverJogador(jogador, 9, dados, baralho);
         
         assertFalse(jogador.getIsNaPrisao());
         assertEquals(0, jogador.getRodadasPreso());
@@ -111,8 +115,9 @@ public class TabuleiroTest {
         jogador.setNaPrisao(true);
         jogador.setRodadasPreso(4);
         int[] dados = {1, 2};
+        Baralho baralho = new Baralho();
         
-        int novaPosicao = tabuleiro.moverJogador(jogador, 9, dados);
+        int novaPosicao = tabuleiro.moverJogador(jogador, 9, dados, baralho);
         
         assertFalse(jogador.getIsNaPrisao());
         assertEquals(0, jogador.getRodadasPreso());
@@ -125,8 +130,9 @@ public class TabuleiroTest {
         jogador.setNaPrisao(true);
         jogador.setRodadasPreso(2);
         int[] dados = {1, 2};
+        Baralho baralho = new Baralho();
         
-        int novaPosicao = tabuleiro.moverJogador(jogador, 9, dados);
+        int novaPosicao = tabuleiro.moverJogador(jogador, 9, dados, baralho);
         
         assertTrue(jogador.getIsNaPrisao());
         assertEquals(3, jogador.getRodadasPreso());
@@ -138,9 +144,10 @@ public class TabuleiroTest {
     public void testMoverJogadorCaindoTerrenoSemDono() {
         int posicaoInicial = 0;
         int[] dados = {1, 1}; // Para cair na Av. Presidente Vargas (posição 2)
+        Baralho baralho = new Baralho();
         
         double saldoInicial = jogador.getSaldo();
-        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados);
+        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados, baralho);
         
         assertEquals(2, novaPosicao);
         // Deve ter comprado o terreno (preço 5x passagem = 500)
@@ -152,9 +159,10 @@ public class TabuleiroTest {
     public void testMoverJogadorCaindoEmpresa() {
         int posicaoInicial = 2;
         int[] dados = {1, 1}; // Para cair na Companhia Ferroviária (posição 4)
+        Baralho baralho = new Baralho();
         
         double saldoInicial = jogador.getSaldo();
-        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados);
+        int novaPosicao = tabuleiro.moverJogador(jogador, posicaoInicial, dados, baralho);
         
         assertEquals(4, novaPosicao);
         // Deve ter comprado a empresa (preço 5x passagem = 1000)
@@ -165,7 +173,9 @@ public class TabuleiroTest {
     @Test(expected = IllegalArgumentException.class)
     public void testMoverJogadorDadosInvalidos() {
         int[] dadosInvalidos = {1};
-        tabuleiro.moverJogador(jogador, 0, dadosInvalidos);
+        Baralho baralho = new Baralho();
+        
+        tabuleiro.moverJogador(jogador, 0, dadosInvalidos, baralho);
     }
 
     @Test

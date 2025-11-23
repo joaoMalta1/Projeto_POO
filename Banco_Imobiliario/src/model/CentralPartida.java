@@ -16,12 +16,14 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	private static Banco banco = null;
 	private ArrayList<Observador<PartidaEvent>> observers = null;
 	private int[] ultimoDados = null;
+	private Baralho baralho = null;
 
 	private CentralPartida() {
 		banco = new Banco();
 		tabuleiro = new Tabuleiro(banco);
 		jogadores = new ArrayList<Jogador>();
 		observers = new ArrayList<>();
+		baralho   = new Baralho();
 	}
 
 	static CentralPartida getInstance() {
@@ -82,8 +84,8 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		return tabuleiro.getTamanho();
 	}
 
-	Tabuleiro getTabuleiro() {
-		return tabuleiro;
+	int getPosicaoPrisao() {
+		return tabuleiro.getPosicaoPrisao();
 	}
 
 	int andarJogadorAtual(int[] dados) {
@@ -96,7 +98,7 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		int posAntes = jogadores.get(jogadorAtual).getPeao().getPosicao();
 
 
-		int novaPos = tabuleiro.moverJogador(jogadores.get(jogadorAtual), posAntes, dados);
+		int novaPos = tabuleiro.moverJogador(jogadores.get(jogadorAtual), posAntes, dados, baralho);
 
 		jogadores.get(jogadorAtual).jogouDados(tabuleiro.getPosicaoPrisao(), dados);
 
@@ -112,6 +114,22 @@ public class CentralPartida implements Observado<PartidaEvent> {
 			notifyObservers(PartidaEvent.propertyLanded(novaPos));
 		}
 		return novaPos;
+	}
+	
+	boolean ehSorteOuReves(int novaPos) {
+		return tabuleiro.ehSorteOuReves(novaPos);
+	}
+	
+	void notificaCompraCasa() {
+		notifyObservers(PartidaEvent.purchased_house());
+	}
+	
+	void notificaCompraHotel() {
+		notifyObservers(PartidaEvent.purchased_hotel());
+	}
+	
+	void notificaSorteOuReves(String nome) {
+		notifyObservers(PartidaEvent.sorteOuReves(nome));
 	}
 
 	boolean propriedadeDisponivel(int posicao) {
@@ -300,5 +318,14 @@ public class CentralPartida implements Observado<PartidaEvent> {
 			nomes.add(p.nome);
 		}
 		return nomes;
+	}
+	
+	void receberDeJogadores(Jogador jogador, double quantia){
+		for(Jogador j : jogadores) {
+			if(j != jogador) {
+				j.removerValor(quantia);
+				jogador.adicionarValor(quantia);
+			}
+		}
 	}
 }

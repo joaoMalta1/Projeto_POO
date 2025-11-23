@@ -9,6 +9,7 @@ class Jogador {
     private double saldo;
     private boolean faliu;
     private List<Propriedade> propriedades;
+    private CartaLivreDaPrisao cartaLivre;
 
     // ---- Prisão ----
     private boolean naPrisao;
@@ -128,6 +129,10 @@ class Jogador {
     	return nome;
     }
     
+    void setCartaLivreDaPrisão(CartaLivreDaPrisao carta) {
+    	cartaLivre = carta;
+    }
+    
 //    ---- Métodos de verificação dos 3 dados consecutivos para ida à prisão -----
     
  // Novo método para verificar três duplas consecutivas
@@ -179,17 +184,33 @@ class Jogador {
         }
     	
     	if(verificarTresDuplasConsecutivas(dados)) {
-    		vaiParaPrisao();
-    		this.peao.setPosicao(posicaoPrisao);
-    		System.out.println("DEBUG: Jogador " + nome + " foi para a prisão em " + posicaoPrisao);
+    		if(cartaLivre != null) {
+    			usarCartaLivreDaPrisao();
+        	}
+    		else {
+    			vaiParaPrisao();
+	    		this.peao.setPosicao(posicaoPrisao);
+	    		System.out.println("DEBUG: Jogador " + nome + " foi para a prisão em " + posicaoPrisao);
+    		}
     	}
     }
     
+    boolean temCartaLivreDaPrisao() {
+    	return cartaLivre != null;
+    }
+    
+    void usarCartaLivreDaPrisao() {
+    	System.out.println("[DEBUG] "+ nome + " usou carta Livre da Prisão");
+    	cartaLivre.foiUsada();
+		cartaLivre = null;
+    }
+    
     void vaiParaPrisao() {
-    	this.naPrisao = true;
-        this.rodadasPreso = 0;
-        resetarControleDuplas();
-        
+    	if(cartaLivre == null) {
+    		this.naPrisao = true;
+    		this.rodadasPreso = 0;
+    		resetarControleDuplas();    		
+    	}
     }
     
     @Override

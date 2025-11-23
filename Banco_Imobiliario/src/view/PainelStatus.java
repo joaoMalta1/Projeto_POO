@@ -166,7 +166,19 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
                 atualizarInformacoes(); 
                 break;
             case PURCHASED_PROPERTY:
-                lblStatusMensagem.setText("Compra Efetuada!");
+                lblStatusMensagem.setText("Propriedade comprada!");
+                atualizarInformacoes();
+                break;
+            case PURCHASED_HOUSE:
+            	lblStatusMensagem.setText("Casa comprada!");
+                atualizarInformacoes();
+                break;
+            case PURCHASED_HOTEL:
+            	lblStatusMensagem.setText("Hotel comprado!");
+                atualizarInformacoes();
+                break;
+            case SORTE_OU_REVES:
+            	lblStatusMensagem.setText("Retirou uma carta!");
                 atualizarInformacoes();
                 break;
             default:
