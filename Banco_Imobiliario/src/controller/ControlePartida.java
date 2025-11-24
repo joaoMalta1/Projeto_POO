@@ -68,4 +68,16 @@ public class ControlePartida {
 	public boolean atualComprarHotel() {
 		return FacadeModel.getInstance().atualComprarHotel();
 	}
+	
+	public boolean salvarJogo(String caminho) {
+		return FacadeModel.getInstance().salvarJogo(caminho);
+	}
+	
+	public boolean carregarJogo(String caminho) {
+		return FacadeModel.getInstance().carregarJogo(caminho);
+	}
+
+	public String getNomeJogadorAtual() {
+		return FacadeModel.getInstance().getNomeJogadorAtual();
+	}
 }

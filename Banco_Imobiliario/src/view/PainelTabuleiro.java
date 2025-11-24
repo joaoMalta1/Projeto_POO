@@ -25,7 +25,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     private static final long serialVersionUID = 1L;
     private final Janela janelaPrincipal;
     private BotaoEstilizado botaoDados, botaoSetarDados, botaoComprarProp, 
-    	botaoComprarCasa, bFimJogo, bFimTurno, botaoComprarHotel;
+    	botaoComprarCasa, bFimJogo, bFimTurno, botaoComprarHotel, bSalvarJogo;
 
     private int[] dados = { 1, 1 };
     private Image imagemMapa;
@@ -234,6 +234,76 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         revalidate();
         repaint();
     }
+    
+    private void criarBotaoSalvarJogo() {
+        if (bSalvarJogo != null && bSalvarJogo.getParent() != null)
+            return; 
+        bSalvarJogo = new BotaoEstilizado("Salvar Jogo", 200, 120);
+        bSalvarJogo.addActionListener(ev -> {
+            // Criar JFileChooser
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Salvar Jogo");
+            
+            // Configurar para salvar apenas arquivos .txt
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                "Arquivos de texto (*.txt)", "txt"));
+            
+            // Sugerir um nome padrão
+            fileChooser.setSelectedFile(new File("jogo_salvo.txt"));
+            
+            // Mostrar diálogo de salvamento
+            int userSelection = fileChooser.showSaveDialog(this);
+            
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = fileChooser.getSelectedFile();
+                
+                // Garantir que tenha extensão .txt
+                String filePath = fileToSave.getAbsolutePath();
+                if (!filePath.toLowerCase().endsWith(".txt")) {
+                    filePath += ".txt";
+                    fileToSave = new File(filePath);
+                }
+                
+                // Verificar se o arquivo já existe
+                if (fileToSave.exists()) {
+                    int overwrite = JOptionPane.showConfirmDialog(this,
+                        "O arquivo já existe. Deseja sobrescrever?",
+                        "Arquivo Existente",
+                        JOptionPane.YES_NO_OPTION);
+                    
+                    if (overwrite != JOptionPane.YES_OPTION) {
+                        return; // Usuário não quer sobrescrever
+                    }
+                }
+                
+                try {
+                    // Tentar salvar o jogo
+                    boolean sucesso = FacadeView.getInstance().salvarJogo(filePath);
+                    
+                    if (sucesso) {
+                        JOptionPane.showMessageDialog(this,
+                            "Jogo salvo com sucesso em:\n" + filePath,
+                            "Salvamento Concluído",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this,
+                            "Erro ao salvar o jogo. Tente novamente.",
+                            "Erro no Salvamento",
+                            JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this,
+                        "Erro ao salvar o jogo:\n" + ex.getMessage(),
+                        "Erro no Salvamento",
+                        JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                }
+            }
+        });
+        add(bSalvarJogo);
+        revalidate();
+        repaint();
+    }
 
     private void removerBotaoComprarPropSeExistir() {
         if (botaoComprarProp != null && botaoComprarProp.getParent() != null) {
@@ -259,6 +329,14 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         }
     }
 
+    private void removerBotaoSalvarJogo() {
+        if (bSalvarJogo != null && bSalvarJogo.getParent() != null) {
+        	remove(bSalvarJogo);
+        	revalidate();
+        	repaint();        	
+        }
+    }
+    
     private void carregarImagensDados() {
         imagensDados = new Image[7]; // índice 0 não usado, 1-6 para os valores
 
@@ -604,6 +682,8 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     @Override
     public void notify(PartidaEvent event) {
         if (event == null) return;
+        System.out.println("[DEBUG PAINEL] Evento recebido: " + event.type + 
+                ", Jogadores carregados: " + FacadeModel.getInstance().getQtdJogadores());
 
         switch (event.type) {
             case DICE_ROLLED:
@@ -612,6 +692,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                     if (dadosRolados != null && dadosRolados.length == 2) {
                         this.dados = new int[] { dadosRolados[0], dadosRolados[1] };
                         this.dadosVisiveis = true;
+                        removerBotaoSalvarJogo();
                     }
                 } catch (Exception ex) {}
                 break;
@@ -673,16 +754,28 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                 ocultarCartaPropriedade();
                 ocultarCartaSorteReves();
                 if (botaoDados != null && botaoDados.getParent() == null) {
-                    add(botaoDados);
-                    if (botaoSetarDados != null) add(botaoSetarDados);
-                    if (botaoComprarProp != null) remove(botaoComprarProp);
-                    if (bFimTurno != null) remove(bFimTurno);
+                    add(botaoDados);                    
+                    if(botaoSetarDados != null) {
+                    	add(botaoSetarDados);                    	
+                    }
+                    if(botaoComprarProp != null){
+                    	remove(botaoComprarProp);
+                    }
+                    if(bFimTurno != null){
+                    	remove(bFimTurno);
+                    }
+                    criarBotaoSalvarJogo();
                     dadosJogadosTurno = false;
                     revalidate();
                 }
                 atualizarFundo();
                 repaint();
                 break;
+            case GAME_ENDED:
+            	janelaPrincipal.mostrarTela(Telas.FIM_DE_JOGO);
+            	break;
+             default:
+                	break;
         }
         repaint();
     }

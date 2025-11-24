@@ -16,6 +16,18 @@ class Tabuleiro {
         inicializarCasas();
         this.banco = banco;
     }
+    
+    Tabuleiro(List<Campo> campos, Banco banco) {
+        this.campos = campos;
+        this.tamanho = campos.size();
+        this.banco = banco;
+     // CORREÇÃO: Preencher nomesDosCampos durante o carregamento
+        for (Campo campo : campos) {
+            if (campo != null) {
+                nomesDosCampos.add(campo.nome);
+            }
+        }
+    }
 
     private void inicializarCasas() {
         ArrayList<Double> precosPassagem = new ArrayList<>();

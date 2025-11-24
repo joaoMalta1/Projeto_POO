@@ -3,7 +3,6 @@ package view;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.ArrayList;
 import controller.Observador;
 import controller.PartidaEvent;
 import model.FacadeModel;
@@ -140,7 +139,7 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
     }
 
     private void atualizarListaPropriedades() {
-        painelListaProps.removeAll();
+    	painelListaProps.removeAll();
         java.util.List<Integer> ids = FacadeModel.getInstance().getIndicesPropriedadesJogadorAtual();
 
         if (ids == null || ids.isEmpty()) {

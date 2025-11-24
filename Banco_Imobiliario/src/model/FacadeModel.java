@@ -1,5 +1,6 @@
 package model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,10 +74,6 @@ public class FacadeModel {
 
 	public void removeObserver(controller.Observador<controller.PartidaEvent> o) {
 		CentralPartida.getInstance().remove(o);
-	}
-
-	public int[] getUltimosDados() {
-		return CentralPartida.getInstance().getUltimosDados();
 	}
 
 	public int getQtdJogadores() {
@@ -159,16 +156,16 @@ public class FacadeModel {
 		List<String> todosOsCampos = CentralPartida.getInstance().getNomesDosCampos();
 		ArrayList<String> nomesPropriedadesJogadorAtual = 
 				CentralPartida.getInstance().getNomesPropriedadesJogadorAtual();
-
+		
 		ArrayList<Integer> ids = new ArrayList<>();
 
 		for (String nome : nomesPropriedadesJogadorAtual) {
 			int index = todosOsCampos.indexOf(nome);
+			
 			if (index != -1) {
 				ids.add(index);
 			}
 		}
-
 		return ids;
 	}
 
@@ -183,4 +180,27 @@ public class FacadeModel {
     public double getPrecoHotelAtual() {
         return CentralPartida.getInstance().getPrecoHotelAtual();
     }
+	
+	public boolean salvarJogo(String caminho) {
+		try {
+//			CentralPartida.getInstance().debugJogadores();
+			Salvamento.getInstance().salvarJogo(caminho);
+			return true;
+			} 
+		catch (IOException e){
+			System.err.println("[DEBUG] ERRO NO SALVAMENTO DO JOGO: " + e.getMessage());
+			return false;
+		}
+	}
+	
+	public boolean carregarJogo(String caminho) {
+		try {
+			Carregamento.getInstance().carregarJogo(caminho);
+			return true;
+		}
+		catch (IOException e) {
+			System.err.println("[DEBUG] ERRO NO CARREGAMENTO DO JOGO: " + e.getMessage());
+			return false;
+		}
+	}
 }

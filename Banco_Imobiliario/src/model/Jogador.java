@@ -80,16 +80,19 @@ class Jogador {
     }
 
     boolean removerValor(double valor) {
-    	System.out.println("[DEBUG] Jogador: " + nome + " Saldo antes: " + saldo);
-    	System.out.println("[DEBUG] Valor: " + valor);
     	if(valor <= 0) {
     		return false;
     	}
     	else if (saldo >= valor) {
             saldo -= valor;
-            System.out.println("[DEBUG] Jogador: " + nome + " Saldo depois: " + saldo);
             return true; // sucesso
         } else {
+        	if(propriedades.size() > 0) {
+        		for(int i = 0; i < propriedades.size(); i++) {
+        			venderPropriedade(propriedades.get(i), CentralPartida.getInstance().getBanco());
+        		}
+        		return removerValor(valor);
+        	}
             faliu = true;
             falencia();
             return false; // jogador perdeu
@@ -208,15 +211,15 @@ class Jogador {
     	}
     }
     
-    @Override
-    public String toString() {
-        return "Nome: " + nome + 
-        	   "\nPeão: " + peao.toString() +
-               "\nSaldo: R$" + String.format("%.2f", saldo) +
-               "\nNa prisão: " + naPrisao +
-               "\nRodadas preso: " + rodadasPreso +
-               "\nFalido: " + faliu;
-    }
+//    @Override
+//    public String toString() {
+//        return "Nome: " + nome + 
+//        	   "\nPeão: " + peao.toString() +
+//               "\nSaldo: R$" + String.format("%.2f", saldo) +
+//               "\nNa prisão: " + naPrisao +
+//               "\nRodadas preso: " + rodadasPreso +
+//               "\nFalido: " + faliu;
+//    }
 
 	boolean venderPropriedade(Propriedade propASerVendida, Banco banco) {
 		for (int i = 0; i < propriedades.size(); i++) {
@@ -232,4 +235,34 @@ class Jogador {
 	    }
 		return false;
 	}
+
+	int[] getUltimoParDados() {
+		return ultimoParDados;
+	}
+
+	int[] getPenultimoParDados() {
+		return penultimoParDados;
+	}
+
+	CartaLivreDaPrisao getCartaLivreDaPrisao() {
+		return cartaLivre;
+	}
+
+	void setSaldo(double saldo) {
+		this.saldo = saldo;
+	}
+
+	void setFaliu(boolean faliu) {
+		this.faliu = faliu;
+	}
+
+	void setUltimoParDados(int[] ultimoDados) {
+		this.ultimoParDados = ultimoDados;
+	}
+
+	void setPenultimoParDados(int[] penultimoDados) {
+		this.penultimoParDados = penultimoDados;
+	}
+	
+	
 }

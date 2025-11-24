@@ -11,12 +11,11 @@ import controller.ResultadoTransacao;
 
 public class CentralPartida implements Observado<PartidaEvent> {
 	private static CentralPartida ctrl = null;
-	private static ArrayList<Jogador> jogadores = null;
+	private ArrayList<Jogador> jogadores = null;
 	private int jogadorAtual = 0; // no turno
-	private static Tabuleiro tabuleiro = null;
-	private static Banco banco = null;
+	private Tabuleiro tabuleiro = null;
+	private Banco banco = null;
 	private ArrayList<Observador<PartidaEvent>> observers = null;
-	private int[] ultimoDados = null;
 	private Baralho baralho = null;
 
 	private CentralPartida() {
@@ -97,8 +96,6 @@ public class CentralPartida implements Observado<PartidaEvent> {
 		if (dados == null || dados.length != 2) {
 			throw new IllegalArgumentException("Dados têm tamanho errado");
 		}
-
-		this.ultimoDados = new int[] { dados[0], dados[1] };
 		
 		int posAntes = jogadores.get(jogadorAtual).getPeao().getPosicao();
 
@@ -167,21 +164,39 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	// retorna jogador mais rico de acordo com a formatação para string da função
 	// getNomeCorString da classe Jogador
 	int jogadorMaisRico() {
-		int maisRico = 0;
-		for (int i = 0; i < jogadores.size(); i++) {
-			Jogador j = jogadores.get(i);
-			if (j.getSaldo() > jogadores.get(maisRico).getSaldo()) {
-				maisRico = i;
-			}
-		}
-		return maisRico;
+	    // VERIFICAÇÃO DE SEGURANÇA ADICIONADA
+	    if (jogadores == null || jogadores.isEmpty()) {
+	        return 0; // fallback
+	    }
+	    
+	    int maisRico = 0;
+	    for (int i = 0; i < jogadores.size(); i++) {
+	        Jogador j = jogadores.get(i);
+	        if (j.getSaldo() > jogadores.get(maisRico).getSaldo()) {
+	            maisRico = i;
+	        }
+	    }
+	    return maisRico;
 	}
 
-	// quando um jogador ganha a partida, ele automaticamente vira o jogador atual
+//	// quando um jogador ganha a partida, ele automaticamente vira o jogador atual
+//	void fimDeJogo() {
+//		jogadorAtual = jogadorMaisRico();
+//		System.out.println(jogadorAtual);
+//		notifyObservers(PartidaEvent.fimDeJogo());
+//	}
+	
 	void fimDeJogo() {
-		jogadorAtual = jogadorMaisRico();
-		System.out.println(jogadorAtual);
-		notifyObservers(PartidaEvent.fimDeJogo());
+	    // VERIFICAÇÃO DE SEGURANÇA ADICIONADA
+	    if (jogadores == null || jogadores.isEmpty()) {
+	        System.err.println("[ERRO] Lista de jogadores vazia ao tentar finalizar jogo");
+	        notifyObservers(PartidaEvent.fimDeJogo());
+	        return;
+	    }
+	    
+	    jogadorAtual = jogadorMaisRico();
+	    System.out.println(jogadorAtual);
+	    notifyObservers(PartidaEvent.fimDeJogo());
 	}
 
 	// checa se jogo chegou ao fim (se todos os jogadores faliram menos um, não
@@ -202,7 +217,11 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	}
 
 	public void reset() {
-		ctrl = null;
+	    // Limpa observers se necessário
+	    if (observers != null) {
+	        observers.clear();
+	    }
+	    ctrl = null;
 	}
 
 	// Observado interface implementation
@@ -225,27 +244,22 @@ public class CentralPartida implements Observado<PartidaEvent> {
 
 	@Override
 	public void notifyObservers(PartidaEvent event) {
-		if (observers == null)
-			return;
-		for (Observador<PartidaEvent> o : new ArrayList<>(observers)) {
-			try {
-				o.notify(event);
-			} catch (Exception e) {
-				System.err.println("Erro notificando observer: " + e.getMessage());
-			}
-		}
+	    if (observers == null || event == null)
+	        return;
+	    
+	    for (Observador<PartidaEvent> o : new ArrayList<>(observers)) {
+	        try {
+	            o.notify(event);
+	        } catch (Exception e) {
+	            System.err.println("Erro notificando observer: " + e.getMessage());
+	            e.printStackTrace(); // ADICIONE ESTA LINHA PARA DEBUG
+	        }
+	    }
 	}
 
 	@Override
 	public PartidaEvent get(int index) {
 		return PartidaEvent.info("central_partida");
-	}
-
-	// retorna os ultimos dados jogados (ou {0,0} se nao houve jogada ainda)
-	int[] getUltimosDados() {
-		if (ultimoDados == null)
-			return new int[] { 0, 0 };
-		return new int[] { ultimoDados[0], ultimoDados[1] };
 	}
 
 	boolean atualPodeComprarCasa() {
@@ -313,11 +327,13 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	}
 
 	public ArrayList<String> getNomesPropriedadesJogadorAtual() {
-		ArrayList<String> nomes = new ArrayList<>();
-		for (Propriedade p : jogadores.get(jogadorAtual).getPropriedades()) {
-			nomes.add(p.nome);
-		}
-		return nomes;
+	    ArrayList<String> nomes = new ArrayList<>();
+	    Jogador jogadorAtualObj = jogadores.get(jogadorAtual);
+	    
+	    for (Propriedade p : jogadorAtualObj.getPropriedades()) {
+	        nomes.add(p.nome);
+	    }
+	    return nomes;
 	}
 
 	boolean venderPropriedadeJogadorAtual(int posicao) {
@@ -414,4 +430,52 @@ public class CentralPartida implements Observado<PartidaEvent> {
 			
         return 0.0;
     }
+	Banco getBanco() {
+		return banco;
+	}
+
+	Baralho getBaralho() {
+		return baralho;
+	}
+
+	Tabuleiro getTabuleiro() {
+		return tabuleiro;
+	}
+
+	Jogador getJogador(int i) {
+		return jogadores.get(i);
+	}
+	
+	void setBanco(Banco banco) {
+	    this.banco = banco;
+	}
+
+	void setTabuleiro(Tabuleiro tabuleiro) {
+	    this.tabuleiro = tabuleiro;
+	}
+
+	void setBaralho(Baralho baralho) {
+	    this.baralho = baralho;
+	}
+
+	void setJogadores(ArrayList<Jogador> jogadores) {
+	    this.jogadores = jogadores;
+	}
+
+	void setJogadorAtual(int jogadorAtual) {
+	    this.jogadorAtual = jogadorAtual;
+	}
+	
+//	// Adicionar este método na classe CentralPartida para debug
+//	public void debugJogadores() {
+//	    System.out.println("[DEBUG CENTRAL] Quantidade de jogadores: " + getQtdJogadores());
+//	    System.out.println("[DEBUG CENTRAL] Lista de jogadores: " + jogadores);
+//	    if (jogadores != null) {
+//	        for (int i = 0; i < jogadores.size(); i++) {
+//	            Jogador j = jogadores.get(i);
+//	            System.out.println("[DEBUG CENTRAL] Jogador " + i + ": " + 
+//	                (j != null ? j.getNome() : "null"));
+//	        }
+//	    }
+//	}
 }

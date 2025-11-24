@@ -52,8 +52,8 @@ public class FacadeView {
 		return CriacaoJogadores.getInstance().getQtdJogadores();
 	}
 
-	String getNomeJogador(int i) {
-		return CriacaoJogadores.getInstance().getNomeJogador(i);
+	String getNomeJogadorAtual() {
+		return ControlePartida.getInstance().getNomeJogadorAtual();
 	}
 
 	void proxJogadorASerCriado() {
@@ -99,5 +99,13 @@ public class FacadeView {
 	void reset() {
 		FacadeModel.getInstance().reset();
 		ControlePartida.getInstance().reset();
+	}
+	
+	boolean salvarJogo(String caminho) {
+		return ControlePartida.getInstance().salvarJogo(caminho);
+	}
+	
+	boolean carregarJogo(String caminho) {
+		return ControlePartida.getInstance().carregarJogo(caminho);
 	}
 }
