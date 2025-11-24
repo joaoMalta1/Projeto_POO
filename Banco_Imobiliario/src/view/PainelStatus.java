@@ -125,7 +125,7 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
     }
 
     private void atualizarListaPropriedades() {
-        painelListaProps.removeAll();
+    	painelListaProps.removeAll();
         java.util.List<Integer> ids = FacadeModel.getInstance().getIndicesPropriedadesJogadorAtual();
 
         if (ids == null || ids.isEmpty()) {

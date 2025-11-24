@@ -20,6 +20,12 @@ class Tabuleiro {
         this.campos = campos;
         this.tamanho = campos.size();
         this.banco = banco;
+     // CORREÇÃO: Preencher nomesDosCampos durante o carregamento
+        for (Campo campo : campos) {
+            if (campo != null) {
+                nomesDosCampos.add(campo.nome);
+            }
+        }
     }
 
     private void inicializarCasas() {

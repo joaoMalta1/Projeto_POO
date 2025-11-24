@@ -332,11 +332,13 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	}
 
 	public ArrayList<String> getNomesPropriedadesJogadorAtual() {
-		ArrayList<String> nomes = new ArrayList<>();
-		for (Propriedade p : jogadores.get(jogadorAtual).getPropriedades()) {
-			nomes.add(p.nome);
-		}
-		return nomes;
+	    ArrayList<String> nomes = new ArrayList<>();
+	    Jogador jogadorAtualObj = jogadores.get(jogadorAtual);
+	    
+	    for (Propriedade p : jogadorAtualObj.getPropriedades()) {
+	        nomes.add(p.nome);
+	    }
+	    return nomes;
 	}
 
 	boolean venderPropriedadeJogadorAtual(int posicao) {
@@ -431,16 +433,16 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	    this.jogadorAtual = jogadorAtual;
 	}
 	
-	// Adicionar este método na classe CentralPartida para debug
-	public void debugJogadores() {
-	    System.out.println("[DEBUG CENTRAL] Quantidade de jogadores: " + getQtdJogadores());
-	    System.out.println("[DEBUG CENTRAL] Lista de jogadores: " + jogadores);
-	    if (jogadores != null) {
-	        for (int i = 0; i < jogadores.size(); i++) {
-	            Jogador j = jogadores.get(i);
-	            System.out.println("[DEBUG CENTRAL] Jogador " + i + ": " + 
-	                (j != null ? j.getNome() : "null"));
-	        }
-	    }
-	}
+//	// Adicionar este método na classe CentralPartida para debug
+//	public void debugJogadores() {
+//	    System.out.println("[DEBUG CENTRAL] Quantidade de jogadores: " + getQtdJogadores());
+//	    System.out.println("[DEBUG CENTRAL] Lista de jogadores: " + jogadores);
+//	    if (jogadores != null) {
+//	        for (int i = 0; i < jogadores.size(); i++) {
+//	            Jogador j = jogadores.get(i);
+//	            System.out.println("[DEBUG CENTRAL] Jogador " + i + ": " + 
+//	                (j != null ? j.getNome() : "null"));
+//	        }
+//	    }
+//	}
 }

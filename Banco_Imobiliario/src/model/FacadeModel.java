@@ -156,22 +156,22 @@ public class FacadeModel {
 		List<String> todosOsCampos = CentralPartida.getInstance().getNomesDosCampos();
 		ArrayList<String> nomesPropriedadesJogadorAtual = 
 				CentralPartida.getInstance().getNomesPropriedadesJogadorAtual();
-
+		
 		ArrayList<Integer> ids = new ArrayList<>();
 
 		for (String nome : nomesPropriedadesJogadorAtual) {
 			int index = todosOsCampos.indexOf(nome);
+			
 			if (index != -1) {
 				ids.add(index);
 			}
 		}
-
 		return ids;
 	}
 	
 	public boolean salvarJogo(String caminho) {
 		try {
-			CentralPartida.getInstance().debugJogadores();
+//			CentralPartida.getInstance().debugJogadores();
 			Salvamento.getInstance().salvarJogo(caminho);
 			return true;
 			} 

@@ -17,7 +17,6 @@ public class Carregamento {
 	private CentralPartida central;
     
 	CentralPartida carregarJogo(String caminhoArquivo) throws IOException {
-        System.out.println("[DEBUG] Iniciando carregamento do jogo...");
         
         // Resetar a CentralPartida se existir
         if (CentralPartida.getInstance() != null) {
@@ -30,33 +29,27 @@ public class Carregamento {
         // Carregar banco
         Banco banco = carregarBanco(linhas);
         central.setBanco(banco);
-        System.out.println("[DEBUG] Banco carregado - Saldo: " + banco.getSaldo());
         
         // Carregar baralho
         Baralho baralho = carregarBaralho(linhas);
         central.setBaralho(baralho);
-        System.out.println("[DEBUG] Baralho carregado - " + baralho.getCartas().size() + " cartas");
         
         // Carregar tabuleiro
         Tabuleiro tabuleiro = carregarTabuleiro(linhas, banco);
         central.setTabuleiro(tabuleiro);
-        System.out.println("[DEBUG] Tabuleiro carregado - " + tabuleiro.getTamanho() + " campos");
         
         // Carregar jogadores
         ArrayList<Jogador> jogadores = carregarJogadores(linhas, tabuleiro, baralho);
         central.setJogadores(jogadores);
-        System.out.println("[DEBUG] Jogadores carregados - " + jogadores.size() + " jogadores");
         
         // Carregar jogador atual
         int jogadorAtual = carregarJogadorAtual(linhas);
         central.setJogadorAtual(jogadorAtual);
-        System.out.println("[DEBUG] Jogador atual: " + jogadorAtual);
         
         if (central.getQtdJogadores() == 0) {
             throw new IOException("Nenhum jogador foi carregado do arquivo!");
         }
         
-        System.out.println("[DEBUG] Carregamento concluído com sucesso!");
         return central;
     }
     
@@ -331,13 +324,32 @@ public class Carregamento {
                         currentJogador.setPenultimoParDados(penultimoDados);
                     }
                     
-                    // Associar propriedades
+//                    // Associar propriedades
+//                    for (String propNome : propriedadesNomes) {
+//                        Campo campo = tabuleiro.getCampo(propNome);
+//                        if (campo instanceof Propriedade) {
+//                            Propriedade propriedade = (Propriedade) campo;
+//                            propriedade.setDono(currentJogador);
+//                            currentJogador.adicionarPropriedade(propriedade);
+//                        }
+//                    }
+                    
                     for (String propNome : propriedadesNomes) {
-                        Campo campo = tabuleiro.getCampo(propNome);
+                        // CORREÇÃO: Buscar pelo nome do campo no tabuleiro
+                        Campo campo = null;
+                        for (int i = 0; i < tabuleiro.getTamanho(); i++) {
+                            Campo c = tabuleiro.getCampo(i);
+                            if (c.nome.equals(propNome)) {
+                                campo = c;
+                                break;
+                            }
+                        }
+                        
                         if (campo instanceof Propriedade) {
                             Propriedade propriedade = (Propriedade) campo;
                             propriedade.setDono(currentJogador);
                             currentJogador.adicionarPropriedade(propriedade);
+                        } else {
                         }
                     }
                     
@@ -355,7 +367,6 @@ public class Carregamento {
                     }
                     
                     jogadores.add(currentJogador);
-                    System.out.println("[DEBUG] Jogador carregado: " + nome + " - Posição: " + posicaoPeao + " - Saldo: " + saldo);
                 }
                 continue;
             }

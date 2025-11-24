@@ -80,16 +80,19 @@ class Jogador {
     }
 
     boolean removerValor(double valor) {
-    	System.out.println("[DEBUG] Jogador: " + nome + " Saldo antes: " + saldo);
-    	System.out.println("[DEBUG] Valor: " + valor);
     	if(valor <= 0) {
     		return false;
     	}
     	else if (saldo >= valor) {
             saldo -= valor;
-            System.out.println("[DEBUG] Jogador: " + nome + " Saldo depois: " + saldo);
             return true; // sucesso
         } else {
+        	if(propriedades.size() > 0) {
+        		for(int i = 0; i < propriedades.size(); i++) {
+        			venderPropriedade(propriedades.get(i), CentralPartida.getInstance().getBanco());
+        		}
+        		return removerValor(valor);
+        	}
             faliu = true;
             falencia();
             return false; // jogador perdeu
