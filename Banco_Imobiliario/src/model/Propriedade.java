@@ -44,6 +44,10 @@ class Propriedade extends Campo {
 		this.dono = dono;
 	}
 	
+	double getPrecoCompra() {
+        return this.precoCompra;
+    }
+	
 	double valorDeVenda() {
 		return 0.9 * precoCompra;
 	}
@@ -120,14 +124,10 @@ class Terreno extends Propriedade {
 		
 		double precoAPagar = precoPassagem * (0.1 + 0.15 * qtdCasas + 0.3 * qtdHotel);
 		
-//		CASO: ninguém possui
 		if(dono == null) {
-//			jogador.removerValor(precoPassagem);
-//			banco.recebeDinheiro(precoPassagem);
 			return;
 		}
 		
-//		CASO: já possui dono e o jogador que está no campo não é o dono
 		if(jogador != dono) {
 			jogador.removerValor(precoAPagar);
 			this.dono.adicionarValor(precoAPagar);
@@ -154,6 +154,17 @@ class Terreno extends Propriedade {
 		this.qtdCasas = 0;
 		this.qtdHotel = 0;
 	}
+
+	int getQtdCasas() {
+		return this.qtdCasas;
+	}
+
+	int getQtdHoteis() {
+		return this.qtdHotel;
+	}
+	
+	double getPrecoCasa() { return this.precoCasa; }
+    double getPrecoHotel() { return this.precoHotel; }
 }
 
 class Empresa extends Propriedade {

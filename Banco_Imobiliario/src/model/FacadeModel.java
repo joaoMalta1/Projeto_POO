@@ -171,4 +171,16 @@ public class FacadeModel {
 
 		return ids;
 	}
+
+    public double getPrecoCompra(int pos) {
+        return CentralPartida.getInstance().getPrecoCompra(pos);
+    }
+
+    public double getPrecoCasaAtual() {
+        return CentralPartida.getInstance().getPrecoCasaAtual();
+    }
+
+    public double getPrecoHotelAtual() {
+        return CentralPartida.getInstance().getPrecoHotelAtual();
+    }
 }

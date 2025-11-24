@@ -6,13 +6,14 @@ public class PartidaEvent {
         MOVE,
         PROPERTY_LANDED,
         PURCHASED_PROPERTY,
-        INFO,
-        PROPERTY_SOLD,
-        NEXT_PLAYER,
-        GAME_ENDED,
         PURCHASED_HOUSE,
         PURCHASED_HOTEL,
+        PROPERTY_SOLD,
         SORTE_OU_REVES,
+        RENT_PAID,
+        NEXT_PLAYER,
+        GAME_ENDED,
+        INFO,
     }
 
     public final Tipo type;
@@ -39,8 +40,8 @@ public class PartidaEvent {
         return new PartidaEvent(Tipo.NEXT_PLAYER, null);
     }
 
-    public static PartidaEvent purchased_property() {
-        return new PartidaEvent(Tipo.PURCHASED_PROPERTY, null);
+    public static PartidaEvent purchased_property(int posicao, double valorPago, String tipo) {
+        return new PartidaEvent(Tipo.PURCHASED_PROPERTY, new Object[]{posicao, valorPago, tipo});
     }
     
     public static PartidaEvent purchased_house() {
@@ -65,5 +66,9 @@ public class PartidaEvent {
 
     public static PartidaEvent propertySold() {
         return new PartidaEvent(Tipo.PROPERTY_SOLD, null);
+    }
+
+    public static PartidaEvent rentPaid(int posicao, double valor) {
+        return new PartidaEvent(Tipo.RENT_PAID, new Object[]{posicao, valor});
     }
 }

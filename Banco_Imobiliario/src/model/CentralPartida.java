@@ -150,23 +150,18 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	 * Retorna true se a compra foi bem sucedida.
 	 */
 	boolean comprarPropriedadeAtualJogador() {
-		Jogador j = jogadores.get(jogadorAtual);
-		int posicao = j.getPeao().getPosicao();
-
-		if (!propriedadeDisponivel(posicao))
-			return false;
-
-		Propriedade prop = (Propriedade) tabuleiro.getCampo(posicao);
-
-		ResultadoTransacao resultado = prop.comprar(j, banco);
-
-		if (resultado != ResultadoTransacao.SUCESSO) {
-			System.out.println("Compra não efetuada por motivos de " + ResultadoTransacao.SUCESSO.toString());
-			return false;
-		}
-
-		notifyObservers(PartidaEvent.purchased_property());
-		return true;
+        int pos = jogadores.get(jogadorAtual).getPeao().getPosicao();
+        Campo c = tabuleiro.getCampo(pos);
+        if (!(c instanceof Propriedade)) return false;
+        Propriedade p = (Propriedade) c;
+        ResultadoTransacao r = p.comprar(jogadores.get(jogadorAtual), banco);
+        if (r == ResultadoTransacao.SUCESSO) {
+            double valorPago = p.precoCompra; // preço efetivamente debitado
+            String tipo = (p instanceof Terreno) ? "Terreno" : (p instanceof Empresa) ? "Empresa" : "Propriedade";
+            notifyObservers(controller.PartidaEvent.purchased_property(pos, valorPago, tipo));
+            return true;
+        }
+        return false;
 	}
 
 	// retorna jogador mais rico de acordo com a formatação para string da função
@@ -380,4 +375,43 @@ public class CentralPartida implements Observado<PartidaEvent> {
 			}
 		}
 	}
+
+    void notificaAluguelPago(int posicao, double valor) {
+        notifyObservers(PartidaEvent.rentPaid(posicao, valor));
+    }
+
+    Campo getCampo(int pos) {
+        return tabuleiro.getCampo(pos);
+    }
+
+    public double getPrecoCompra(int pos) {
+        Campo c = tabuleiro.getCampo(pos);
+        if (c instanceof Propriedade) {
+			Propriedade p = (Propriedade) c;
+			return p.getPrecoCompra();
+		} 
+        return 0.0;
+    }
+
+    public double getPrecoCasaAtual() {
+        int pos = getPosJogadorAtual();
+        Campo c = tabuleiro.getCampo(pos);
+        if (c instanceof Terreno) {
+			Terreno t = (Terreno) c;
+			return t.getPrecoCasa();
+		}
+			
+        return 0.0;
+    }
+
+    public double getPrecoHotelAtual() {
+        int pos = getPosJogadorAtual();
+        Campo c = tabuleiro.getCampo(pos);
+        if (c instanceof Terreno) {
+			Terreno t = (Terreno) c;
+			return t.getPrecoHotel();
+		}
+			
+        return 0.0;
+    }
 }

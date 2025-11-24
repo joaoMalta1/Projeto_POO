@@ -14,11 +14,10 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
 	private JLabel lblNomeJogador;
     private JLabel lblSaldo;
     private JLabel lblPosicao;
-    private JLabel lblStatusMensagem;
-    private JPanel painelListaProps;
-
     private JLabel lblTituloFixo;
     private JLabel lblPropFixo;
+    private JPanel painelListaProps;
+    private JTextArea areaStatus; // adicionar campo
 
     public PainelStatus() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -91,10 +90,21 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
         lblPosicao.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // status mensagem
-        lblStatusMensagem = new JLabel(" ");
-        lblStatusMensagem.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
-        lblStatusMensagem.setForeground(new Color(57, 181, 74)); //verde zoado pra mostrar compra efetivada 
-        lblStatusMensagem.setAlignmentX(Component.LEFT_ALIGNMENT);
+        areaStatus = new JTextArea(" ");
+        areaStatus.setName("areaStatusMensagem");
+        areaStatus.setEditable(false);
+        areaStatus.setFocusable(false);
+        areaStatus.setHighlighter(null);
+        areaStatus.setCursor(null);
+        areaStatus.setOpaque(false);
+        areaStatus.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
+        areaStatus.setForeground(new Color(57, 181, 74));
+        areaStatus.setLineWrap(true);
+        areaStatus.setWrapStyleWord(true);
+        areaStatus.setAlignmentX(Component.LEFT_ALIGNMENT);
+        javax.swing.text.DefaultCaret caret = (javax.swing.text.DefaultCaret) areaStatus.getCaret();
+        caret.setVisible(false);
+        caret.setSelectionVisible(false);
 
         // propriedades-
         lblPropFixo = new JLabel("Minhas Propriedades:");
@@ -110,6 +120,10 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
         scrollPropriedades.setOpaque(false);
         scrollPropriedades.getViewport().setOpaque(false);
         scrollPropriedades.setBorder(BorderFactory.createLineBorder(new Color(255,255,255,100)));
+        // permite expandir
+        scrollPropriedades.setPreferredSize(new Dimension(200, 250));
+        scrollPropriedades.setMinimumSize(new Dimension(200, 150));
+        scrollPropriedades.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
         add(lblTituloFixo);
         add(lblNomeJogador);
@@ -118,7 +132,7 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
         add(Box.createVerticalStrut(5));
         add(lblPosicao);
         add(Box.createVerticalStrut(15));
-        add(lblStatusMensagem);
+        add(areaStatus);
         add(Box.createVerticalStrut(15));
         add(lblPropFixo);
         add(Box.createVerticalStrut(5));
@@ -198,34 +212,99 @@ public class PainelStatus extends JPanel implements Observador<PartidaEvent> {
         }
     }
 
+    private String quebraAutomatica(String msg, int limite) {
+        if (msg == null) return "";
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        for (String palavra : msg.split(" ")) {
+            int tam = palavra.length();
+            if (count + tam > limite) {
+                sb.append("\n");
+                count = 0;
+            }
+            sb.append(palavra).append(" ");
+            count += tam + 1;
+        }
+        return sb.toString().trim();
+    }
+
     @Override
     public void notify(PartidaEvent event) {
         if (event == null) return;
         switch (event.type) {
-            case NEXT_PLAYER:
-                lblStatusMensagem.setText(" ");
+            case PROPERTY_LANDED: {
+                try {
+                    Integer pos = (Integer) event.payload;
+                    boolean disponivel = FacadeModel.getInstance().propriedadeDisponivel(pos);
+                    if (disponivel) {
+                        double preco = FacadeModel.getInstance().getPrecoCompra(pos);
+                        areaStatus.setText(quebraAutomatica(
+                                String.format("Propriedade livre (ID %02d). Comprar por R$ %.2f", pos, preco), 32));
+                    } else {
+                        // Se pertence ao jogador atual: mostrar preços de casa/hotel
+                        boolean podeCasa  = FacadeModel.getInstance().atualPodeComprarCasa();
+                        boolean podeHotel = FacadeModel.getInstance().atualPodeComprarHotel();
+                        if (podeCasa || podeHotel) {
+                            StringBuilder sb = new StringBuilder("Sua propriedade. ");
+                            if (podeCasa)  sb.append(String.format("Casa: R$ %.2f. ", FacadeModel.getInstance().getPrecoCasaAtual()));
+                            if (podeHotel) sb.append(String.format("Hotel: R$ %.2f. ", FacadeModel.getInstance().getPrecoHotelAtual()));
+                            areaStatus.setText(quebraAutomatica(sb.toString().trim(), 32));
+                        }
+                        // Se é de outro jogador, não sobrescreve para esperar RENT_PAID
+                    }
+                } catch (Exception ignore) {}
                 atualizarInformacoes();
                 break;
-            case PURCHASED_PROPERTY:
-                lblStatusMensagem.setText("Propriedade comprada!");
+            }
+            case RENT_PAID: {
+                try {
+                    Object[] dados = (Object[]) event.payload;
+                    int pos = (Integer) dados[0];
+                    double valor = (Double) dados[1];
+                    areaStatus.setText(quebraAutomatica(
+                            String.format("Aluguel pago (ID %02d): R$ %.2f", pos, valor), 32));
+                } catch (Exception ex) {
+                    areaStatus.setText("Aluguel pago.");
+                }
                 atualizarInformacoes();
                 break;
+            }
+            case PURCHASED_PROPERTY: {
+                try {
+                    Object[] dados = (Object[]) event.payload;
+                    int pos = (Integer) dados[0];
+                    double valor = (Double) dados[1];
+                    String tipo = (String) dados[2];
+                    areaStatus.setText(quebraAutomatica(
+                            String.format("%s comprado (ID %02d) por R$ %.2f", tipo, pos, valor), 32));
+                } catch (Exception ex) {
+                    areaStatus.setText("Propriedade comprada!");
+                }
+                atualizarInformacoes();
+                break;
+            }
             case PURCHASED_HOUSE:
-            	lblStatusMensagem.setText("Casa comprada!");
+                areaStatus.setText("Casa comprada!");
                 atualizarInformacoes();
                 break;
             case PURCHASED_HOTEL:
-            	lblStatusMensagem.setText("Hotel comprado!");
-                atualizarInformacoes();
-                break;
-            case SORTE_OU_REVES:
-            	lblStatusMensagem.setText("Retirou uma carta!");
+                areaStatus.setText("Hotel comprado!");
                 atualizarInformacoes();
                 break;
             case PROPERTY_SOLD:
-                lblStatusMensagem.setText("Venda Efetuada!");
+                areaStatus.setText("Venda efetuada!");
                 atualizarInformacoes();
                 break;
+            case SORTE_OU_REVES:
+                areaStatus.setText("Carta Sorte ou Revés retirada.");
+                atualizarInformacoes();
+                break;
+            case NEXT_PLAYER:
+                areaStatus.setText(" ");
+                atualizarInformacoes();
+                break;
+            case DICE_ROLLED:
+            case MOVE:
             default:
                 atualizarInformacoes();
                 break;

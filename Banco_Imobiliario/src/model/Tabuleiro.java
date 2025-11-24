@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+
 class Tabuleiro {
     private List<Campo> campos;
     private int tamanho;
@@ -224,9 +225,36 @@ class Tabuleiro {
             novaPosicao = sorteReves.CaiuNoCampo(jogador, banco, baralho);
             jogador.getPeao().setPosicao(novaPosicao);
             // Se a carta mover o jogador, ela deve chamar setPosicao internamente
-        } else if (campos.get(novaPosicao) instanceof Propriedade) {
-            Propriedade prop = (Propriedade) campos.get(novaPosicao);
+        } 
+        
+        Campo campoDestino = campos.get(novaPosicao);
+        if (campoDestino instanceof Propriedade) {
+            Propriedade prop = (Propriedade) campoDestino;
+
+            // Detecta cenário de pagamento antes de executar a lógica (owner diferente)
+            boolean pagaAluguel = (prop.getDono() != null && prop.getDono() != jogador);
+
+            // Calcula valor antes (estado atual)
+            double valorAluguel = 0.0;
+            if (pagaAluguel) {
+                if (prop instanceof Terreno) {
+					Terreno terreno = (Terreno) prop;
+                    int casas  = terreno.getQtdCasas();
+                    int hoteis = terreno.getQtdHoteis();
+                    valorAluguel = terreno.precoPassagem * (0.1 + 0.15 * casas + 0.3 * hoteis);
+                } else if (prop instanceof Empresa) {
+					Empresa empresa = (Empresa) prop;
+                    valorAluguel = empresa.precoPassagem;
+                }
+            }
+
+            // Executa efeito (realiza débito/crédito)
             prop.caiuNoCampo(jogador, banco);
+
+            // Após débito, notifica
+            if (pagaAluguel && valorAluguel > 0) {
+                CentralPartida.getInstance().notificaAluguelPago(novaPosicao, valorAluguel);
+            }
         } else {
             campos.get(novaPosicao).caiuNoCampo(jogador, banco);
         }
