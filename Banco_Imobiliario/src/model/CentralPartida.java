@@ -11,10 +11,10 @@ import controller.ResultadoTransacao;
 
 public class CentralPartida implements Observado<PartidaEvent> {
 	private static CentralPartida ctrl = null;
-	private static ArrayList<Jogador> jogadores = null;
+	private ArrayList<Jogador> jogadores = null;
 	private int jogadorAtual = 0; // no turno
-	private static Tabuleiro tabuleiro = null;
-	private static Banco banco = null;
+	private Tabuleiro tabuleiro = null;
+	private Banco banco = null;
 	private ArrayList<Observador<PartidaEvent>> observers = null;
 	private Baralho baralho = null;
 
@@ -169,21 +169,39 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	// retorna jogador mais rico de acordo com a formatação para string da função
 	// getNomeCorString da classe Jogador
 	int jogadorMaisRico() {
-		int maisRico = 0;
-		for (int i = 0; i < jogadores.size(); i++) {
-			Jogador j = jogadores.get(i);
-			if (j.getSaldo() > jogadores.get(maisRico).getSaldo()) {
-				maisRico = i;
-			}
-		}
-		return maisRico;
+	    // VERIFICAÇÃO DE SEGURANÇA ADICIONADA
+	    if (jogadores == null || jogadores.isEmpty()) {
+	        return 0; // fallback
+	    }
+	    
+	    int maisRico = 0;
+	    for (int i = 0; i < jogadores.size(); i++) {
+	        Jogador j = jogadores.get(i);
+	        if (j.getSaldo() > jogadores.get(maisRico).getSaldo()) {
+	            maisRico = i;
+	        }
+	    }
+	    return maisRico;
 	}
 
-	// quando um jogador ganha a partida, ele automaticamente vira o jogador atual
+//	// quando um jogador ganha a partida, ele automaticamente vira o jogador atual
+//	void fimDeJogo() {
+//		jogadorAtual = jogadorMaisRico();
+//		System.out.println(jogadorAtual);
+//		notifyObservers(PartidaEvent.fimDeJogo());
+//	}
+	
 	void fimDeJogo() {
-		jogadorAtual = jogadorMaisRico();
-		System.out.println(jogadorAtual);
-		notifyObservers(PartidaEvent.fimDeJogo());
+	    // VERIFICAÇÃO DE SEGURANÇA ADICIONADA
+	    if (jogadores == null || jogadores.isEmpty()) {
+	        System.err.println("[ERRO] Lista de jogadores vazia ao tentar finalizar jogo");
+	        notifyObservers(PartidaEvent.fimDeJogo());
+	        return;
+	    }
+	    
+	    jogadorAtual = jogadorMaisRico();
+	    System.out.println(jogadorAtual);
+	    notifyObservers(PartidaEvent.fimDeJogo());
 	}
 
 	// checa se jogo chegou ao fim (se todos os jogadores faliram menos um, não
@@ -204,7 +222,11 @@ public class CentralPartida implements Observado<PartidaEvent> {
 	}
 
 	public void reset() {
-		ctrl = null;
+	    // Limpa observers se necessário
+	    if (observers != null) {
+	        observers.clear();
+	    }
+	    ctrl = null;
 	}
 
 	// Observado interface implementation
@@ -227,15 +249,17 @@ public class CentralPartida implements Observado<PartidaEvent> {
 
 	@Override
 	public void notifyObservers(PartidaEvent event) {
-		if (observers == null)
-			return;
-		for (Observador<PartidaEvent> o : new ArrayList<>(observers)) {
-			try {
-				o.notify(event);
-			} catch (Exception e) {
-				System.err.println("Erro notificando observer: " + e.getMessage());
-			}
-		}
+	    if (observers == null || event == null)
+	        return;
+	    
+	    for (Observador<PartidaEvent> o : new ArrayList<>(observers)) {
+	        try {
+	            o.notify(event);
+	        } catch (Exception e) {
+	            System.err.println("Erro notificando observer: " + e.getMessage());
+	            e.printStackTrace(); // ADICIONE ESTA LINHA PARA DEBUG
+	        }
+	    }
 	}
 
 	@Override
@@ -385,5 +409,38 @@ public class CentralPartida implements Observado<PartidaEvent> {
 
 	Jogador getJogador(int i) {
 		return jogadores.get(i);
+	}
+	
+	void setBanco(Banco banco) {
+	    this.banco = banco;
+	}
+
+	void setTabuleiro(Tabuleiro tabuleiro) {
+	    this.tabuleiro = tabuleiro;
+	}
+
+	void setBaralho(Baralho baralho) {
+	    this.baralho = baralho;
+	}
+
+	void setJogadores(ArrayList<Jogador> jogadores) {
+	    this.jogadores = jogadores;
+	}
+
+	void setJogadorAtual(int jogadorAtual) {
+	    this.jogadorAtual = jogadorAtual;
+	}
+	
+	// Adicionar este método na classe CentralPartida para debug
+	public void debugJogadores() {
+	    System.out.println("[DEBUG CENTRAL] Quantidade de jogadores: " + getQtdJogadores());
+	    System.out.println("[DEBUG CENTRAL] Lista de jogadores: " + jogadores);
+	    if (jogadores != null) {
+	        for (int i = 0; i < jogadores.size(); i++) {
+	            Jogador j = jogadores.get(i);
+	            System.out.println("[DEBUG CENTRAL] Jogador " + i + ": " + 
+	                (j != null ? j.getNome() : "null"));
+	        }
+	    }
 	}
 }

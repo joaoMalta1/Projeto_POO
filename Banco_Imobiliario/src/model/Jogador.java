@@ -244,4 +244,22 @@ class Jogador {
 	CartaLivreDaPrisao getCartaLivreDaPrisao() {
 		return cartaLivre;
 	}
+
+	void setSaldo(double saldo) {
+		this.saldo = saldo;
+	}
+
+	void setFaliu(boolean faliu) {
+		this.faliu = faliu;
+	}
+
+	void setUltimoParDados(int[] ultimoDados) {
+		this.ultimoParDados = ultimoDados;
+	}
+
+	void setPenultimoParDados(int[] penultimoDados) {
+		this.penultimoParDados = penultimoDados;
+	}
+	
+	
 }

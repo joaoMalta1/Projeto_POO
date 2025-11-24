@@ -3,6 +3,7 @@ package view;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 class PainelJanelaInicial extends JPanel{
     private static final long serialVersionUID = 1L;
@@ -55,10 +56,20 @@ class PainelJanelaInicial extends JPanel{
         	janela.mostrarTela(Telas.QUANTIDADE_JOGADORES);  });
         
         bCarregar.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, 
-                "Funcionalidade em desenvolvimento", 
-                "Carregar Jogo", 
-                JOptionPane.INFORMATION_MESSAGE);
+        	JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos de jogo (*.txt)", "txt"));
+            
+            int result = fileChooser.showOpenDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                boolean sucesso = FacadeView.getInstance().carregarJogo(fileChooser.getSelectedFile().getAbsolutePath());
+                if(sucesso) {
+                	JOptionPane.showMessageDialog(this, "Jogo carregado com sucesso!");
+                	janela.mostrarTela(Telas.TABULEIRO);
+                }
+                else {
+                	JOptionPane.showMessageDialog(this, "Erro ao carregar jogo...");
+                }
+            }
         });
     }
   }

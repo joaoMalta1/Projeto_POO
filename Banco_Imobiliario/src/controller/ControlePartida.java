@@ -72,4 +72,12 @@ public class ControlePartida {
 	public boolean salvarJogo(String caminho) {
 		return FacadeModel.getInstance().salvarJogo(caminho);
 	}
+	
+	public boolean carregarJogo(String caminho) {
+		return FacadeModel.getInstance().carregarJogo(caminho);
+	}
+
+	public String getNomeJogadorAtual() {
+		return FacadeModel.getInstance().getNomeJogadorAtual();
+	}
 }

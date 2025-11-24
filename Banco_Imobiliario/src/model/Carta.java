@@ -3,7 +3,7 @@ package model;
 class Carta {
 	private double precoAReceber;
 	private String nome;
-	Baralho baralho;
+	protected Baralho baralho;
 	
 	Carta(String nome, double precoAReceber, Baralho baralho){  // se for negativo, é para pagar
 		this.precoAReceber = precoAReceber;
@@ -33,6 +33,10 @@ class Carta {
 	String getPrecoAReceber() {
 		return ((Double)precoAReceber).toString();
 	}
+	
+	void setBaralho(Baralho baralho) {
+	    this.baralho = baralho;
+	}
 }
 
 class CartaLivreDaPrisao extends Carta {
@@ -54,6 +58,10 @@ class CartaLivreDaPrisao extends Carta {
 	void foiUsada() {
 		dono = null;
 		baralho.voltaParaBaralho(this);
+	}
+	
+	void setDono(Jogador j) {
+		this.dono = j;
 	}
 }
 

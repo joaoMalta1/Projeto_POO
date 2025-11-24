@@ -235,22 +235,6 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
         repaint();
     }
     
-//    private void criarBotaoSalvarJogo() {
-//        if (bSalvarJogo != null && bSalvarJogo.getParent() != null)
-//            return; 
-//        bSalvarJogo = new BotaoEstilizado("Salvar Jogo", 200, 120);
-//        bSalvarJogo.addActionListener(ev -> {
-////            System.out.println(FacadeModel.getInstance().getPosJogadorAtual());
-//            boolean sucesso = FacadeView.getInstance().salvarJogo();
-//            if (sucesso) {
-//            	
-//            }
-//        });
-//        add(bSalvarJogo);
-//        revalidate();
-//        repaint();
-//    }
-    
     private void criarBotaoSalvarJogo() {
         if (bSalvarJogo != null && bSalvarJogo.getParent() != null)
             return; 
@@ -294,7 +278,7 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                 
                 try {
                     // Tentar salvar o jogo
-                    boolean sucesso = FacadeModel.getInstance().salvarJogo(filePath);
+                    boolean sucesso = FacadeView.getInstance().salvarJogo(filePath);
                     
                     if (sucesso) {
                         JOptionPane.showMessageDialog(this,
@@ -698,6 +682,8 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
     @Override
     public void notify(PartidaEvent event) {
         if (event == null) return;
+        System.out.println("[DEBUG PAINEL] Evento recebido: " + event.type + 
+                ", Jogadores carregados: " + FacadeModel.getInstance().getQtdJogadores());
 
         switch (event.type) {
             case DICE_ROLLED:
@@ -785,6 +771,11 @@ public class PainelTabuleiro extends JPanel implements Observador<PartidaEvent> 
                 atualizarFundo();
                 repaint();
                 break;
+            case GAME_ENDED:
+            	janelaPrincipal.mostrarTela(Telas.FIM_DE_JOGO);
+            	break;
+             default:
+                	break;
         }
         repaint();
     }

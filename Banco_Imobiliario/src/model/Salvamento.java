@@ -100,10 +100,31 @@ public class Salvamento {
     }
     
     private void salvarJogadores(PrintWriter writer, CentralPartida central) {
-        writer.println("QUANTIDADE_JOGADORES:" + central.getQtdJogadores());
+        int qtdJogadores = central.getQtdJogadores();
+        writer.println("QUANTIDADE_JOGADORES:" + qtdJogadores);
         
-        for (int i = 0; i < central.getQtdJogadores(); i++) {
+        System.out.println("[DEBUG SALVAMENTO] Salvando " + qtdJogadores + " jogadores");
+        
+        // VERIFICAÇÃO CRÍTICA: Se não há jogadores, logar detalhes e retornar
+        if (qtdJogadores == 0) {
+            System.err.println("[DEBUG SALVAMENTO] ERRO: Nenhum jogador para salvar!");
+            System.err.println("[DEBUG SALVAMENTO] Verifique se:");
+            System.err.println("[DEBUG SALVAMENTO] 1. Jogadores foram criados com central.criaJogadores()");
+            System.err.println("[DEBUG SALVAMENTO] 2. A instância CentralPartida é a mesma usada para criar jogadores");
+            return; // Não tenta salvar jogadores se não existem
+        }
+        
+        for (int i = 0; i < qtdJogadores; i++) {
             Jogador jogador = central.getJogador(i);
+            
+            // VERIFICAÇÃO ADICIONADA: Checar se jogador é null
+            if (jogador == null) {
+                System.err.println("[DEBUG SALVAMENTO] AVISO: Jogador " + i + " é null!");
+                continue;
+            }
+            
+            System.out.println("[DEBUG SALVAMENTO] Salvando jogador " + i + ": " + jogador.getNome());
+            
             writer.println("JOGADOR_INICIO");
             writer.println("NOME:" + jogador.getNome());
             writer.println("COR_PEAO:" + jogador.getPeao().getCorString());
@@ -124,15 +145,21 @@ public class Salvamento {
             
             // Salvar propriedades
             writer.println("PROPRIEDADES_INICIO");
-            for (Propriedade prop : jogador.getPropriedades()) {
-                writer.println(prop.nome);
+            List<Propriedade> propriedades = jogador.getPropriedades();
+            System.out.println("[DEBUG SALVAMENTO] Jogador " + jogador.getNome() + " tem " + 
+                propriedades.size() + " propriedades");
+            
+            for (Propriedade prop : propriedades) {
+                if (prop != null) {
+                    writer.println(prop.nome);
+                }
             }
             writer.println("PROPRIEDADES_FIM");
             
             // Salvar carta livre da prisão
+            CartaLivreDaPrisao cartaLivre = jogador.getCartaLivreDaPrisao();
             writer.println("CARTA_LIVRE_PRISAO:" + 
-                (jogador.getCartaLivreDaPrisao() != null ? 
-                 jogador.getCartaLivreDaPrisao().getNome() : "null"));
+                (cartaLivre != null ? cartaLivre.getNome() : "null"));
             
             writer.println("JOGADOR_FIM");
         }

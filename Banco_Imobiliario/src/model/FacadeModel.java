@@ -171,11 +171,23 @@ public class FacadeModel {
 	
 	public boolean salvarJogo(String caminho) {
 		try {
+			CentralPartida.getInstance().debugJogadores();
 			Salvamento.getInstance().salvarJogo(caminho);
 			return true;
 			} 
 		catch (IOException e){
 			System.err.println("[DEBUG] ERRO NO SALVAMENTO DO JOGO: " + e.getMessage());
+			return false;
+		}
+	}
+	
+	public boolean carregarJogo(String caminho) {
+		try {
+			Carregamento.getInstance().carregarJogo(caminho);
+			return true;
+		}
+		catch (IOException e) {
+			System.err.println("[DEBUG] ERRO NO CARREGAMENTO DO JOGO: " + e.getMessage());
 			return false;
 		}
 	}

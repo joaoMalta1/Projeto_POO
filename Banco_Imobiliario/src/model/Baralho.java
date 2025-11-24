@@ -7,6 +7,10 @@ import java.util.stream.*;
 class Baralho {
 	private Queue<Carta> baralho;
 	
+	public Baralho(Queue<Carta> cartas) {
+	    this.baralho = new LinkedList<>(cartas);
+	}
+	
 	void voltaParaBaralho(Carta carta) {
 		baralho.offer(carta);
 	}
@@ -202,7 +206,7 @@ class Baralho {
 				nada
 				""";
 		criarBaralho(nomeCartas, qntDeveReceber, especialidade);
-		imprimirBaralho();
+//		imprimirBaralho();
 	}
 
 	Queue<Carta> getCartas() {

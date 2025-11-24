@@ -4,7 +4,7 @@ import controller.ResultadoTransacao;
 
 class Propriedade extends Campo {
 	protected Jogador dono;
-	protected final double precoCompra;
+	protected double precoCompra;
 	protected final int proporcaoPassagemCompra = 2;
 	
 	Propriedade(String nome, double precoPassagem) {
@@ -50,6 +50,10 @@ class Propriedade extends Campo {
 	
 	void vendida() {
 		this.dono = null;
+	}
+
+	void setPrecoCompra(double precoCompra) {
+		this.precoCompra = precoCompra;
 	}
 }
 
@@ -153,6 +157,16 @@ class Terreno extends Propriedade {
 		this.dono = null;
 		this.qtdCasas = 0;
 		this.qtdHotel = 0;
+	}
+
+
+	void setQtdCasas(int qtdCasas) {
+		this.qtdCasas = qtdCasas;
+	}
+
+
+	void setQtdHotel(int qtdHotel) {
+		this.qtdHotel = qtdHotel;
 	}
 }
 

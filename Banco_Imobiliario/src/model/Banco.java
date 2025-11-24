@@ -23,4 +23,8 @@ class Banco {
 	double getSaldo() {
 		return saldo;
 	}
+
+	void setSaldo(double saldo) {
+		this.saldo = saldo;
+	}
 }

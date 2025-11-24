@@ -20,7 +20,7 @@ class PainelFimDeJogo extends JPanel {
 		
 		System.out.println(FacadeView.getInstance().getJogadorAtual());
 		
-		nomeVencedor = FacadeView.getInstance().getNomeJogador(FacadeView.getInstance().getJogadorAtual());
+		nomeVencedor = FacadeView.getInstance().getNomeJogadorAtual();
 		
 		inicializarComponentes();
 		configurarLayout();

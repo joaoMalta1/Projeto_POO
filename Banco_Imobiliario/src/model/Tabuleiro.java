@@ -15,6 +15,12 @@ class Tabuleiro {
         inicializarCasas();
         this.banco = banco;
     }
+    
+    Tabuleiro(List<Campo> campos, Banco banco) {
+        this.campos = campos;
+        this.tamanho = campos.size();
+        this.banco = banco;
+    }
 
     private void inicializarCasas() {
         ArrayList<Double> precosPassagem = new ArrayList<>();
